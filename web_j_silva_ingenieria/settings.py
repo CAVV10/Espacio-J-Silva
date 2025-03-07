@@ -26,7 +26,7 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-b*4%%5vjyf@948=bap_s9%kka9r^82lhr+x*1v9_6ax(8l0td^')
 
 # ADVERTENCIA: No actives debug en producción
-DEBUG = True
+DEBUG = False
 # Hosts permitidos en la aplicación
 default_hosts = ['127.0.0.1', 'localhost']
 env_hosts = os.getenv('ALLOWED_HOSTS', '').split(',')
