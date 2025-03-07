@@ -1,0 +1,24 @@
+{% extends "contacto/base.html" %}
+{% load static %}
+
+{% block title %}Capacitación - J Silva Ingeniería{% endblock %}
+
+{% block content %}
+<div class="spacer__titles layer-2">
+    <div class="overlay__text">Servicios</div>
+</div>
+<div class="spacer__subtitles layer-3">
+    <div class="overlay__text__subtitles">Capacitación</div>
+</div>
+<div class="services__about">
+    <div class="service__description">
+        <p>En J. Silva Ingeniería, ofrecemos planes de capacitación especializados en prevención de incendios y saneamiento básico. Nuestros programas están diseñados para que tu personal esté completamente preparado para actuar en situaciones de emergencia, garantizando la seguridad en tu empresa y el cumplimiento de las normativas exigidas por las autoridades locales.</p>
+    </div>
+    <div class="service__image">
+        <img src="{% static 'contacto/img/servicio-capacitación.webp' %}" alt="">
+    </div>
+</div>
+
+<a href="{% url 'hacer_reserva' %}">J SILVA INGENIERÍA</a>
+
+{% endblock %}

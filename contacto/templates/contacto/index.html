@@ -1,0 +1,97 @@
+{% extends "contacto/base.html" %}
+{% load static %}
+
+{% block title %}Inicio - J Silva Ingeniería{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="content__main">
+        <h1>Protegemos lo que más importa: su bienestar, su hogar y su entorno.</h1>
+        <div class="buttons">
+            <a href="#contact__space" class="button schedule">Agende en línea</a>
+            <a href="tel:+573213249181" class="button call">Llame hoy</a>
+        </div>
+    </div>
+</div>
+<div class="services">
+    <h2>Conozca nuestros servicios</h2>
+    <div class="all__services">
+        <!-- Fila 1: 3 tarjetas -->
+        <div class="container">
+            <div class="card card1">
+                <p class="title">Desinfección</p>
+                <div class="card-hidden">
+                    <a class="button" href="{% url 'desinfeccion' %}">Más información</a>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="card card2">
+                <p class="title">Control apícola</p>
+                <div class="card-hidden">
+                    <a class="button" href="{% url 'control_apicola' %}">Más información</a>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="card card3">
+                <p class="title">Jardinería</p>
+                <div class="card-hidden">
+                    <a class="button" href="{% url 'jardineria' %}">Más información</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fila 2: 4 tarjetas -->
+        <div class="container">
+            <div class="card card4">
+                <p class="title">Suministros</p>
+                <div class="card-hidden">
+                    <a class="button" href="{% url 'suministros' %}">Más información</a>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="card card5">
+                <p class="title">Capacitación</p>
+                <div class="card-hidden">
+                    <a class="button" href="{% url 'capacitacion' %}">Más información</a>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="card card6">
+                <p class="title">Planos 3D</p>
+                <div class="card-hidden">
+                    <a class="button" href="{% url 'planos_3d' %}">Más información</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slider-box">
+    <h2>Ellos confían en nosotros</h2>
+    <div class="slider">
+        <ul class="brands">
+            <img class="img-logos" src="{% static 'contacto/img/logo-alcadia-neiva.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-contructora.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-terminal-neiva.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-ese-carmen.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-corhuila.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-asproquin.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-interedes.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-surcolombiana.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-alcadia-neiva.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-contructora.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-terminal-neiva.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-ese-carmen.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-corhuila.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-asproquin.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-interedes.png' %}" alt="">
+            <img class="img-logos" src="{% static 'contacto/img/logo-surcolombiana.png' %}" alt="">
+        </ul>
+    </div>
+</div>
+
+{% endblock %}

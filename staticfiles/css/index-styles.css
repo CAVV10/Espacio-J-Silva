@@ -1,0 +1,324 @@
+@import url("configuracion.css");
+
+
+
+.hero {
+    margin-top: 2rem;
+    height: 112vh;
+    background: url("../img/inicio-fondo-1.png") no-repeat center center/cover;
+    display: flex;
+    align-items: center;
+    color: white;
+}
+
+.content__main {
+    margin-top: -8rem;
+    z-index: 2;
+    max-width: 27rem;
+    margin-left: 1.6rem;
+}
+
+.content__main h1 {
+    font-weight: 300;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.services {
+    font-size: 1.3rem;
+    color: #233e37;
+    background-color: white;
+    text-align: center;
+    justify-content: center;
+    height: 90vh;
+    margin: 2rem 0 3rem 0;
+}
+
+.all__services {
+    background-color: white;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0rem 1.1rem;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 100%;
+    height: 100%;
+    padding: 2rem;
+}
+
+.card {
+    position: relative;
+    width: 100%;
+    height: 90%;
+    border-radius: 8px;
+    color: #ffffff;
+    padding: 0.8rem;
+    border: 0.2rem solid #b78d41;
+    transition: background-color 0.5s ease, background-image 0.5s ease, transform 0.5s ease, border-color 0.5s ease;
+    overflow: hidden;
+}
+
+
+.card1 {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 58, 8, 0.89)),
+        url("../img/servicio-desinfeccion.webp") no-repeat center center;
+    background-size: cover;
+    background-position: center center;
+}
+
+.card2 {
+    background: 
+        linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 58, 8, 0.89)),
+        url("../img/servicio-control-apicola.webp") no-repeat center center;
+    background-size: cover;
+    background-position: center center;
+}
+
+.card3 {
+    background: 
+        linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 58, 8, 0.89)),
+        url("../img/servicio-jardineria.jpg") no-repeat center center;
+    background-size: cover;
+    background-position: center center;
+}
+
+.card4 {
+    background: 
+        linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 58, 8, 0.89)),
+        url("../img/servicio-extintores.webp") no-repeat center center;
+    background-size: cover;
+    background-position: center center;
+}
+
+.card5 {
+    background: 
+        linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 58, 8, 0.89)),
+        url("../img/servicio-capacitación.webp") no-repeat center center;
+    background-size: cover;
+    background-position: center center;
+}
+
+.card6 {
+    background: 
+        linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(0, 58, 8, 0.89)),
+        url("../img/servicio-planos-3d.jpg") no-repeat center center;
+    background-size: cover;
+    background-position: center center;
+}
+
+
+.card-hidden {
+    display: flex;
+    transform: translateY(200%);
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.3s ease-in, opacity 0.3s ease-in;
+    opacity: 0;
+}
+
+.card-border {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    border: 1px dashed #232323;
+    border-radius: 8px;
+    z-index: -1;
+}
+
+.card:hover {
+    transform: translate(-10px, -10px);
+    border-color: #233e37;
+}
+
+.card:hover .card-hidden {
+    transform: translateY(200%);
+    opacity: 1;
+}
+
+.card:hover .title {
+    transform: translateY(200%);
+}
+
+.title {
+    position: absolute;
+    bottom: 1rem;
+    font-weight: 500;
+    font-size: 1.5rem;
+    transition: transform 0.25s ease-out;
+}
+
+.card-hidden a {
+    margin: 0 auto;
+    align-items: center;
+    width: 70%;
+}
+
+:root {
+    --total-brand: 14;
+    --logo-width: 12rem;
+    --total-logo-width: calc(var(--total-brand) * var(--logo-width) * 2);
+    --animation-duration: calc(var(--total-brand) * 1.5s)
+}
+
+
+.img-logos {
+    width: 18rem;
+}
+.slider-box {
+    height: 14rem;
+    background-color: white;
+    font-size: 1.3rem;
+    color: #233e37;
+    width: 100%;
+    place-items: center;
+}
+
+
+.slider {
+    position: relative;
+    width: 100%;
+    height: 12rem;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    
+    overflow: hidden;
+}
+
+.slider::before,
+.slider::after {
+    position: absolute;
+    content: "";
+
+    height: 100%;
+    width: var(--logo-width);
+}
+
+.slider::before {
+    left: 0;
+    background: linear-gradient(to right, #fff 0%, #fff0 100%);
+}
+
+.slider::after {
+    right: 0;
+    background: linear-gradient(to left, #fff 0%, #fff0 100%);
+}
+
+.slider ul.brands {
+    list-style: none;
+
+    width: var(--total-logo-width);
+
+    display: flex;
+
+    animation: slideLeft var(--animation-duration) linear infinite;
+}
+
+.slider:hover ul.brands {
+
+    animation-play-state: paused;
+
+}
+
+@keyframes slideLeft {
+    100% {
+        transform: translateX(calc(-100% /2));
+    }
+}
+
+ul.brands li.brand-logo {
+    width: var(--logo-width);
+    font-size: 2rem;
+    text-align: center;
+    margin-left: 3rem;
+}
+
+
+@media (max-width: 780px) {
+    .hero {
+        height: 90vh;
+    }
+
+    .content__main {
+        margin-top: -7rem;
+        margin-left: 1.6rem;
+        max-width: 20rem;
+    }
+
+    .content__main h1 {
+        font-size: 2rem;
+    }
+
+    .content__main p {
+        font-size: 1rem;
+    }
+
+    .button {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .all__services {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0rem 1rem;
+    }
+    
+    .card:hover .card-hidden {
+        transform: translateY(115%);
+    }
+}
+
+@media (max-width: 560px) {
+    /* Hero Section */
+    .hero {
+        background-position: left center;
+        height: 90vh;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .content__main {
+        margin-top: 10rem;
+        margin-left: 0;
+        max-width: 90%;
+    }
+
+    .content__main h1 {
+        font-size: 1.8rem;
+    }
+
+    .content__main p {
+        font-size: 0.9rem;
+    }
+
+    .buttons {
+        margin: auto;
+        width: 60%;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+
+    .all__services {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .services {
+        height: 130vh;
+    }
+    .card {
+        width: 100%;
+    }
+    .card:hover .card-hidden {
+        transform: translateY(80%);
+    }
+
+}

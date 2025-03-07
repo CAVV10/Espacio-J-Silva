@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: mi-sitio-django
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn web_j_silva_ingenieria.wsgi:application
+    envVars:
+      - key: DEBUG
+        value: "False"
+      - key: SECRET_KEY
+        value: "django-insecure-b*4%%5vjyf@948=bap_s9%kka9r^82lhr+x*1v9_6ax(8l0td^"
+      - key: ALLOWED_HOSTS
+        value: "*"

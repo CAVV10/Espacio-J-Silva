@@ -1,0 +1,24 @@
+{% extends "contacto/base.html" %}
+{% load static %}
+
+{% block title %}Desinfección - J Silva Ingeniería{% endblock %}
+
+{% block content %}
+<div class="spacer__titles layer-2">
+    <div class="overlay__text">Servicios</div>
+</div>
+<div class="spacer__subtitles layer-3">
+    <div class="overlay__text__subtitles">Desinfección</div>
+</div>
+
+<div class="services__about">
+    <div class="service__description">
+        <p>J. SILVA INGENIERÍA SAS ofrece un servicio profesional de desinfección y fumigación especializado en la eliminación de plagas en entornos industriales, comerciales y residenciales. Con técnicas avanzadas y productos certificados, se asegura un control efectivo de insectos y roedores, garantizando la salud y seguridad de los espacios. Cumplimos con todas las regulaciones de sanidad exigidas por la Secretaría de Salud y contamos con certificados oficiales. Contáctenos para obtener una solución confiable y sostenible para su negocio.</p>
+    </div>
+    <div class="service__image">
+        <img src="{% static 'contacto/img/servicio-desinfeccion.webp' %}" alt="">
+    </div>
+    
+</div>
+
+{% endblock %}

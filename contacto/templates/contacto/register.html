@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Register</title>
+    <link rel="stylesheet" href="{% static 'contacto/css/login.css' %}">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const registerForm = document.getElementById("registerForm");
+        
+            registerForm.addEventListener("submit", function (event) {
+                event.preventDefault(); // Evita que la página se recargue
+        
+                let formData = new FormData(registerForm);
+        
+                fetch("{% url 'register_view' %}", {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest", // Indica que es una solicitud AJAX
+                        "X-CSRFToken": "{{ csrf_token }}" // Incluye el token CSRF
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let messageDiv = document.getElementById("register-message");
+                    messageDiv.innerHTML = data.message; // Muestra el mensaje de error o éxito
+                    messageDiv.style.color = data.success ? "green" : "red";
+        
+                    if (data.success) {
+                        registerForm.reset(); // Limpia el formulario si fue exitoso
+                    }
+                })
+                .catch(error => console.error("Error en la solicitud:", error));
+            });
+        });
+        </script>
+        
+</head>
+<body>
+    
+    <div class="form-container">
+        <!-- Formulario de Inicio de Sesión -->
+        <form id="loginForm" class="form" method="POST" action="{% url 'login_view' %}">
+            {% csrf_token %}
+            <p class="title__form">Iniciar sesión</p>
+            <label>
+                <input class="input" type="email" name="email" required>
+                <span>Correo electrónico</span>
+            </label>
+            <label>
+                <input class="input" type="password" name="password" required>
+                <span>Contraseña</span>
+            </label>
+            <button class="button" type="submit">Ingresar</button>
+            <p class="signin">¿No tiene una cuenta? <a href="#" id="toggleToRegister">Regístrese</a></p>
+        </form>
+        
+        <!-- Formulario de Registro -->
+        <form id="registerForm" class="form hidden" method="POST" action="{% url 'register_view' %}">
+            {% csrf_token %}
+            <p class="title__form">Registrarse</p>
+            <div class="flex">
+                <label>
+                    <input class="input" type="text" name="first_name" required>
+                    <span>Nombre(s)</span>
+                </label>
+                <label>
+                    <input class="input" type="text" name="last_name" required>
+                    <span>Apellido(s)</span>
+                </label>
+            </div>
+            <label>
+                <input class="input" type="email" name="email" required>
+                <span>Correo electrónico</span>
+            </label>
+            <label>
+                <input class="input" type="password" name="password1" required>
+                <span>Contraseña</span>
+            </label>
+            <label>
+                <input class="input" type="password" name="password2" required>
+                <span>Confirmar contraseña</span>
+            </label>
+            <button class="button" type="submit">Crear cuenta</button>
+            <p class="signin">¿Ya tiene una cuenta? <a href="{% 'login'%}" id="toggleToLogin">Inicie sesión</a></p>
+        </form>
+    </div>
+    <a href="{% url 'inicio' %}" class="back-button">← Volver al inicio</a>
+</body>
+{% if messages %}
+    <div class="mensaje-flotante">
+        {% for message in messages %}
+            <p class="mensaje-texto">{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+</html>

@@ -1,0 +1,173 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>J Silva Ingeniería - Servicios</title>
+    <link rel="stylesheet" href="{% static 'contacto/css/servicios.css' %}">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="icon" href="img/jsilva-favicon.png" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="{% url 'inicio' %}">
+                    <img src="{% static 'contacto/img/jsilva.png' %}" alt="Logo de J Silva Ingeniería">
+                </a>
+                <a href="{% url 'inicio' %}">
+                    J SILVA INGENIERÍA
+                </a>
+            </div>
+
+            <!-- Toggle para móviles -->
+            <div class="toggle__menu" id="toggle-menu">
+                <i class='bx bx-grid-alt'></i>
+            </div>
+
+            <!-- Menú de navegación -->
+            <ul class="nav__list" id="nav-menu">
+                <div class="close__menu" id="close-menu">
+                    <i class='bx bx-x-circle'></i>
+                </div>
+                <li class="nav__item"><a href="{% url 'inicio' %}" class="nav__link">Inicio</a></li>
+                <li class="nav__item"><a href="{% url 'quienes_somos' %}" class="nav__link">¿Quiénes somos?</a></li>
+
+                <li class="nav__item dropdown">
+                    <a href="#" class="nav__link dropdown__link">Servicios 
+                        <i class='bx bxs-chevron-down dropdown__icon'></i>
+                    </a>
+                    <div class="megamenu">
+                        <ul class="content">
+                            <li class="header__megamenu">Higiene y manejo ambiental</li>
+                            <li class="megamenu__item">
+                                <div class="menu__icon"><img src="{% static 'contacto/img/icono_fumigacion-def.png' %}" alt=""></div>
+                                <div class="megamenu__link">
+                                    <a href="{% url 'desinfeccion' %}">Desinfección</a>
+                                    <p>Eliminación de virus, bacterias y patógenos</p>
+                                </div>
+                            </li>
+                            <li class="megamenu__item">
+                                <div class="menu__icon"><img src="{% static 'contacto/img/icono_control-apicola-def.png' %}" alt=""></div>
+                                <div class="megamenu__link">
+                                    <a href="{% url 'control_apicola' %}">Control apícola</a>
+                                    <p>Manejo integrado de abejas</p>
+                                </div>
+                            </li>
+                            <li class="megamenu__item">
+                                <div class="menu__icon"><img src="{% static 'contacto/img/icono_jardineria-def.png' %}" alt=""></div>
+                                <div class="megamenu__link">
+                                    <a href="{% url 'jardineria' %}">Jardinería</a>
+                                    <p>Servicio de jardinería y mantenimiento</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="content">
+                            <li class="header__megamenu">Mantenimiento y soporte</li>
+                            <li class="megamenu__item">
+                                <div class="menu__icon"><img src="{% static 'contacto/img/icono_extintor-def.png' %}" alt=""></div>
+                                <div class="megamenu__link">
+                                    <a href="{% url 'suministros' %}">Suministros</a>
+                                    <p>Venta y mantenimiento de equipos de seguridad</p>
+                                </div>
+                            </li>
+                            <li class="megamenu__item">
+                                <div class="menu__icon"><img src="{% static 'contacto/img/icono_capacitacion-def.png' %}" alt=""></div>
+                                <div class="megamenu__link">
+                                    <a href="{% url 'capacitacion' %}">Capacitación</a>
+                                    <p>Prevención de incendios y plan de saneamiento</p>
+                                </div>
+                            </li>
+                            <li class="megamenu__item">
+                                <div class="menu__icon"><img src="{% static 'contacto/img/icono_planos-3d-def.png' %}" alt=""></div>
+                                <div class="megamenu__link">
+                                    <a href="{% url 'planos_3d' %}">Planos 3D</a>
+                                    <p>Diseño y planificación para emergencias</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav__item"><a href="#contact__space" class="nav__link">Contáctenos</a></li>
+
+                <li class="nav__item">
+                    <a href="tel:+573213249181" class="contact-button button">
+                        <span>+57 321 3249181</span>
+                    </a>
+                </li>
+                
+                <!-- botón para iniciar sesión -->
+                <!-- <li class="nav__item">
+                    <a href="#">
+                        <img class="login" src="img/icono-sesion-verde.png" alt="">
+                    </a>
+                </li> -->
+            </ul>
+        </nav>
+    </header>
+
+    <div class="spacer__titles layer-2">
+        <div class="overlay__text">Servicios</div>
+    </div>
+
+    <div class="spacer__subtitles layer-3">
+        <div class="overlay__text__subtitles">Desinfección</div>
+    </div>
+
+    <div class="services__about">
+        <div class="service__description">
+            <p>J. SILVA INGENIERÍA SAS ofrece un servicio profesional de desinfección y fumigación especializado en la eliminación de plagas en entornos industriales, comerciales y residenciales. Con técnicas avanzadas y productos certificados, se asegura un control efectivo de insectos y roedores, garantizando la salud y seguridad de los espacios. Cumplimos con todas las regulaciones de sanidad exigidas por la Secretaría de Salud y contamos con certificados oficiales. Contáctenos para obtener una solución confiable y sostenible para su negocio.</p>
+        </div>
+        <div class="service__image">
+            <img src="img/servicio-desinfeccion.webp" alt="">
+        </div>
+        
+    </div>
+
+
+    <div class="spacer layer-1" id="contact__space"></div>
+
+    <div class="contact__us">
+        
+        <div class="map">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m13!1m8!1m3!1d996.1562128100267!2d-75.316127!3d2.923728!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMsKwNTUnMjUuMyJOIDc1wrAxOCc1OC4xIlc!5e0!3m2!1ses!2sus!4v1733139594945!5m2!1ses!2sus" width="700" height="450" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
+        <form class="form" method="POST" action="{% url 'enviar_mensaje' %}">
+            {% csrf_token %}
+            <p class="title__form">Contáctenos</p>
+            <p class="message">Envíenos un mensaje y nos comunicaremos lo antes posible.</p>
+            
+            <div class="flex">
+                <label>
+                    {{ form.nombre }}
+                    <span>Nombre(s)</span>
+                </label>
+        
+                <label>
+                    {{ form.apellido }}
+                    <span>Apellido(s)</span>
+                </label>
+            </div>  
+                    
+            <label>
+                {{ form.correo }}
+                <span>Correo electrónico</span>
+            </label> 
+                
+            <label>
+                {{ form.mensaje }}
+                <span>Mensaje</span>
+            </label>
+            <button class="button" type="submit">Enviar</button>
+        </form>
+    </div>
+    
+
+    <script src="{% static 'js/main.js' %}"></script>
+
+    
+</body>
+</html>

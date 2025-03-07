@@ -1,0 +1,273 @@
+{% extends "contacto/base.html" %}
+{% load static %}
+{% load producto_tags %}
+
+{% block title %}Hacer Reserva - J Silva Ingeniería{% endblock %}
+
+{% block content %}
+<div class="spacer__titles layer-2">
+    <div class="overlay__text">Diligenciar</div>
+</div>
+<div class="spacer__subtitles layer-3">
+    <div class="overlay__text__subtitles">Reserva</div>
+</div>
+
+<div class="container-reserve">
+    <form method="post" action="{% url 'hacer_reserva' %}">
+        {% csrf_token %}
+        
+        <!-- Selector de Servicio -->
+        <div class="form-group">
+            <select id="servicio" name="servicio" class="form-control" required>
+                <option value="" disabled selected>Seleccione un servicio</option>
+                {% for servicio in servicios %}
+                    <option value="{{ servicio.id }}">{{ servicio.servicio_nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Contenedor de Columnas -->
+        <div class="form-columns-container">
+            <!-- Columna Izquierda - Campos de Servicio -->
+            <div class="service-column">
+                <!-- Desinfección -->
+                <div id="desinfeccion-fields" class="service-fields" style="display:none;">
+                    <h4>Desinfección</h4>
+                    <div class="form-group">
+                        <select id="tipo_lugar" name="tipo_lugar" class="form-control">
+                            <option value="" disabled selected>Tipo de lugar</option>
+                            <option value="residencial">Residencial</option>
+                            <option value="comercial">Comercial</option>
+                            <option value="industrial">Industrial</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" id="metros_cuadrados" name="metros_cuadrados" class="form-control" min="0" placeholder="Área a desinfectar (m²)">
+                    </div>
+                    <div class="form-group">
+                        <select id="tipo_plaga" name="tipo_plaga" class="form-control">
+                            <option value="" disabled selected>Tipo de plaga</option>
+                            <option value="insectos">Insectos</option>
+                            <option value="roedores">Roedores</option>
+                            <option value="otros">Otros (detallar)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select id="desinfeccion_previa" name="desinfeccion_previa" class="form-control">
+                            <option value="" disabled selected>¿Se ha realizado desinfección previamente?</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="productos_preferidos" name="productos_preferidos" class="form-control" placeholder="Productos específicos (opcional)">
+                    </div>
+                </div>
+
+                <!-- Control Apícola -->
+                <div id="control-apicola-fields" class="service-fields" style="display:none;">
+                    <h4>Control Apícola</h4>
+                    <div class="form-group">
+                        <select id="ubicacion_colmena" name="ubicacion_colmena" class="form-control">
+                            <option value="" disabled selected>Ubicación de la colmena:</option>
+                            <option value="interior">Interior</option>
+                            <option value="exterior">Exterior</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select id="accesibilidad" name="accesibilidad" class="form-control">
+                            <option value="" disabled selected>Accesibilidad</option>
+                            <option value="facil">Fácil</option>
+                            <option value="dificil">Difícil (requiere equipos especiales)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" id="cantidad_colmenas" name="cantidad_colmenas" class="form-control" min="1" placeholder="Cantidad de colmenas">
+                    </div>
+                    <div class="form-group">
+                        <select id="abejas_agresivas" name="abejas_agresivas" class="form-control">
+                            <option value="" disabled selected>¿Las abejas han mostrado agresividad?</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select id="tratamiento_abejas" name="tratamiento_abejas" class="form-control">
+                            <option value="" disabled selected>¿Reubicación o eliminación?</option>
+                            <option value="reubicacion">Reubicación</option>
+                            <option value="eliminacion">Eliminación</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Jardinería -->
+                <div id="jardineria-fields" class="service-fields" style="display:none;">
+                    <h4>Jardinería</h4>
+                    <div class="form-group">
+                        <select id="tipo_servicio_jardineria" name="tipo_servicio_jardineria" class="form-control">
+                            <option value="" disabled selected>Tipo de servicio</option>
+                            <option value="mantenimiento">Mantenimiento</option>
+                            <option value="diseno_jardin">Diseño de jardín</option>
+                            <option value="poda">Poda</option>
+                            <option value="riego">Sistema de riego</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" id="tamanio_jardin" name="tamanio_jardin" class="form-control" min="0" placeholder="Tamaño del jardín (m²)">
+                    </div>
+                    <div class="form-group">
+                        <select id="frecuencia_mantenimiento" name="frecuencia_mantenimiento" class="form-control">
+                            <option value="" disabled selected>Frecuencia de mantenimiento</option>
+                            <option value="semanal">Semanal</option>
+                            <option value="quincenal">Quincenal</option>
+                            <option value="mensual">Mensual</option>
+                            <option value="unica">Única vez</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="plantas_especificas" name="plantas_especificas" class="form-control" placeholder="¿Hay plantas específicas a cuidar?">
+                    </div>
+                    <div class="form-group">
+                        <select id="riego_instalado" name="riego_instalado" class="form-control">
+                            <option value="" disabled selected>¿Tiene sistema de riego instalado?</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Capacitación -->
+                <div id="capacitacion-fields" class="service-fields" style="display:none;">
+                    <h4>Capacitación</h4>
+                    <div class="form-group">
+                        <select id="tipo_capacitacion" name="tipo_capacitacion" class="form-control">
+                            <option value="" disabled selected>Tipo de capacitación</option>
+                            <option value="seguridad">Seguridad</option>
+                            <option value="manejo_equipos">Manejo de equipos</option>
+                            <option value="primeros_auxilios">Primeros auxilios</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" id="numero_personas" name="numero_personas" class="form-control" min="1" placeholder="Número de personas"> 
+                    </div>
+                    <div class="form-group">
+                        <select id="certificacion_oficial" name="certificacion_oficial" class="form-control">
+                            <option value="" disabled selected>¿Requiere certificación oficial?</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Datos de Contacto -->
+            <div class="contact-column">
+                <div class="datos-contacto">
+                    <div class="form-group">
+                        <label for="numero_celular">Número de celular:</label>
+                        <input type="tel" id="numero_celular" name="numero_celular" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="direccion">Dirección:</label>
+                        <input type="text" id="direccion" name="direccion" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ciudad">Ciudad:</label>
+                        <select id="ciudad" name="ciudad" class="form-control" required>
+                            <option value="neiva">Neiva</option>
+                            <option value="otra">Otra</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fecha">Fecha:</label>
+                        <input type="date" id="fecha" name="fecha" class="form-control" required>
+                    </div>
+                
+                    <div class="form-group">
+                        <label for="hora">Hora:</label>
+                        <input type="time" id="hora" name="hora" class="form-control" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="button">Enviar Reserva</button>
+    </form>
+</div>
+
+<div class="spacer__subtitles layer-3">
+    <div class="overlay__text__subtitles">Compra</div>
+</div>
+
+<!-- Sección de la tienda -->
+<div class="container-tienda">
+    <div class="productos-grid">
+        {% for producto in productos %}
+            {% if producto.activo %}
+            <div class="producto" data-id="{{ producto.id }}" data-tipo="{{ producto.tipo }}">
+                {% if producto.imagen %}
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                {% else %}
+                    <img src="{% static 'img/'|add:producto.tipo|add:'.png' %}" alt="{{ producto.nombre }}">
+                {% endif %}
+                <h3>{{ producto.nombre }}</h3>
+                <p>{{ producto.descripcion }}</p>
+                <!-- <p class="precio">${{ producto.precio_base|floatformat:0 }} COP</p> -->
+                <button class="btn-comprar button" data-producto-id="{{ producto.id }}">Comprar</button>
+            </div>
+            {% endif %}
+        {% empty %}
+            <p>No hay productos disponibles en este momento.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Ventanas modales dinámicas -->
+<!-- Modificar la parte del modal -->
+{% for producto in productos %}
+    <div id="modal-{{ producto.tipo }}-{{ producto.id }}" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>{{ producto.nombre }}</h2>
+            <form id="form-{{ producto.tipo }}-{{ producto.id }}" class="form-producto" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                <p class="precio-base" data-precio="{{ producto.precio_base }}">Precio base: ${{ producto.precio_base|floatformat:0 }} COP</p>
+                
+                {% for opcion in producto.opciones.all %}
+                <div class="form-group">
+                    <label for="{{ opcion.nombre }}-{{ producto.id }}">{{ opcion.nombre }}:</label>
+                    <select 
+                        id="{{ opcion.nombre }}-{{ producto.id }}" 
+                        name="{{ opcion.nombre }}" 
+                        data-required="true"
+                        class="select-opcion">
+                        <option value="">Seleccione {{ opcion.nombre }}</option>
+                        {% for item in opcion.opciones %}
+                            <option value="{{ item.valor }}" data-precio="{{ item.precio }}">
+                                {{ item.valor }} - ${{ item.precio|floatformat:0 }} COP
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endfor %}
+            
+                <div class="form-group">
+                    <label for="cantidad-{{ producto.id }}">Cantidad:</label>
+                    <input type="number" id="cantidad-{{ producto.id }}" name="cantidad" min="1" value="1">
+                </div>
+            
+                <p class="precio-total">Total: $<span>{{ producto.precio_base }}</span> COP</p>
+                <button type="submit" class="btn-agregar-carrito button">Agregar al carrito</button>
+            </form>
+        </div>
+    </div>
+{% endfor %}
+<script src="{% static 'js/productos.js' %}"></script>
+
+<script src="{% static 'js/reservas.js' %}"></script>
+
+{% endblock %}

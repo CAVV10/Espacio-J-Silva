@@ -1,0 +1,97 @@
+@import url("configuracion.css");
+
+body {
+    background-image: url("../img/fondo-sesion.svg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    height: 100vh; /* Ocupa toda la altura de la pantalla */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+    
+.hidden { 
+    display: none; 
+}
+
+.form {
+    margin: auto;
+    max-width: 380px;
+    min-width: 380px;
+    display: flex;
+    flex-direction: column;
+}
+
+.signin a {
+    color: #b78d41;
+}
+
+.button {
+    width: 100%;
+}
+
+.form label {
+    display: block;
+    margin-bottom: 10px; /* Espaciado entre campos */
+    position: relative;
+}
+
+.form .input {
+    width: 100%;
+    outline: 0;
+    border: 1px solid #b78d41;
+    border-radius: 10px;
+    font-size: 16px; /* Tamaño uniforme */
+}
+
+
+/* Asegurar separación entre los inputs en línea */
+.flex {
+    display: flex;
+    width: 100%;
+
+}
+
+.back-button {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.back-button:hover {
+    color: #b78d41;
+}
+
+@media (max-width: 560px) {
+    .form {
+        max-width: 100%; /* Que ocupe el 90% del ancho disponible */
+        min-width: unset; /* Elimina la restricción de ancho mínimo */
+    }
+
+    .form .input {
+        font-size: 14px; /* Reduce el tamaño del texto */
+        border-radius: 8px; /* Bordes un poco menos redondeados */
+    }
+
+    .button {
+        font-size: 1rem; /* Reduce el tamaño del botón */
+        padding: 0.2em 0.5em;
+    }
+
+    .flex {
+        flex-direction: column; /* Pone los campos de nombre y apellido en una sola columna */
+        gap: 5px; /* Reduce el espacio entre los campos */
+    }
+
+    .back-button {
+        font-size: 14px; /* Reduce el tamaño del texto */
+        margin-top: 10px;
+    }
+}

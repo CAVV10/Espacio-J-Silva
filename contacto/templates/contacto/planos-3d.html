@@ -1,0 +1,25 @@
+{% extends "contacto/base.html" %}
+{% load static %}
+
+{% block title %}Planos 3D - J Silva Ingeniería{% endblock %}
+
+{% block content %}
+
+<div class="spacer__titles layer-2">
+    <div class="overlay__text">Servicios</div>
+</div>
+<div class="spacer__subtitles layer-3">
+    <div class="overlay__text__subtitles">Planos 3D</div>
+</div>
+
+<div class="services__about">
+    <div class="service__description">
+        <p>En J. Silva Ingeniería, nuestro equipo diseña, imprime e instala planos tridimensionales personalizados que permiten la visualización detallada de proyectos y soluciones de ingeniería. Estos planos son una herramienta esencial para la planificación de espacios y emergencias, brindando claridad y precisión en el diseño de tus proyectos.</p>
+    </div>
+    <div class="service__image">
+        <img src="{% static 'contacto/img/servicio-planos-3d.jpg' %}" alt="">
+    </div>
+    
+</div>
+
+{% endblock %}

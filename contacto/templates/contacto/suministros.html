@@ -1,0 +1,25 @@
+{% extends "contacto/base.html" %}
+{% load static %}
+
+{% block title %}Planos 3D - J Silva Ingeniería{% endblock %}
+
+{% block content %}
+
+<div class="spacer__titles layer-2">
+    <div class="overlay__text">Servicios</div>
+</div>
+<div class="spacer__subtitles layer-3">
+    <div class="overlay__text__subtitles"> Suministros</div>
+</div>
+
+<div class="services__about">
+    <div class="service__description">
+        <p>En J. Silva Ingeniería, proveemos y mantenemos equipos de seguridad industrial, como extintores, garantizando que cumplen con las normativas vigentes de prevención de incendios. Nuestros servicios incluyen la venta, recarga, y mantenimiento periódico de extintores, para asegurar que tus instalaciones estén siempre protegidas ante cualquier eventualidad.</p>
+    </div>
+    <div class="service__image">
+        <img src="{% static 'contacto/img/servicio-extintores.webp' %}" alt="">
+    </div>
+    
+</div>
+
+{% endblock %}

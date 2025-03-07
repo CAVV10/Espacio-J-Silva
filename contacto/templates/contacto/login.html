@@ -1,0 +1,178 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso</title>
+    <link rel="stylesheet" href="{% static 'contacto/css/login.css' %}">
+</head>
+
+<body>
+    <!-- Contenedor de mensajes flotantes -->
+    <div id="messageContainer" class="mensaje-flotante" style="display: none;"></div>
+
+    <div class="form-container">
+        <!-- Formulario de Inicio de Sesión -->
+        <form id="loginForm" class="form" method="POST">
+            {% csrf_token %}
+            <p class="title__form">Iniciar sesión</p>
+            <label>
+                <input class="input" type="email" name="email" required>
+                <span>Correo electrónico</span>
+            </label>
+            <label>
+                <input class="input" type="password" name="password" required>
+                <span>Contraseña</span>
+            </label>
+            <p class="forgot-password"><a href="{% url 'password_reset_request' %}">¿Olvidó la contraseña?</a></p>
+
+            <button class="button" type="submit">Ingresar</button>
+
+            <p class="signin">¿No tiene una cuenta? <a href="#" id="toggleToRegister">Regístrese</a></p>
+        </form>
+        
+        <!-- Formulario de Registro -->
+        <form id="registerForm" class="form hidden" method="POST">
+            {% csrf_token %}
+            <p class="title__form">Registrarse</p>
+            <div class="flex">
+                <label>
+                    <input class="input" type="text" name="first_name" required>
+                    <span>Nombre(s)</span>
+                </label>
+                <label>
+                    <input class="input" type="text" name="last_name" required>
+                    <span>Apellido(s)</span>
+                </label>
+            </div>
+            <label>
+                <input class="input" type="email" name="email" required>
+                <span>Correo electrónico</span>
+            </label>
+            <label>
+                <input class="input" type="password" name="password1" required>
+                <span>Contraseña</span>
+            </label>
+            <label>
+                <input class="input" type="password" name="password2" required>
+                <span>Confirmar contraseña</span>
+            </label>
+            <button class="button" type="submit">Crear cuenta</button>
+            <p class="signin">¿Ya tiene una cuenta? <a href="#" id="toggleToLogin">Inicie sesión</a></p>
+        </form>
+    </div>
+
+    <a href="{% url 'inicio' %}" class="back-button">← Volver al inicio</a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const loginForm = document.getElementById("loginForm");
+            const registerForm = document.getElementById("registerForm");
+            const toggleToRegister = document.getElementById("toggleToRegister");
+            const toggleToLogin = document.getElementById("toggleToLogin");
+            const messageContainer = document.getElementById("messageContainer");
+
+            loginForm.style.display = "block";
+            registerForm.style.display = "none";
+
+            toggleToRegister.addEventListener("click", function (e) {
+                e.preventDefault();
+                loginForm.style.display = "none";
+                registerForm.style.display = "block";
+                clearMessages();
+            });
+
+            toggleToLogin.addEventListener("click", function (e) {
+                e.preventDefault();
+                loginForm.style.display = "block";
+                registerForm.style.display = "none";
+                clearMessages();
+            });
+            loginForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                const formData = new FormData(loginForm);
+
+                fetch("{% url 'login_view' %}", {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = data.redirect_url;  // Redireccionar a la URL recibida
+                    } else {
+                        showMessage(data.message, "error");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error en la petición:", error);
+                    showMessage("Ocurrió un error inesperado.", "error");
+                });
+            });
+            
+            registerForm.addEventListener("submit", function (event) {
+                event.preventDefault(); 
+            
+                const formData = new FormData(registerForm);
+            
+                fetch("{% url 'register_view' %}", {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",  
+                        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    showMessage(data.message, data.success ? "success" : "error");
+                
+                    if (data.success) {
+                        registerForm.reset(); // Reseteamos el formulario de registro
+            
+                        // Habilitamos el formulario de inicio de sesión
+                        loginForm.style.display = "block";
+                        registerForm.style.display = "none";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error en la petición:", error);
+                    showMessage("Ocurrió un error inesperado.", "error");
+                });
+            });
+
+
+            function showMessage(text, type) {
+                if (!text) return;
+
+                clearMessages();
+
+                messageContainer.textContent = text;
+                messageContainer.style.display = "block";
+                messageContainer.style.opacity = "1";
+                messageContainer.style.backgroundColor = type === "success" ? "#233e37" : "#8B0000";
+
+                setTimeout(() => {
+                    messageContainer.style.opacity = "0";
+                }, 3000);
+
+                setTimeout(() => {
+                    clearMessages();
+                }, 4000);
+            }
+
+            function clearMessages() {
+                messageContainer.textContent = "";
+                messageContainer.style.display = "none";
+                messageContainer.style.opacity = "1";
+            }
+        });
+    </script>
+</body>
+</html>

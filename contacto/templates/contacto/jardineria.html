@@ -1,0 +1,25 @@
+{% extends "contacto/base.html" %}
+{% load static %}
+
+{% block title %}Jardinería - J Silva Ingeniería{% endblock %}
+
+{% block content %}
+
+<div class="spacer__titles layer-2">
+    <div class="overlay__text">Servicios</div>
+</div>
+<div class="spacer__subtitles layer-3">
+    <div class="overlay__text__subtitles">Jardinería</div>
+</div>
+
+<div class="services__about">
+    <div class="service__description">
+        <p>En J. Silva Ingeniería, ofrecemos servicios completos de jardinería, desde el diseño y mantenimiento de áreas verdes hasta la implementación de sistemas de riego y poda especializada. Nuestro equipo está capacitado para transformar y mantener tus espacios exteriores, garantizando un entorno saludable, estético y acorde con tus necesidades.</p>
+    </div>
+    <div class="service__image">
+        <img src="{% static 'contacto/img/servicio-jardineria.jpg' %}" alt="">
+    </div>
+    
+</div>
+
+{% endblock %}

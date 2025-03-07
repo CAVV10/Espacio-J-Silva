@@ -1,0 +1,51 @@
+{% extends "contacto/base.html" %}
+{% load static %}
+
+{% block title %}Inicio - J Silva Ingeniería{% endblock %}
+
+{% block content %}
+
+<div class="spacer__titles layer-2">
+    <div class="overlay__text">¿Quiénes somos?</div>
+</div>
+<div class="about__us">
+    <div class="about__us__description">
+        <p>J. SILVA INGENIERÍA SAS somos una empresa con una Propuesta
+            Tecnificada en diferentes pilares de procesos industriales y domésticos
+            comprometidos con las siguientes actividades: Servicio de Fumigación
+            de plagas, Recarga y mantenimiento de extintores, lavado, limpieza y
+            desinfección de tanques de agua potable, Diseño impresión e
+            instalación de planos 3D. Lo asesoramos y suministramos a su empresa
+            con todo lo necesario para certificar su negocio en prevención de
+            incendios y seguridad humana. Certificado de Bomberos y Secretaria
+            de salud municipal, cumpliendo todas las normas en salud. Plan de
+            capacitación, plan de saneamiento básico.
+            Con el fin de proporcionar a la población Neiva elementos
+            indispensables para garantizar la seguridad, J. SILVA INGENIERÍA
+            SAS a través de procesos confiables, ofrece precios competitivos,
+            cumplimiento y calidad en los servicios logrando el desarrollo óptimo de
+            las actividades de la ingeniería en sus diversos procesos alineados con
+            el objeto de su organización.
+        </p>
+    </div>
+    <div class="video">
+        <video class="actual-video" id="myVideo" controls>
+            <source src="{% static 'contacto/img/video-quienes-somos.mp4' %}" type="video/mp4">
+            Tu navegador no soporta la reproducción de video.
+        </video>
+    </div>
+</div>
+<div class="vision__mision">
+    <div class="vision__description">
+        <h3>Visión</h3>
+        <p>Ser reconocidos como líderes en el mercado de servicios especializados, brindando soluciones innovadoras, confiables y de alta calidad que superen las expectativas de nuestros clientes, fomentando el desarrollo sostenible, la excelencia operativa y el crecimiento profesional de nuestro equipo.
+        </p>
+    </div>
+    <div class="mision__description">
+        <h3>Misión</h3>
+        <p>Ser reconocidos como líderes en el mercado de servicios especializados, brindando soluciones innovadoras, confiables y de alta calidad que superen las expectativas de nuestros clientes, fomentando el desarrollo sostenible, la excelencia operativa y el crecimiento profesional de nuestro equipo.
+        </p>
+    </div>
+</div>
+
+{% endblock %}
