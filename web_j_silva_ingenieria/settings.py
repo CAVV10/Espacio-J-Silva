@@ -26,7 +26,7 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-b*4%%5vjyf@948=bap_s9%kka9r^82lhr+x*1v9_6ax(8l0td^')
 
 # ADVERTENCIA: No actives debug en producción
-DEBUG = False
+DEBUG = True
 # Hosts permitidos en la aplicación
 default_hosts = ['127.0.0.1', 'localhost']
 env_hosts = os.getenv('ALLOWED_HOSTS', '').split(',')
@@ -44,7 +44,7 @@ default_hosts = ['localhost', '127.0.0.1']
 env_hosts = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 # Combinar ambas listas y eliminar hosts vacíos
-ALLOWED_HOSTS = ['web-j-silva.onrender.com']
+ALLOWED_HOSTS = ['*']
 
 
 
@@ -135,7 +135,7 @@ USE_TZ = True
 TIME_ZONE = 'America/Bogota'
 
 # Archivos estáticos (CSS, JavaScript, Imágenes)
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'contacto', 'static', 'contacto'),

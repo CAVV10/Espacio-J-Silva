@@ -2,7 +2,10 @@ services:
   - type: web
     name: mi-sitio-django
     runtime: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
     startCommand: gunicorn web_j_silva_ingenieria.wsgi:application
     envVars:
       - key: DEBUG

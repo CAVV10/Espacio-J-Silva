@@ -12,7 +12,7 @@ body {
     display: flex;
     flex-direction: column;
 }
-    
+
 .hidden { 
     display: none; 
 }
@@ -25,11 +25,19 @@ body {
     flex-direction: column;
 }
 
-.signin a {
+
+.signin a, .forgot-password a {
     color: #b78d41;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.signin a:hover , .forgot-password a:hover {
+    text-decoration: underline;
 }
 
 .button {
+    margin: 1rem 0;
     width: 100%;
 }
 
@@ -71,7 +79,7 @@ body {
 
 @media (max-width: 560px) {
     .form {
-        max-width: 100%; /* Que ocupe el 90% del ancho disponible */
+        max-width: 95%; /* Que ocupe el 90% del ancho disponible */
         min-width: unset; /* Elimina la restricción de ancho mínimo */
     }
 

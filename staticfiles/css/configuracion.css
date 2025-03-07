@@ -8,6 +8,38 @@
     font-family: 'Kanit', sans-serif;
 }
 
+
+
+
+/* Estilos para el spinner de carga */
+#spinner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001; /* Por encima de todo */
+}
+
+.spinner {
+    border: 4px solid #f3f3f3; /* Color del borde */
+    border-top: 4px solid #233e37; /* Color del borde superior (verde) */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite; /* Animación de rotación */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
 .logo {
     display: flex;
     
@@ -44,7 +76,9 @@ li {
 body {
     background-color: white;
 }
-
+h2 {
+    color: #233e37;
+}
 header {
     position: fixed;
     top: 0;
@@ -126,7 +160,7 @@ nav {
     position: absolute;
     width: 50%;
     top: 4rem;
-    left: 47%;
+    left: 43%;
     background-color: #fff;
     display: flex;
     justify-content: center;
@@ -190,7 +224,7 @@ nav {
     transition: all 0.3s ease;
 }
 
-.megamenu__link a:hover {
+a:hover {
     color: #b78d41;
 }
 
@@ -211,6 +245,55 @@ nav {
     transform: rotate(180deg);
     transform: all 0.3s ease;
 }
+
+/* Menú desplegable común */
+.dropdown-content {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    background-color: #FFF;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    right: 0; /* Alinea el menú a la derecha del icono */
+    justify-content: center;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 23px 23px -21px rgba(0, 0, 0, 0.25);
+    transition: visibility 0.3s ease, opacity 0.3s ease;
+}
+
+/* Mostrar el menú con animación */
+.profile-icon:hover .dropdown-content {
+    visibility: visible;
+    opacity: 1;
+}
+
+.dropdown-content a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+
+/* Estilo del contenedor de la imagen de perfil */
+.profile-icon {
+    position: relative;
+    display: inline-block;
+}
+
+/* Estilos para el ícono de perfil */
+.profile-icon img {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Estilos adicionales para el menú de usuario */
+.user-menu .dropdown-content {
+    min-width: 120px; /* Puedes ajustar el tamaño aquí si lo deseas */
+}
+
 
 .buttons {
     display: flex;
@@ -314,6 +397,9 @@ nav {
     font-size: 4.5rem; /* Ajusta el tamaño del texto */
     text-align: center; /* Centra el texto */
 }
+
+
+
 
 .spacer {
     aspect-ratio: 960/100;
@@ -480,23 +566,24 @@ iframe {
     color: #fff; /* Color del texto de la dirección */
 }
 
-
 .mensaje-flotante {
+    display: none; /* Oculta el mensaje hasta que se active */
     position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 50%; /* Centrado vertical */
+    left: 50%; /* Centrado horizontal */
+    transform: translate(-50%, -50%); /* Centrado exacto */
     background-color: #233e37; /* Verde */
     color: white;
     padding: 15px 20px;
     border: 0.3rem solid #b78d41;
     border-radius: 8px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 1.5rem;
+    font-weight: 300;
     z-index: 1000;
     text-align: center;
-    animation: fadeOut 4s ease-in-out forwards;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
 }
 
 @keyframes fadeOut {
@@ -504,9 +591,6 @@ iframe {
     70% { opacity: 1; }
     100% { opacity: 0; display: none; }
 }
-
-
-
 @media screen and (max-width: 1000px) {
     .megamenu {
         justify-content: start;
@@ -570,6 +654,30 @@ iframe {
     .show__menu {
         left: 50%;
     }
+
+    .profile-icon {
+        position: relative;
+    }
+
+    .profile-icon .dropdown-content {
+        position: absolute;
+        right: 0; /* Alinea el menú desplegable a la derecha */
+        transform: translateX(100%);
+    }
+    
+    /* Para asegurar que el contenido no se corte */
+    .profile-icon img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .dropdown-content {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: none;
+    }
     
     .contact__us {
         grid-template-columns: 1fr;
@@ -611,6 +719,7 @@ iframe {
         visibility: visible;
         opacity: 1;
     }
+    
 }
 
 @media screen and (max-width: 760px) {
