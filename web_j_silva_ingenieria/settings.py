@@ -1,57 +1,18 @@
-"""
-Configuración de Django para el proyecto web_j_silva_ingenieria.
-
-Generado por 'django-admin startproject' usando Django 5.1.6.
-
-Para más información sobre este archivo, consulta:
-https://docs.djangoproject.com/en/5.1/topics/settings/
-
-Para la lista completa de configuraciones y sus valores, consulta:
-https://docs.djangoproject.com/en/5.1/ref/settings/
-"""
 from django.contrib.messages import constants as message_constants
 from pathlib import Path
 import os
-from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Cargar las variables del archivo .env
-load_dotenv(os.path.join(BASE_DIR, '.env'))
-
-
-
 # Configuración rápida para el desarrollo; NO es adecuada para producción
 # ADVERTENCIA: Mantén la clave secreta usada en producción en secreto.
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-b*4%%5vjyf@948=bap_s9%kka9r^82lhr+x*1v9_6ax(8l0td^')
+SECRET_KEY = 'django-insecure-b*4%%5vjyf@948=bap_s9%kka9r^82lhr+x*1v9_6ax(8l0td^'
 
 # ADVERTENCIA: No actives debug en producción
 DEBUG = False
+
 # Hosts permitidos en la aplicación
-default_hosts = ['127.0.0.1', 'localhost']
-env_hosts = os.getenv('ALLOWED_HOSTS', '').split(',')
-
-
-
-
-
-
-
-# Hosts permitidos por defecto (desarrollo)
-default_hosts = ['localhost', '127.0.0.1']
-
-# Hosts definidos en variables de entorno (producción)
-env_hosts = os.getenv('ALLOWED_HOSTS', '').split(',')
-
-# Combinar ambas listas y eliminar hosts vacíos
 ALLOWED_HOSTS = ['*']
-
-
-
-
-
-
-
 
 # Definición de aplicaciones instaladas
 INSTALLED_APPS = [
@@ -104,11 +65,11 @@ WSGI_APPLICATION = 'web_j_silva_ingenieria.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'j_silva_base_de_datos'),
-        'USER': os.getenv('DB_USER', 'jsilva_admin_base'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'adminjsilva'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'NAME': 'j_silva_base_de_datos',  # Nombre de la base de datos
+        'USER': 'jsilva_admin_base',      # Usuario de la base de datos
+        'PASSWORD': 'adminjsilva',        # Contraseña del usuario
+        'HOST': 'localhost',              # Host de la base de datos
+        'PORT': '5432',                   # Puerto de la base de datos
     }
 }
 
@@ -160,20 +121,20 @@ EMAIL_ADMIN = 'vargasvillanuevacarlosalberto@gmail.com'
 
 # Modelo de usuario personalizado
 AUTH_USER_MODEL = 'contacto.CustomUser'
-print(EMAIL_HOST_USER)
-print(EMAIL_HOST_PASSWORD)
+
 # Configuración de login y redirección
 LOGIN_URL = '/login/'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
 # Configuraciones de seguridad para producción
 SECURE_HSTS_SECONDS = 3600
-SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'False') == 'True'
-SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', 'False') == 'True'
-CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', 'False') == 'True'
+SECURE_SSL_REDIRECT = False
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 # Tipo de campo de clave primaria por defecto
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 MESSAGE_TAGS = {
     message_constants.DEBUG: 'debug',
     message_constants.INFO: 'info',
@@ -181,5 +142,3 @@ MESSAGE_TAGS = {
     message_constants.WARNING: 'warning',
     message_constants.ERROR: 'error',
 }
-
-
