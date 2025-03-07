@@ -44,7 +44,7 @@ default_hosts = ['localhost', '127.0.0.1']
 env_hosts = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 # Combinar ambas listas y eliminar hosts vacíos
-ALLOWED_HOSTS = default_hosts + [host for host in env_hosts if host]
+ALLOWED_HOSTS = ['web-j-silva.onrender.com']
 
 
 
