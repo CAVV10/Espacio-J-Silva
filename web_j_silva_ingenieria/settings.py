@@ -1,6 +1,8 @@
 from django.contrib.messages import constants as message_constants
 from pathlib import Path
 import dj_database_url  # Importa la librería
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
 
 import os
 
@@ -63,9 +65,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'web_j_silva_ingenieria.wsgi.application'
 
 # Configuración de la base de datos
-DATABASES = {
-    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
-}
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(default=DATABASE_URL)
+    }
+else:
+    # Configuración local sin .env
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'mi_db',
+            'USER': 'admin',
+            'PASSWORD': '1234',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
+    }
+
 
 # Validación de contraseñas
 AUTH_PASSWORD_VALIDATORS = [
