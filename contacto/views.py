@@ -8,13 +8,17 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.db import IntegrityError, transaction
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+import logging
+logger = logging.getLogger(__name__)
+
+import traceback
 
 
 
@@ -79,29 +83,53 @@ def panel_usuario_view(request):
 # Función iniciar sesión
 def login_view(request):
     if request.method == 'POST':
-        email = request.POST.get('email', '').lower()  # Convertir a minúsculas
+        email = request.POST.get('email', '').lower()
         password = request.POST.get('password', '')
 
-        # Mensaje de depuración
         print(f"Intentando iniciar sesión con email: {email} y contraseña: {password}")
 
-        user = authenticate(request, username=email, password=password)
+        try:
+            user = authenticate(request, email=email, password=password)
 
-        if user is not None:
-            login(request, user)
-            return JsonResponse({
-                'success': True,
-                'message': 'Inicio de sesión exitoso.',
-                'redirect_url': reverse('inicio')  # Aquí devolvemos la URL de redirección
-            })
-        else:
-            return JsonResponse({
-                'success': False,
-                'message': 'Correo o contraseña incorrectos.'
-            })
+            if user is not None:
+                login(request, user)
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Inicio de sesión exitoso.',
+                    'redirect_url': reverse('inicio')
+                })
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Correo o contraseña incorrectos.'
+                })
+        except Exception as e:
+            import traceback
+            error_msg = traceback.format_exc()
+            print("🚨 Error en login_view:")
+            print(error_msg)
+            with open("/tmp/error_login.txt", "w") as f:
+                    f.write(error_msg)
 
-    # Si la solicitud es GET, renderizamos la plantilla de inicio de sesión
+            return JsonResponse({'success': False, 'message': 'Error interno del servidor.'})
+
+
+
     return render(request, 'contacto/login.html')
+
+
+
+
+def ver_error_login(request):
+    if os.path.exists("/tmp/error_login.txt"):
+        with open("/tmp/error_login.txt", "r") as f:
+            contenido = f.read()
+        return HttpResponse(f"<pre>{contenido}</pre>")
+    else:
+        return HttpResponse("No hay errores guardados.")
+
+
+
 
 # Función cerrar sesión
 def logout_view(request):
@@ -129,11 +157,10 @@ def register_view(request):
         try:
             # Registrar usuario
             user = User.objects.create_user(
-                username=email,  # Asegúrate de que el nombre de usuario sea el correo
+                email=email,  # Asegúrate de que el nombre de usuario sea el correo
                 password=password1,
                 first_name=first_name,
                 last_name=last_name,
-                email=email
             )
             user.save()
 

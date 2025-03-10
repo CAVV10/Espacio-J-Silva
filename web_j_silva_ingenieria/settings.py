@@ -1,5 +1,7 @@
 from django.contrib.messages import constants as message_constants
 from pathlib import Path
+import dj_database_url  # Importa la librería
+
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,8 +14,7 @@ SECRET_KEY = 'django-insecure-b*4%%5vjyf@948=bap_s9%kka9r^82lhr+x*1v9_6ax(8l0td^
 DEBUG = False
 
 # Hosts permitidos en la aplicación
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = ['web-j-silva.onrender.com']
 # Definición de aplicaciones instaladas
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -63,14 +64,7 @@ WSGI_APPLICATION = 'web_j_silva_ingenieria.wsgi.application'
 
 # Configuración de la base de datos
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'j_silva_base_de_datos',  # Nombre de la base de datos
-        'USER': 'jsilva_admin_base',      # Usuario de la base de datos
-        'PASSWORD': 'adminjsilva',        # Contraseña del usuario
-        'HOST': 'localhost',              # Host de la base de datos
-        'PORT': '5432',                   # Puerto de la base de datos
-    }
+    'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
 }
 
 # Validación de contraseñas
@@ -118,6 +112,10 @@ EMAIL_HOST_USER = 'vargasvillanuevacarlosalberto@gmail.com'
 EMAIL_HOST_PASSWORD = 'mmjy tlrh qouc iupj'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = 'vargasvillanuevacarlosalberto@gmail.com'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 # Modelo de usuario personalizado
 AUTH_USER_MODEL = 'contacto.CustomUser'
