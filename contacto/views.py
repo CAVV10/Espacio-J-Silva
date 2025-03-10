@@ -159,7 +159,7 @@ def register_view(request):
         try:
             # Registrar usuario
             user = User.objects.create_user(
-                username=email
+                username=email,
                 email=email,  # Asegúrate de que el nombre de usuario sea el correo
                 password=password1,
                 first_name=first_name,
