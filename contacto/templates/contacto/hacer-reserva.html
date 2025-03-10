@@ -201,32 +201,32 @@
 <div class="spacer__subtitles layer-3">
     <div class="overlay__text__subtitles">Compra</div>
 </div>
-
-<!-- Sección de la tienda -->
+<!-- Sección de la tienda agrupada por tipo -->
 <div class="container-tienda">
-    <div class="productos-grid">
-        {% for producto in productos %}
-            {% if producto.activo %}
-            <div class="producto" data-id="{{ producto.id }}" data-tipo="{{ producto.tipo }}">
-                {% if producto.imagen %}
-                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
-                {% else %}
-                    <img src="{% static 'img/'|add:producto.tipo|add:'.png' %}" alt="{{ producto.nombre }}">
+    {% regroup productos by tipo as productos_por_tipo %}
+
+    {% for grupo in productos_por_tipo %}
+        <h3 class="titulo-tipo-producto">{{ grupo.grouper|title }}</h3>
+        <div class="productos-grid">
+            {% for producto in grupo.list %}
+                {% if producto.activo %}
+                    <div class="producto" data-id="{{ producto.id }}" data-tipo="{{ producto.tipo }}">
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                        {% else %}
+                            <img src="{% static 'img/'|add:producto.tipo|add:'.png' %}" alt="{{ producto.nombre }}">
+                        {% endif %}
+                        <h4>{{ producto.nombre }}</h4>
+                        <p>{{ producto.descripcion }}</p>
+                        <button class="btn-comprar button" data-producto-id="{{ producto.id }}">Comprar</button>
+                    </div>
                 {% endif %}
-                <h3>{{ producto.nombre }}</h3>
-                <p>{{ producto.descripcion }}</p>
-                <!-- <p class="precio">${{ producto.precio_base|floatformat:0 }} COP</p> -->
-                <button class="btn-comprar button" data-producto-id="{{ producto.id }}">Comprar</button>
-            </div>
-            {% endif %}
-        {% empty %}
-            <p>No hay productos disponibles en este momento.</p>
-        {% endfor %}
-    </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
 </div>
 
-<!-- Ventanas modales dinámicas -->
-<!-- Modificar la parte del modal -->
+<!-- Ventanas modales dinámicas por producto -->
 {% for producto in productos %}
     <div id="modal-{{ producto.tipo }}-{{ producto.id }}" class="modal">
         <div class="modal-content">
@@ -236,36 +236,37 @@
                 {% csrf_token %}
                 <input type="hidden" name="producto_id" value="{{ producto.id }}">
                 <p class="precio-base" data-precio="{{ producto.precio_base }}">Precio base: ${{ producto.precio_base|floatformat:0 }} COP</p>
-                
+
                 {% for opcion in producto.opciones.all %}
-                <div class="form-group">
-                    <label for="{{ opcion.nombre }}-{{ producto.id }}">{{ opcion.nombre }}:</label>
-                    <select 
-                        id="{{ opcion.nombre }}-{{ producto.id }}" 
-                        name="{{ opcion.nombre }}" 
-                        data-required="true"
-                        class="select-opcion">
-                        <option value="">Seleccione {{ opcion.nombre }}</option>
-                        {% for item in opcion.opciones %}
-                            <option value="{{ item.valor }}" data-precio="{{ item.precio }}">
-                                {{ item.valor }} - ${{ item.precio|floatformat:0 }} COP
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="{{ opcion.nombre }}-{{ producto.id }}">{{ opcion.nombre }}:</label>
+                        <select 
+                            id="{{ opcion.nombre }}-{{ producto.id }}" 
+                            name="{{ opcion.nombre }}" 
+                            data-required="true"
+                            class="select-opcion">
+                            <option value="">Seleccione {{ opcion.nombre }}</option>
+                            {% for item in opcion.opciones %}
+                                <option value="{{ item.valor }}" data-precio="{{ item.precio }}">
+                                    {{ item.valor }} - ${{ item.precio|floatformat:0 }} COP
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 {% endfor %}
-            
+
                 <div class="form-group">
                     <label for="cantidad-{{ producto.id }}">Cantidad:</label>
                     <input type="number" id="cantidad-{{ producto.id }}" name="cantidad" min="1" value="1">
                 </div>
-            
+
                 <p class="precio-total">Total: $<span>{{ producto.precio_base }}</span> COP</p>
                 <button type="submit" class="btn-agregar-carrito button">Agregar al carrito</button>
             </form>
         </div>
     </div>
 {% endfor %}
+
 <script src="{% static 'js/productos.js' %}"></script>
 
 <script src="{% static 'js/reservas.js' %}"></script>
