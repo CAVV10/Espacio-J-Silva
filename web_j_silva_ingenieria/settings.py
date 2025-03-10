@@ -13,7 +13,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "clave-secreta-desarrollo")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 # Allowed hosts
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+ALLOWED_HOSTS = ['web-j-silva.onrender.com', 'localhost', '127.0.0.1']
 
 # Installed apps
 INSTALLED_APPS = [
