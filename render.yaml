@@ -14,3 +14,5 @@ services:
         value: "django-insecure-b*4%%5vjyf@948=bap_s9%kka9r^82lhr+x*1v9_6ax(8l0td^"
       - key: ALLOWED_HOSTS
         value: "web-j-silva.onrender.com"
+      - key: DATABASE_URL
+        value: "postgresql://jsilva_admin_base:WgMlLFA2knlzefWdiqFziFutjyLzlTXC@dpg-cv7dstt2ng1s7384pfm0-a/j_silva_base_de_datos"

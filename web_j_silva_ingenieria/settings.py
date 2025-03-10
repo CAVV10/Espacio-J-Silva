@@ -1,23 +1,21 @@
-from django.contrib.messages import constants as message_constants
-from pathlib import Path
-import dj_database_url  # Importa la librería
-DATABASE_URL = os.environ.get("DATABASE_URL")
-
-
 import os
+from pathlib import Path
+from django.contrib.messages import constants as message_constants
+import dj_database_url
 
+# BASE_DIR
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Configuración rápida para el desarrollo; NO es adecuada para producción
-# ADVERTENCIA: Mantén la clave secreta usada en producción en secreto.
-SECRET_KEY = 'django-insecure-b*4%%5vjyf@948=bap_s9%kka9r^82lhr+x*1v9_6ax(8l0td^'
+# Secret key
+SECRET_KEY = os.environ.get("SECRET_KEY", "clave-secreta-desarrollo")
 
-# ADVERTENCIA: No actives debug en producción
-DEBUG = False
+# Debug
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-# Hosts permitidos en la aplicación
-ALLOWED_HOSTS = ['web-j-silva.onrender.com']
-# Definición de aplicaciones instaladas
+# Allowed hosts
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+
+# Installed apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -26,10 +24,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.humanize',
     'django.contrib.staticfiles',
-    'contacto',  # Tu app personalizada
+    'contacto',
 ]
 
-# Definición del middleware
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -41,10 +39,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Archivo principal de rutas
+# URL config
 ROOT_URLCONF = 'web_j_silva_ingenieria.urls'
 
-# Configuración de las plantillas
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -61,29 +59,29 @@ TEMPLATES = [
     },
 ]
 
-# Configuración del WSGI
+# WSGI
 WSGI_APPLICATION = 'web_j_silva_ingenieria.wsgi.application'
 
-# Configuración de la base de datos
+# Database
+DATABASE_URL = os.environ.get("DATABASE_URL")
 if DATABASE_URL:
     DATABASES = {
-        'default': dj_database_url.config(default=DATABASE_URL)
+        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
     }
 else:
-    # Configuración local sin .env
+    # Configuración local (sin .env)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'mi_db',
-            'USER': 'admin',
-            'PASSWORD': '1234',
-            'HOST': 'localhost',
-            'PORT': '5432',
+            'NAME': os.environ.get("DB_NAME", "mi_db"),
+            'USER': os.environ.get("DB_USER", "admin"),
+            'PASSWORD': os.environ.get("DB_PASSWORD", "1234"),
+            'HOST': os.environ.get("DB_HOST", "localhost"),
+            'PORT': os.environ.get("DB_PORT", "5432"),
         }
     }
 
-
-# Validación de contraseñas
+# Password validators
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -99,56 +97,52 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internacionalización
+# Localization
 LANGUAGE_CODE = 'es'
-
-# Zona horaria para Colombia
-USE_TZ = True
 TIME_ZONE = 'America/Bogota'
+USE_I18N = True
+USE_TZ = True
 
-# Archivos estáticos (CSS, JavaScript, Imágenes)
+# Static files
 STATIC_URL = '/static/'
-
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'contacto', 'static', 'contacto'),
 ]
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Archivos de medios (para subir imágenes y otros archivos)
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Configuración del correo electrónico
+# Email config
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'vargasvillanuevacarlosalberto@gmail.com'
-EMAIL_HOST_PASSWORD = 'mmjy tlrh qouc iupj'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-EMAIL_ADMIN = 'vargasvillanuevacarlosalberto@gmail.com'
+EMAIL_ADMIN = os.environ.get('EMAIL_ADMIN', '')
 
+# Custom user
+AUTH_USER_MODEL = 'contacto.CustomUser'
 AUTHENTICATION_BACKENDS = [
     'contacto.backends.EmailBackend',
 ]
 
-# Modelo de usuario personalizado
-AUTH_USER_MODEL = 'contacto.CustomUser'
-
-# Configuración de login y redirección
+# Login
 LOGIN_URL = '/login/'
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 
-# Configuraciones de seguridad para producción
-SECURE_HSTS_SECONDS = 3600
-SECURE_SSL_REDIRECT = False
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
+# Security settings
+SECURE_SSL_REDIRECT = os.environ.get("SECURE_SSL_REDIRECT", "False") == "True"
+SESSION_COOKIE_SECURE = os.environ.get("SESSION_COOKIE_SECURE", "False") == "True"
+CSRF_COOKIE_SECURE = os.environ.get("CSRF_COOKIE_SECURE", "False") == "True"
 
-# Tipo de campo de clave primaria por defecto
+# Auto field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Message tags
 MESSAGE_TAGS = {
     message_constants.DEBUG: 'debug',
     message_constants.INFO: 'info',
