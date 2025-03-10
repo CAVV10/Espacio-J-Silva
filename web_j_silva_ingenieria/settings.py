@@ -114,7 +114,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = 'vargasvillanuevacarlosalberto@gmail.com'
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
+    'contacto.backends.EmailBackend',
 ]
 
 # Modelo de usuario personalizado
