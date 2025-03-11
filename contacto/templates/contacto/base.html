@@ -115,6 +115,7 @@
                 </li>
                 {% if request.user.is_authenticated %}
                 <a href="{% url 'carrito' %}" class="carrito-icono" id="carrito-link">
+                    <img src="{% static 'contacto/img/cart.png%}" alt="">
                     🛒
                     <span id="carrito-contador" class="contador-carrito">{{ request.user|carrito_cantidad }}</span>
                 </a>
