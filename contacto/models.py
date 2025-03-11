@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.models import User  # Importa el modelo de usuario
-
+from cloudinary.models import CloudinaryField
 from django.conf import settings  # Para usar settings.AUTH_USER_MODEL
 
 
@@ -125,7 +125,7 @@ class Producto(models.Model):
     tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, default='general')
     descripcion = models.TextField()
     precio_base = models.DecimalField(max_digits=10, decimal_places=2)
-    imagen = models.ImageField(upload_to='productos/', null=True, blank=True)
+    imagen = CloudinaryField('image', blank=True, null=True)
     activo = models.BooleanField(default=True)
     tiene_opciones = models.BooleanField(default=False)
 
