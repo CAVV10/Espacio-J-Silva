@@ -15,6 +15,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from .forms import ProductoForm
+
 import os
 
 import logging
@@ -74,6 +76,19 @@ def crear_superusuario(request):
         user.is_staff = True
         user.save()
         return HttpResponse('El usuario ya existía. Se actualizó como superusuario 👍')
+
+
+def crear_producto(request):
+    if request.method == 'POST':
+        form = ProductoForm(request.POST, request.FILES)  # OJO: request.FILES es necesario para imágenes
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Producto creado con éxito.')
+            return redirect('lista_productos')  # Ajusta esto según tu proyecto
+    else:
+        form = ProductoForm()
+    
+    return render(request, 'crear_producto.html', {'form': form})
 
 
 
@@ -375,7 +390,7 @@ def obtener_eventos(request):
 def tienda_view(request):
     """Vista principal de la tienda"""
     productos = Producto.objects.filter(activo=True).prefetch_related('opciones')
-    return render(request, 'contacto/tienda.html', {'productos': productos})
+    return render(request, 'contacto/hacer_reserva.html', {'productos': productos})
 
 @login_required
 def agregar_al_carrito(request, producto_id):

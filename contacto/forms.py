@@ -143,6 +143,12 @@ class Plano3DForm(forms.Form):
 
 
 
+class ProductoForm(forms.ModelForm):
+    class Meta:
+        model = Producto
+        fields = ['nombre', 'descripcion', 'precio', 'imagen']
+
+
 # Formulario de Mensaje
 class MensajeForm(forms.ModelForm):
     class Meta:
