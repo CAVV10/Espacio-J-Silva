@@ -119,7 +119,6 @@ CLOUDINARY_STORAGE = {
 }
 
 
-
 # Static files
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
