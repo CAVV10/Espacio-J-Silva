@@ -416,7 +416,7 @@ def agregar_al_carrito(request, producto_id):
                 # Buscar el precio de la opción seleccionada
                 for opcion_item in opcion.opciones:
                     if opcion_item['valor'] == valor_seleccionado:
-                        precio_total += float(opcion_item.get('precio', 0))
+                        precio_total = float(opcion_item.get('precio', 0))
 
                         break
                 
