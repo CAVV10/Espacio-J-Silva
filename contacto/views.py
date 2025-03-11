@@ -390,7 +390,7 @@ def obtener_eventos(request):
 def tienda_view(request):
     """Vista principal de la tienda"""
     productos = Producto.objects.filter(activo=True).prefetch_related('opciones')
-    return render(request, 'contacto/hacer_reserva.html', {'productos': productos})
+    return render(request, 'contacto/tienda.html', {'productos': productos})
 
 @login_required
 def agregar_al_carrito(request, producto_id):
