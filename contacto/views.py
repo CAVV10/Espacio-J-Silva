@@ -54,6 +54,23 @@ User = get_user_model()
 
 
 
+
+def crear_superusuario():
+    User = get_user_model()
+    if not User.objects.filter(email='admin@admin.com').exists():
+        User.objects.create_superuser(
+            username='admin',
+            email='admin@admin.com',
+            password='admin123'
+        )
+        print("✅ Superusuario creado")
+    else:
+        print("⚠️ Ya existe un superusuario con ese email")
+
+crear_superusuario()
+
+
+
 # Vistas de las páginas principales
 def inicio(request):
     return render(request, 'contacto/index.html')
@@ -378,7 +395,8 @@ def agregar_al_carrito(request, producto_id):
                 # Buscar el precio de la opción seleccionada
                 for opcion_item in opcion.opciones:
                     if opcion_item['valor'] == valor_seleccionado:
-                        precio_total = float(opcion_item.get('precio', 0))
+                        precio_total += float(opcion_item.get('precio', 0))
+
                         break
                 
                 opciones[opcion.nombre] = {
