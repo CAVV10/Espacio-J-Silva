@@ -1,4 +1,6 @@
 {% load static %}
+{% load carrito_extras %}
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -111,6 +113,10 @@
                         <span>+57 321 3249181</span>
                     </a>
                 </li>
+                <a href="{% url 'carrito' %}" class="carrito-icono" id="carrito-link">
+                    🛒
+                    <span id="carrito-contador" class="contador-carrito">{{ request.user|carrito_cantidad }}</span>
+                </a>
                 <li class="nav__item">
                     {% if user.is_authenticated %}
                         <!-- Si el usuario está autenticado, mostrar la imagen de perfil -->

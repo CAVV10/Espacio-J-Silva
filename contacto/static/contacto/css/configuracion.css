@@ -591,6 +591,31 @@ iframe {
     70% { opacity: 1; }
     100% { opacity: 0; display: none; }
 }
+
+
+.carrito-icono {
+    position: relative;
+    display: inline-block;
+    margin-left: 15px;
+    font-size: 20px;
+    text-decoration: none;
+    color: black;
+}
+
+.contador-carrito {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: red;
+    color: white;
+    font-size: 11px;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
+
+
+
+
 @media screen and (max-width: 1000px) {
     .megamenu {
         justify-content: start;
