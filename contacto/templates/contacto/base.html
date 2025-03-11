@@ -113,10 +113,12 @@
                         <span>+57 321 3249181</span>
                     </a>
                 </li>
+                {% if request.user.is_authenticated %}
                 <a href="{% url 'carrito' %}" class="carrito-icono" id="carrito-link">
                     🛒
                     <span id="carrito-contador" class="contador-carrito">{{ request.user|carrito_cantidad }}</span>
                 </a>
+              {% endif %}
                 <li class="nav__item">
                     {% if user.is_authenticated %}
                         <!-- Si el usuario está autenticado, mostrar la imagen de perfil -->
