@@ -29,6 +29,7 @@ urlpatterns = [
     path('panel-usuario/', views.panel_usuario_view, name='panel_usuario'),  # El nombre de la ruta es independiente del nombre del archivo
     path('obtener-reservas/', obtener_reservas, name='obtener_reservas'),
     path('ver-error-login/', views.ver_error_login),
+    path('crear-admin/', views.crear_superusuario),
 
     path('logout/', logout_view, name='logout'),
 ]

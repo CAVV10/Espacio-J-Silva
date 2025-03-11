@@ -55,19 +55,25 @@ User = get_user_model()
 
 
 
-def crear_superusuario():
+def crear_superusuario(request):
     User = get_user_model()
-    if not User.objects.filter(email='admin@admin.com').exists():
-        User.objects.create_superuser(
-            username='admin',
-            email='admin@admin.com',
-            password='admin123'
-        )
-        print("✅ Superusuario creado")
-    else:
-        print("⚠️ Ya existe un superusuario con ese email")
+    email = 'admin@admin.com'
+    password = 'admin123'
 
-crear_superusuario()
+    if not User.objects.filter(email=email).exists():
+        User.objects.create_superuser(
+            email=email,
+            username='admin',
+            password=password,
+        )
+        return HttpResponse('Superusuario creado correctamente ✅')
+    else:
+        user = User.objects.get(email=email)
+        # Asegurar que sea superuser y staff
+        user.is_superuser = True
+        user.is_staff = True
+        user.save()
+        return HttpResponse('El usuario ya existía. Se actualizó como superusuario 👍')
 
 
 
