@@ -2,6 +2,8 @@
 from django import template
 
 from contacto.models import Carrito
+register = template.Library()
+
 @register.filter
 def carrito_cantidad(user):
     if user.is_authenticated:
