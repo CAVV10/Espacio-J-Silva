@@ -1,0 +1,24 @@
+
+{% extends 'contacto/base.html' %}
+
+{% block content %}
+<h2>Historial de Compras y Reservas</h2>
+
+<h3>Compras</h3>
+<ul>
+    {% for compra in compras %}
+    <li>
+        Compra ID: {{ compra.id }} - Fecha: {{ compra.fecha_compra }} - Total: ${{ compra.total }}
+    </li>
+    {% endfor %}
+</ul>
+
+<h3>Reservas</h3>
+<ul>
+    {% for reserva in reservas %}
+    <li>
+        Reserva ID: {{ reserva.id }} - Fecha: {{ reserva.fecha_reserva }} - Servicio: {{ reserva.servicio }}
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -97,7 +97,23 @@ class Reserva(models.Model):
         super(Reserva, self).save(*args, **kwargs)
 
 
+class Compra(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    fecha_compra = models.DateTimeField(auto_now_add=True)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    # Otros campos relevantes para la compra
 
+    def __str__(self):
+        return f"Compra {self.id} de {self.usuario.username}"
+
+class Reserva(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    fecha_reserva = models.DateTimeField()
+    servicio = models.CharField(max_length=100)
+    # Otros campos relevantes para la reserva
+
+    def __str__(self):
+        return f"Reserva {self.id} de {self.usuario.username}"
 
 
 class OpcionProducto(models.Model):

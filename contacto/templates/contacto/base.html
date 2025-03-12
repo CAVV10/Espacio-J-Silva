@@ -10,6 +10,7 @@
 
     <!-- Estilos CSS -->
     <link rel="stylesheet" href="{% static 'contacto/css/index-styles.css' %}">
+    <link rel="stylesheet" href="{% static 'contacto/css/historial.css' %}">
     <link rel="stylesheet" href="{% static 'contacto/css/quienes-somos.css' %}">
     <link rel="stylesheet" href="{% static 'contacto/css/servicios.css' %}">
     <link rel="stylesheet" href="{% static 'contacto/css/reserva.css' %}">
@@ -135,6 +136,8 @@
                             <div class="dropdown-content">
                                 <a>{{ user.email }}</a>
                                 <a href="{% url 'hacer_reserva' %}">Diligenciar</a>
+                                <a href="{% url 'historial_pedidos' %}">Historial de Pedidos</a>
+
                                 <a href="{% url 'logout' %}">Cerrar sesión</a>
                             </div>
                         </div>
