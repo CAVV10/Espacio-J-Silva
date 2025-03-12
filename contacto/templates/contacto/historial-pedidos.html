@@ -1,4 +1,3 @@
-
 {% extends 'contacto/base.html' %}
 
 {% block content %}
@@ -10,6 +9,8 @@
     <li>
         Compra ID: {{ compra.id }} - Fecha: {{ compra.fecha_compra }} - Total: ${{ compra.total }}
     </li>
+    {% empty %}
+    <li>No hay compras registradas.</li>
     {% endfor %}
 </ul>
 
@@ -19,6 +20,8 @@
     <li>
         Reserva ID: {{ reserva.id }} - Fecha: {{ reserva.fecha_reserva }} - Servicio: {{ reserva.servicio }}
     </li>
+    {% empty %}
+    <li>No hay reservas registradas.</li>
     {% endfor %}
 </ul>
 {% endblock %}

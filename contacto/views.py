@@ -16,7 +16,7 @@ from django.utils import timezone
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .forms import ProductoForm
-from .models import Compra, Reserva
+from .models import HistorialCompra, HistorialReserva
 
 
 import os
@@ -569,9 +569,10 @@ def actualizar_cantidad(request, item_id):
 
 @login_required
 def historial_compras_reservas(request):
-    compras = Compra.objects.filter(usuario=request.user)
-    reservas = Reserva.objects.filter(usuario=request.user)
+    compras = HistorialCompra.objects.filter(usuario=request.user)
+    reservas = HistorialReserva.objects.filter(usuario=request.user)
     return render(request, 'contacto/historial-pedidos.html', {'compras': compras, 'reservas': reservas})
+
 
 
 # Función para manejar el formulario de contacto sin plantilla específica
