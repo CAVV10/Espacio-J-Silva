@@ -30,6 +30,6 @@ urlpatterns = [
     path('obtener-reservas/', obtener_reservas, name='obtener_reservas'),
     path('ver-error-login/', views.ver_error_login),
     path('crear-admin/', views.crear_superusuario),
-    path('historial-pedidos/', views.historial_pedidos, name='historial_pedidos'),
+    path('historial-pedidos/', views.historial_pedidos, views.historial_compras_reservas, name='historial_pedidos'),
     path('logout/', logout_view, name='logout'),
 ]
