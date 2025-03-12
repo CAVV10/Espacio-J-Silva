@@ -575,6 +575,7 @@ def historial_compras_reservas(request):
 
 
 
+
 # Función para manejar el formulario de contacto sin plantilla específica
 def enviar_mensaje(request):
     if request.method == 'POST':
