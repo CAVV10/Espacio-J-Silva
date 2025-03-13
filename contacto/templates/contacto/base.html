@@ -8,6 +8,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}J Silva Ingeniería{% endblock %}</title>
 
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#233e37',
+                        secondary: '#b78d41'
+                    }
+                }
+            }
+        }
+    </script>
+
     <!-- Estilos CSS -->
     <link rel="stylesheet" href="{% static 'contacto/css/index-styles.css' %}">
     <link rel="stylesheet" href="{% static 'contacto/css/historial.css' %}">
@@ -32,7 +48,7 @@
         </ul>
     {% endif %}
 
-    <!-- 🟢 HEADER - Menú de navegación -->
+    <!-- HEADER - Menú de navegación -->
     <header>
         <nav class="navbar">
             <div class="logo">
@@ -156,7 +172,7 @@
 
     </header>
 
-    <!-- 🔵 Contenido dinámico -->
+    <!-- Contenido dinámico -->
     <main>
 
         
@@ -227,9 +243,6 @@
     <script src="{% static 'contacto/js/carga-bloqueo.js' %}"></script>
     
 
-
-</body>
-</html>
 
 </body>
 </html>

@@ -6,66 +6,137 @@
 {% block title %}Carrito de Compras - J Silva Ingeniería{% endblock %}
 
 {% block content %}
-<div class="spacer__titles layer-2">
-    <div class="overlay__text">Carrito</div>
-</div>
-
-<div class="container-carrito">
-    {% if items %}
-        <ul class="lista-carrito">
-            {% for item in items %}
-                <li class="item-carrito">
-                    <div class="item-info">
-                        <h3>{{ item|formato_producto_nombre }}</h3>
-
-                        <div class="cantidad-control">
-                            <button class="btn-cantidad decrease" data-item-id="{{ item.id }}">-</button>
-                            <span class="cantidad">{{ item.cantidad }}</span>
-                            <button class="btn-cantidad increase" data-item-id="{{ item.id }}">+</button>
-                        </div>
-                        <p class="precio-unitario">Precio unitario: ${{ item.precio_unitario|floatformat:0|intcomma }} COP</p>
-                        <p class="subtotal">Subtotal: {{ item.subtotal_formateado }}</p>  <!-- Usar el valor formateado -->
-                        {% if item.opciones %}
-                        {% endif %}
-                    </div>
-                    <button class="btn-eliminar" data-item-id="{{ item.id }}">Eliminar</button>
-                </li>
-            {% endfor %}
-        </ul>
-        
-        <div class="total-carrito">
-            <h3>Total: {{ total_formateado }}</h3>  <!-- Usar el valor formateado -->
-            <button id="btn-pagar" class="button">Proceder al pago</button>
+<section class="min-h-screen bg-gray-50 dark:bg-[#0A2025] py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white text-center mb-12">
+      Carrito
+    </h1>
+    
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Cart Items -->
+      <div class="flex-grow bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead>
+              <tr class="border-b border-gray-200 dark:border-gray-700">
+                <th class="text-left py-4 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">Producto</th>
+                <th class="py-4 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">Precio</th>
+                <th class="py-4 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">Cantidad</th>
+                <th class="py-4 px-4 text-sm font-medium text-gray-600 dark:text-gray-400">Subtotal</th>
+                <th class="w-16"></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+              {% if items %}
+                {% for item in items %}
+                  <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition duration-150">
+                    <td class="py-4 px-4">
+                      <div class="flex items-center space-x-4">
+                        <img src="{% static 'img/producto.jpg' %}" alt="Producto" class="w-20 h-20 rounded-lg object-cover"/>
+                        <span class="font-medium text-gray-900 dark:text-white">{{ item|formato_producto_nombre }}</span>
+                      </div>
+                    </td>
+                    <td class="py-4 px-4 text-center">
+                      <span class="text-gray-900 dark:text-white font-medium">${{ item.precio_unitario|floatformat:0|intcomma }} COP</span>
+                    </td>
+                    <td class="py-4 px-4">
+                      <div class="flex items-center justify-center space-x-3">
+                        <button class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-600 transition" data-item-id="{{ item.id }}">
+                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2.33398 7H11.6673" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                          </svg>
+                        </button>
+                        <span class="w-12 text-center font-medium text-gray-900 dark:text-white">{{ item.cantidad }}</span>
+                        <button class="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-600 transition" data-item-id="{{ item.id }}">
+                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 2.33331V11.6666M2.33333 7H11.6667" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                    <td class="py-4 px-4 text-center">
+                      <span class="text-gray-900 dark:text-white font-medium">{{ item.subtotal_formateado }}</span>
+                    </td>
+                    <td class="py-4 px-4">
+                      <button class="text-gray-400 hover:text-red-500 transition" data-item-id="{{ item.id }}">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                          <path d="M6 6l12 12m-12 0l12-12" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="5" class="py-4 px-4 text-center text-gray-600 dark:text-gray-400">Tu carrito está vacío</td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
         </div>
-    {% else %}
-        <p>Tu carrito está vacío</p>
-        <a href="{% url 'hacer_reserva' %}" class="btn-continuar-comprando button">Continuar comprando</a>
-    {% endif %}
-</div>
 
-<!-- Modal de Pago Nequi -->
-<div id="modal-nequi" class="modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Pagar con Nequi</h2>
-        <p>Por favor, escanea el siguiente código QR para realizar el pago:</p>
-        <p>Total a pagar: <strong id="total-pagar">$0</strong> COP</p>
-        <p>Número de Nequi: <strong>3174294224</strong></p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <button class="px-6 py-3 bg-gray-100 dark:bg-gray-700 rounded-full text-gray-700 dark:text-white font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+            Continuar comprando
+          </button>
+          <button class="px-6 py-3 bg-gray-100 dark:bg-gray-700 rounded-full text-gray-700 dark:text-white font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition">
+            Actualizar carrito
+          </button>
+        </div>
+      </div>
 
-        <img src="{% static 'img/nequi_qr.jpeg' %}" alt="Código QR para pagar con Nequi" style="width: 300px; height: 300px;">
+      <!-- Cart Summary -->
+      <div class="w-full lg:w-96 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Resumen del carrito</h2>
+        
+        <div class="space-y-4">
+          <div class="flex justify-between items-center pb-4 border-b border-gray-200 dark:border-gray-700">
+            <span class="text-gray-600 dark:text-gray-400">Subtotal</span>
+            <span class="text-gray-900 dark:text-white font-medium">${{ total_formateado }}</span>
+          </div>
+          
+          <div class="flex justify-between items-center pb-4 border-b border-gray-200 dark:border-gray-700">
+            <span class="text-gray-600 dark:text-gray-400">Envío</span>
+            <span class="text-green-500 font-medium">Gratis</span>
+          </div>
+          
+          <div class="flex justify-between items-center pb-4">
+            <span class="text-gray-900 dark:text-white font-bold">Total</span>
+            <span class="text-gray-900 dark:text-white font-bold text-xl">${{ total_formateado }}</span>
+          </div>
+        </div>
 
-        <p>Instrucciones:</p>
-        <ol>
-            <li>Abre la app de Nequi en tu teléfono.</li>
-            <li>Selecciona la opción "Enviar" o "Pagar con QR".</li>
-            <li>Escanea el código QR que aparece arriba.</li>
-            <li>Ingresa el monto de <strong id="monto-pagar">$0</strong> COP.</li>
-            <li>Confirma el pago.</li>
-        </ol>
+        <button class="w-full mt-6 px-6 py-4 bg-green-600 hover:bg-green-700 rounded-full text-white font-medium transition" id="btn-pagar">
+          Proceder al pago
+        </button>
 
-        <button id="btn-confirmar-pago" class="button">He pagado</button>
+        <!-- Modal de Pago Nequi -->
+        <div id="modal-nequi" class="modal" style="display: none;">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Pagar con Nequi</h2>
+            <p>Por favor, escanea el siguiente código QR para realizar el pago:</p>
+            <p>Total a pagar: <strong id="total-pagar">$0</strong> COP</p>
+            <p>Número de Nequi: <strong>3174294224</strong></p>
+
+            <img src="{% static 'img/nequi_qr.jpeg' %}" alt="Código QR para pagar con Nequi" style="width: 300px; height: 300px;">
+
+            <p>Instrucciones:</p>
+            <ol>
+              <li>Abre la app de Nequi en tu teléfono.</li>
+              <li>Selecciona la opción "Enviar" o "Pagar con QR".</li>
+              <li>Escanea el código QR que aparece arriba.</li>
+              <li>Ingresa el monto de <strong id="monto-pagar">$0</strong> COP.</li>
+              <li>Confirma el pago.</li>
+            </ol>
+
+            <button id="btn-confirmar-pago" class="button">He pagado</button>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
+</section>
 
 <script src="{% static 'js/carrito.js' %}"></script>
 {% endblock %}

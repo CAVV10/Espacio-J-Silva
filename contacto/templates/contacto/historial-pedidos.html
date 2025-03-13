@@ -1,34 +1,43 @@
 {% extends 'contacto/base.html' %}
 {% load static %}
 
-{% block title %}Desinfección - J Silva Ingeniería{% endblock %}
+{% block title %}Historial de Compras y Reservas - J Silva Ingeniería{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'contacto/css/historial.css' %}">
 {% endblock %}
 
 {% block content %}
-<h2>Historial de Compras y Reservas</h2>
-
-<h3>Compras</h3>
-<ul>
-    {% for compra in compras %}
-    <li>
-        Compra ID: {{ compra.id }} - Fecha: {{ compra.fecha_compra }} - Total: ${{ compra.total }}
-    </li>
-    {% empty %}
-    <li>No hay compras registradas.</li>
-    {% endfor %}
-</ul>
-
-<h3>Reservas</h3>
-<ul>
-    {% for reserva in reservas %}
-    <li>
-        Reserva ID: {{ reserva.id }} - Fecha: {{ reserva.fecha_reserva }} - Servicio: {{ reserva.servicio }}
-    </li>
-    {% empty %}
-    <li>No hay reservas registradas.</li>
-    {% endfor %}
-</ul>
+<div class="spacer__titles layer-2">
+    <div class="overlay__text">Historial</div>
+</div>
+<div class="spacer__subtitles layer-3">
+    <div class="overlay__text__subtitles">Reservas y compras</div>
+</div>
+<div class="history-section">
+    <ul class="history-list">
+        {% for compra in compras %}
+        <li class="history-item">
+            <span class="item-label">Compra ID:</span> {{ compra.id }} - 
+            <span class="item-label">Fecha:</span> {{ compra.fecha_compra }} - 
+            <span class="item-label">Total:</span> ${{ compra.total }}
+        </li>
+        {% empty %}
+        <li class="history-item">No hay compras registradas.</li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="history-section">
+    <ul class="history-list">
+        {% for reserva in reservas %}
+        <li class="history-item">
+            <span class="item-label">Reserva ID:</span> {{ reserva.id }} - 
+            <span class="item-label">Fecha:</span> {{ reserva.fecha_reserva }} - 
+            <span class="item-label">Servicio:</span> {{ reserva.servicio }}
+        </li>
+        {% empty %}
+        <li class="history-item">No hay reservas registradas.</li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}

@@ -1,3 +1,4 @@
+/* Modal styles */
 .modal {
     display: none;
     position: fixed;
@@ -7,7 +8,6 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0,0,0,0.5);
-    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -18,116 +18,77 @@
 
 .modal-content {
     background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 80%;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 90%;
     max-width: 500px;
     position: relative;
     max-height: 90vh;
     overflow-y: auto;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 .close {
     position: absolute;
-    right: 20px;
-    top: 10px;
-    font-size: 28px;
+    right: 1.5rem;
+    top: 1rem;
+    font-size: 1.75rem;
     cursor: pointer;
-}
-
-
-
-.container-carrito {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 20px;
-}
-
-.lista-carrito {
-    list-style: none;
-    padding: 0;
-}
-
-.item-carrito {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: white;
-}
-
-.item-info {
-    flex: 1;
-}
-
-.item-info h3 {
-    margin: 0 0 0.5rem 0;
-    color: #333;
-}
-
-.opciones-seleccionadas {
-    margin-top: 0.5rem;
-    font-size: 0.9em;
     color: #666;
+    transition: color 0.2s;
 }
 
-.btn-eliminar {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
+.close:hover {
+    color: #000;
 }
 
-.total-carrito {
-    text-align: right;
-    margin-top: 2rem;
-    padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 8px;
+/* Modal content styles */
+.modal-content h2 {
+    color: #1a1a1a;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
-
-
-
-.btn-continuar-comprando {
-    background-color: #ff0000;
-
+.modal-content p {
+    margin-bottom: 1rem;
+    color: #4a5568;
 }
 
+.modal-content img {
+    margin: 1.5rem auto;
+    display: block;
+    border-radius: 0.5rem;
+}
 
-
-.cantidad-control {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+.modal-content ol {
     margin: 1rem 0;
+    padding-left: 1.5rem;
 }
 
-.btn-cantidad {
-    background-color: #233e37;
-    color: white;
-    border: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
+.modal-content ol li {
+    margin-bottom: 0.5rem;
+    color: #4a5568;
 }
 
-.btn-cantidad:hover {
-    background-color: #b78d41;
-}
-
-.cantidad {
-    font-size: 1.1rem;
-    font-weight: bold;
+.modal-content strong {
     color: #233e37;
+    font-weight: 600;
+}
+
+#btn-confirmar-pago {
+    background-color: #00b206;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    border: none;
+    width: 100%;
+    font-weight: 500;
+    margin-top: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#btn-confirmar-pago:hover {
+    background-color: #009605;
 }
