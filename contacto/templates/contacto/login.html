@@ -73,9 +73,11 @@
             const toggleToLogin = document.getElementById("toggleToLogin");
             const messageContainer = document.getElementById("messageContainer");
 
+            // Inicialmente mostramos el formulario de login
             loginForm.style.display = "block";
             registerForm.style.display = "none";
 
+            // Cambio entre formularios
             toggleToRegister.addEventListener("click", function (e) {
                 e.preventDefault();
                 loginForm.style.display = "none";
@@ -89,88 +91,112 @@
                 registerForm.style.display = "none";
                 clearMessages();
             });
+
+            // Manejo del formulario de login
             loginForm.addEventListener("submit", function (event) {
                 event.preventDefault();
+                clearMessages();
 
+                // Obtener datos del formulario
                 const formData = new FormData(loginForm);
 
+                // Enviar solicitud AJAX
                 fetch("{% url 'login_view' %}", {
                     method: "POST",
                     body: formData,
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest",
-                        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
-                    },
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta del servidor');
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    console.log("Respuesta recibida:", data);
+                    
                     if (data.success) {
-                        window.location.href = data.redirect_url;  // Redireccionar a la URL recibida
+                        showMessage(data.message, "success");
+                        
+                        // Redireccionar después de un breve retraso
+                        setTimeout(function() {
+                            window.location.href = data.redirect_url || "/";
+                        }, 1000);
                     } else {
                         showMessage(data.message, "error");
                     }
                 })
                 .catch(error => {
                     console.error("Error en la petición:", error);
-                    showMessage("Ocurrió un error inesperado.", "error");
+                    showMessage("Ocurrió un error al procesar su solicitud. Por favor, intente nuevamente.", "error");
                 });
             });
             
+            // Manejo del formulario de registro
             registerForm.addEventListener("submit", function (event) {
-                event.preventDefault(); 
-            
+                event.preventDefault();
+                clearMessages();
+
+                // Obtener datos del formulario
                 const formData = new FormData(registerForm);
-            
+
+                // Validar contraseñas
+                const password1 = formData.get("password1");
+                const password2 = formData.get("password2");
+                
+                if (password1 !== password2) {
+                    showMessage("Las contraseñas no coinciden", "error");
+                    return;
+                }
+                
+                if (password1.length < 6) {
+                    showMessage("La contraseña debe tener al menos 6 caracteres", "error");
+                    return;
+                }
+
+                // Enviar solicitud AJAX
                 fetch("{% url 'register_view' %}", {
                     method: "POST",
                     body: formData,
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest",  
-                        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
-                    },
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta del servidor');
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    console.log("Respuesta recibida:", data);
+                    
                     showMessage(data.message, data.success ? "success" : "error");
-                
+                    
                     if (data.success) {
-                        registerForm.reset(); // Reseteamos el formulario de registro
-            
-                        // Habilitamos el formulario de inicio de sesión
-                        loginForm.style.display = "block";
-                        registerForm.style.display = "none";
+                        // Redirigir después de mostrar mensaje de éxito
+                        setTimeout(function() {
+                            window.location.href = data.redirect_url || "/";
+                        }, 1500);
                     }
                 })
                 .catch(error => {
                     console.error("Error en la petición:", error);
-                    showMessage("Ocurrió un error inesperado.", "error");
+                    showMessage("Ocurrió un error al procesar su solicitud. Por favor, intente nuevamente.", "error");
                 });
             });
 
-
+            // Función para mostrar mensajes
             function showMessage(text, type) {
-                if (!text) return;
-
-                clearMessages();
-
                 messageContainer.textContent = text;
+                messageContainer.className = "mensaje-flotante " + type;
                 messageContainer.style.display = "block";
-                messageContainer.style.opacity = "1";
-                messageContainer.style.backgroundColor = type === "success" ? "#233e37" : "#8B0000";
-
-                setTimeout(() => {
-                    messageContainer.style.opacity = "0";
-                }, 3000);
-
-                setTimeout(() => {
-                    clearMessages();
-                }, 4000);
+                
+                // Ocultamos el mensaje después de 5 segundos
+                setTimeout(function() {
+                    messageContainer.style.display = "none";
+                }, 5000);
             }
 
+            // Función para limpiar mensajes
             function clearMessages() {
-                messageContainer.textContent = "";
                 messageContainer.style.display = "none";
-                messageContainer.style.opacity = "1";
             }
         });
     </script>

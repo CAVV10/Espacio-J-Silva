@@ -21,14 +21,11 @@ urlpatterns = [
     path('login/', login_view, name='login_view'),
     path('password-reset/', password_reset_request, name='password_reset_request'),
     path('password-reset-confirm/<uidb64>/<token>/', password_reset_confirm, name='password_reset_confirm'),
-    path('agregar-al-carrito/<int:producto_id>/', views.agregar_al_carrito, name='agregar_al_carrito'),
-    path('carrito/', views.ver_carrito, name='carrito'),  # Añade esta línea
-    path('carrito/eliminar/<int:item_id>/', views.eliminar_del_carrito, name='eliminar_del_carrito'),
-    path('carrito/actualizar/<int:item_id>/', views.actualizar_cantidad, name='actualizar_cantidad'),
-    path('carrito/pagar/', views.pagar, name='pagar'),
-    path('panel-usuario/', views.panel_usuario_view, name='panel_usuario'),  # El nombre de la ruta es independiente del nombre del archivo
+    
+    # Las rutas del carrito han sido eliminadas, ahora se usan las de carrito_nuevo
+    
+    path('panel-usuario/', views.panel_usuario_view, name='panel_usuario'),
     path('obtener-reservas/', obtener_reservas, name='obtener_reservas'),
-    path('ver-error-login/', views.ver_error_login),
     path('crear-admin/', views.crear_superusuario),
     path('historial-pedidos/', views.historial_compras_reservas, name='historial_pedidos'),
     path('logout/', logout_view, name='logout'),

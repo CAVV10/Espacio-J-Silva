@@ -6,11 +6,7 @@ from .models import (
     Servicio, 
     Reserva, 
     Producto, 
-    OpcionProducto, 
-    Carrito, 
-    ItemCarrito, 
-    Pedido, 
-    ItemPedido
+    OpcionProducto
 )
 
 class OpcionProductoInline(admin.TabularInline):
@@ -41,7 +37,3 @@ admin.site.register(Mensaje)
 admin.site.register(CustomUser, UserAdmin)
 admin.site.register(Servicio)
 admin.site.register(Reserva)
-admin.site.register(Carrito)
-admin.site.register(ItemCarrito)
-admin.site.register(Pedido)
-admin.site.register(ItemPedido)

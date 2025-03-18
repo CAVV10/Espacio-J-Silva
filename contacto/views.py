@@ -45,11 +45,7 @@ from .models import (
     Reserva,
     Servicio,
     Mensaje,
-    Producto,
-    Carrito,
-    ItemCarrito,
-    Pedido,
-    ItemPedido
+    Producto
 )
 from .utils import enviar_correo_confirmacion, validar_fecha_hora
 
@@ -124,15 +120,26 @@ def panel_usuario_view(request):
 
 # Función iniciar sesión
 def login_view(request):
+    # Si es GET, mostrar la página de login
+    if request.method == 'GET':
+        return render(request, 'contacto/login.html')
+        
+    # Si es POST, procesar el inicio de sesión
     if request.method == 'POST':
-        email = request.POST.get('email', '').lower()
+        email = request.POST.get('email', '')
         password = request.POST.get('password', '')
-
-        print(f"Intentando iniciar sesión con email: {email} y contraseña: {password}")
-
+        
+        # Validación básica
+        if not email or not password:
+            return JsonResponse({
+                'success': False,
+                'message': 'Por favor, complete todos los campos.'
+            })
+        
+        # Intentar autenticar al usuario
         try:
             user = authenticate(request, email=email, password=password)
-
+            
             if user is not None:
                 login(request, user)
                 return JsonResponse({
@@ -143,81 +150,94 @@ def login_view(request):
             else:
                 return JsonResponse({
                     'success': False,
-                    'message': 'Correo o contraseña incorrectos.'
+                    'message': 'Credenciales incorrectas. Por favor, verifique su correo y contraseña.'
                 })
+                
         except Exception as e:
-            import traceback
-            error_msg = traceback.format_exc()
-            print("🚨 Error en login_view:")
-            print(error_msg)
-            with open("/tmp/error_login.txt", "w") as f:
-                    f.write(error_msg)
+            print(f"Error en login_view: {str(e)}")
+            return JsonResponse({
+                'success': False,
+                'message': 'Ocurrió un error en el servidor. Por favor, intente nuevamente más tarde.'
+            })
+    
+    # Si llega aquí, el método no está permitido
+    return JsonResponse({
+        'success': False,
+        'message': 'Método no permitido'
+    })
 
-            return JsonResponse({'success': False, 'message': 'Error interno del servidor.'})
-
-
-
-    return render(request, 'contacto/login.html')
-
-
-
-
-def ver_error_login(request):
-    if os.path.exists("/tmp/error_login.txt"):
-        with open("/tmp/error_login.txt", "r") as f:
-            contenido = f.read()
-        return HttpResponse(f"<pre>{contenido}</pre>")
-    else:
-        return HttpResponse("No hay errores guardados.")
-
-
-
+# Función registrarse
+def register_view(request):
+    # Solo aceptamos método POST para registro
+    if request.method != 'POST':
+        return JsonResponse({
+            'success': False,
+            'message': 'Método no permitido'
+        })
+    
+    # Obtener datos del formulario
+    try:
+        first_name = request.POST.get('first_name', '')
+        last_name = request.POST.get('last_name', '')
+        email = request.POST.get('email', '')
+        password1 = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
+        
+        # Validaciones
+        if not all([first_name, last_name, email, password1, password2]):
+            return JsonResponse({
+                'success': False,
+                'message': 'Por favor, complete todos los campos.'
+            })
+            
+        if password1 != password2:
+            return JsonResponse({
+                'success': False,
+                'message': 'Las contraseñas no coinciden.'
+            })
+            
+        if len(password1) < 6:
+            return JsonResponse({
+                'success': False,
+                'message': 'La contraseña debe tener al menos 6 caracteres.'
+            })
+            
+        # Verificar si el correo ya existe
+        if User.objects.filter(email=email).exists():
+            return JsonResponse({
+                'success': False,
+                'message': 'Este correo electrónico ya está registrado.'
+            })
+            
+        # Crear usuario
+        user = User.objects.create_user(
+            username=email,
+            email=email,
+            password=password1,
+            first_name=first_name,
+            last_name=last_name
+        )
+        
+        # Iniciar sesión automáticamente
+        login(request, user)
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Registro exitoso. Bienvenido/a a J Silva Ingeniería.',
+            'redirect_url': reverse('inicio')
+        })
+        
+    except Exception as e:
+        print(f"Error en register_view: {str(e)}")
+        return JsonResponse({
+            'success': False,
+            'message': 'Ocurrió un error en el servidor. Por favor, intente nuevamente más tarde.'
+        })
 
 # Función cerrar sesión
 def logout_view(request):
     logout(request)
     return redirect('inicio')
-
-# Función registrarse
-def register_view(request):
-    if request.method == 'POST':
-        first_name = request.POST.get('first_name', '')
-        last_name = request.POST.get('last_name', '')
-        email = request.POST.get('email', '').lower()  # Convertir a minúsculas
-        password1 = request.POST.get('password1', '')
-        password2 = request.POST.get('password2', '')
-
-        if len(password1) < 6:
-            return JsonResponse({'success': False, 'message': 'La contraseña debe tener al menos 6 caracteres.'})
-
-        if password1 != password2:
-            return JsonResponse({'success': False, 'message': 'Las contraseñas no coinciden.'})
-
-        if User.objects.filter(email=email).exists():
-            return JsonResponse({'success': False, 'message': 'El correo ya está registrado.'})
-
-        try:
-            # Registrar usuario
-            user = User.objects.create_user(
-                username=email,
-                email=email,  # Asegúrate de que el nombre de usuario sea el correo
-                password=password1,
-                first_name=first_name,
-                last_name=last_name,
-            )           
-            user.save()
-
-            return JsonResponse({
-                'success': True,
-                'message': 'Registro exitoso. Ahora puede iniciar sesión.',
-                'redirect_url': reverse('login_view')  # URL para redirigir después del registro
-            })
-        except Exception as e:
-            return JsonResponse({'success': False, 'message': 'Ocurrió un error inesperado: {}'.format(str(e))})
-
-    # Si no es POST, devolvemos el mensaje de método no permitido
-    return JsonResponse({'success': False, 'message': 'Método no permitido.'})
-
 
 # Función para recuperar contraseña
 def password_reset_request(request):
@@ -387,195 +407,6 @@ def obtener_eventos(request):
 
 
 
-# Funciones para el carrito de compras
-@login_required
-def tienda_view(request):
-    """Vista principal de la tienda"""
-    productos = Producto.objects.filter(activo=True).prefetch_related('opciones')
-    return render(request, 'contacto/tienda.html', {'productos': productos})
-
-@login_required
-def agregar_al_carrito(request, producto_id):
-    if request.method == 'POST':
-        try:
-            producto = get_object_or_404(Producto, id=producto_id, activo=True)
-            carrito, _ = Carrito.objects.get_or_create(usuario=request.user)
-            
-            # Obtener datos del formulario
-            cantidad = int(request.POST.get('cantidad', 1))
-            opciones = {}
-            precio_total = producto.precio_base
-
-            # Recoger todas las opciones seleccionadas y sus precios
-            for opcion in producto.opciones.all():
-                valor_seleccionado = request.POST.get(opcion.nombre)
-                if not valor_seleccionado:
-                    return JsonResponse({
-                        'success': False,
-                        'message': f'Por favor seleccione {opcion.nombre}'
-                    })
-                
-                # Buscar el precio de la opción seleccionada
-                for opcion_item in opcion.opciones:
-                    if opcion_item['valor'] == valor_seleccionado:
-                        precio_total = float(opcion_item.get('precio', 0))
-
-                        break
-                
-                opciones[opcion.nombre] = {
-                    'valor': valor_seleccionado,
-                    'precio': precio_total
-                }
-
-            # Crear el item del carrito con el precio
-            item_carrito = ItemCarrito.objects.create(
-                carrito=carrito,
-                producto=producto,
-                cantidad=cantidad,
-                precio_unitario=precio_total,  # Guardar el precio unitario
-                opciones=opciones
-            )
-
-            return JsonResponse({
-                'success': True,
-                'message': 'Producto agregado al carrito',
-                'redirect_url': reverse('carrito')
-            })
-
-        except ValueError as e:
-            return JsonResponse({
-                'success': False,
-                'message': str(e)
-            })
-        except Exception as e:
-            print(f"Error: {str(e)}")  # Para debugging
-            return JsonResponse({
-                'success': False,
-                'message': 'Error al procesar la solicitud'
-            })
-
-    return JsonResponse({
-        'success': False,
-        'message': 'Método no permitido'
-    })
-
-
-
-@login_required
-def carrito(request):
-    """Ver el contenido del carrito"""
-    try:
-        carrito = Carrito.objects.get(usuario=request.user)
-        return render(request, 'contacto/carrito.html', {
-            'carrito': carrito,
-            'items': carrito.itemcarrito_set.select_related('producto').all()
-        })
-    except Carrito.DoesNotExist:
-        messages.warning(request, 'No tienes productos en el carrito')
-        return redirect('tienda')
-    
-
-@login_required
-def ver_carrito(request):
-    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
-    items = carrito.itemcarrito_set.all().select_related('producto').order_by('fecha_agregado')
-    total = sum(item.subtotal for item in items)
-    
-    # Formatear los valores con puntos como separadores de miles
-    for item in items:
-        item.subtotal_formateado = f"${item.subtotal:,.0f} COP".replace(",", ".")
-        item.precio_unitario_formateado = f"${item.precio_unitario:,.0f} COP".replace(",", ".")
-
-    
-    total_formateado = f"${total:,.0f} COP".replace(",", ".")
-    
-    context = {
-        'items': items,
-        'total': total,
-        'total_formateado': total_formateado
-    }
-    
-    return render(request, 'contacto/carrito.html', context)
-
-
-@login_required
-def pagar(request):
-    """Procesar el pago del carrito"""
-    carrito = get_object_or_404(Carrito, usuario=request.user)
-    
-    if not carrito.itemcarrito_set.exists():
-        messages.error(request, 'Tu carrito está vacío')
-        return redirect('carrito')
-
-    try:
-        # Aquí iría la lógica de pago con PayPal, Binance, etc.
-        pedido = Pedido.objects.create(
-            usuario=request.user,
-            total=carrito.total(),
-            metodo_pago='pendiente'  # Actualizar según el método seleccionado
-        )
-
-        # Transferir items del carrito al pedido
-        for item in carrito.itemcarrito_set.all():
-            ItemPedido.objects.create(
-                pedido=pedido,
-                producto=item.producto,
-                cantidad=item.cantidad,
-                opciones=item.opciones
-            )
-
-        # Limpiar el carrito
-        carrito.itemcarrito_set.all().delete()
-        
-        messages.success(request, 'Pedido realizado con éxito')
-        return redirect('gracias')
-
-    except Exception as e:
-        messages.error(request, f'Error al procesar el pago: {str(e)}')
-        return redirect('carrito')
-
-@login_required
-def eliminar_del_carrito(request, item_id):
-    """Eliminar un item del carrito"""
-    if request.method == 'POST':
-        item = get_object_or_404(ItemCarrito, id=item_id, carrito__usuario=request.user)
-        item.delete()
-        return JsonResponse({'success': True, 'message': 'Producto eliminado del carrito'})
-    return JsonResponse({'success': False, 'message': 'Método no permitido'})
-
-@login_required
-def actualizar_cantidad(request, item_id):
-    """Actualizar la cantidad de un item en el carrito"""
-    if request.method == 'POST':
-        item = get_object_or_404(ItemCarrito, id=item_id, carrito__usuario=request.user)
-        cantidad = request.POST.get('cantidad')
-        
-        try:
-            cantidad = int(cantidad)
-            if cantidad > 0:
-                item.cantidad = cantidad
-                item.save()
-                return JsonResponse({
-                    'success': True,
-                    'message': 'Cantidad actualizada',
-                    'nuevo_subtotal': float(item.subtotal)  # Acceso a la propiedad, sin paréntesis
-                })
-        except ValueError:
-            return JsonResponse({'success': False, 'message': 'Cantidad inválida'})
-        
-    return JsonResponse({'success': False, 'message': 'Método no permitido'})
-
-
-
-@login_required
-def historial_compras_reservas(request):
-    compras = HistorialCompra.objects.filter(usuario=request.user)
-    reservas = HistorialReserva.objects.filter(usuario=request.user)
-    return render(request, 'contacto/historial-pedidos.html', {'compras': compras, 'reservas': reservas})
-
-
-
-
 # Función para manejar el formulario de contacto sin plantilla específica
 def enviar_mensaje(request):
     if request.method == 'POST':
@@ -652,3 +483,9 @@ def enviar_mensaje(request):
             return JsonResponse({'success': False, 'message': "Error al enviar el mensaje. Inténtalo de nuevo más tarde."})
     
     return JsonResponse({'success': False, 'message': "Método no permitido."})
+
+@login_required
+def historial_compras_reservas(request):
+    compras = HistorialCompra.objects.filter(usuario=request.user)
+    reservas = HistorialReserva.objects.filter(usuario=request.user)
+    return render(request, 'contacto/historial-pedidos.html', {'compras': compras, 'reservas': reservas})

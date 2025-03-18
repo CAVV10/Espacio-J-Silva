@@ -1,0 +1,233 @@
+{% extends 'carrito_nuevo/base.html' %}
+{% load static %}
+
+{% block title %}{{ producto.nombre }} | J Silva Ingeniería{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Breadcrumbs -->
+    <nav class="text-sm text-dark mb-6">
+        <ol class="flex items-center space-x-2">
+            <li><a href="{% url 'carrito_nuevo:catalogo' %}" class="hover:text-secondary">Catálogo</a></li>
+            <li class="flex items-center space-x-2">
+                <span class="text-dark mx-2">/</span>
+                <a href="{% url 'carrito_nuevo:catalogo' %}?categoria={{ producto.categoria.id }}" class="hover:text-secondary">{{ producto.categoria.nombre }}</a>
+            </li>
+            <li class="flex items-center space-x-2">
+                <span class="text-dark mx-2">/</span>
+                <span class="text-primary">{{ producto.nombre }}</span>
+            </li>
+        </ol>
+    </nav>
+    
+    <!-- Detalle del producto -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-secondary/30">
+        <div class="md:flex">
+            <!-- Imágenes del producto -->
+            <div class="w-full md:w-1/2">
+                <div class="p-6">
+                    <div class="aspect-w-1 aspect-h-1 bg-gray-100 rounded-lg overflow-hidden border border-secondary/20">
+                        {% if producto.imagen %}
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-full h-full object-cover">
+                        {% else %}
+                        <div class="w-full h-full flex items-center justify-center">
+                            <i class="fa-solid fa-box-open text-5xl text-secondary"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Información del producto -->
+            <div class="w-full md:w-1/2 p-6 flex flex-col">
+                <h1 class="text-2xl font-bold mb-2 text-primary">{{ producto.nombre }}</h1>
+                
+                <div class="mb-4">
+                    <span class="text-sm text-dark">Categoría: </span>
+                    <a href="{% url 'carrito_nuevo:catalogo' %}?categoria={{ producto.categoria.id }}" class="text-sm text-secondary hover:underline">
+                        {{ producto.categoria.nombre }}
+                    </a>
+                </div>
+                
+                <div class="text-2xl font-bold mb-4 text-secondary">{{ producto.precio_formateado }}</div>
+                
+                <div class="mb-6">
+                    <h2 class="text-lg font-semibold mb-2 text-primary">Descripción</h2>
+                    <p class="text-dark">{{ producto.descripcion }}</p>
+                </div>
+                
+                <div class="mb-8">
+                    <h2 class="text-lg font-semibold mb-3 text-primary">Cantidad</h2>
+                    <div class="flex items-center">
+                        <button type="button" onclick="cambiarCantidad(-1)" class="bg-gray-200 text-dark p-2 rounded-l hover:bg-secondary hover:text-white transition-colors">
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
+                        <input type="number" id="cantidad" name="cantidad" value="1" min="1" max="{{ producto.stock }}" 
+                               class="w-16 py-2 px-3 text-center border-t border-b border-secondary/30">
+                        <button type="button" onclick="cambiarCantidad(1)" class="bg-gray-200 text-dark p-2 rounded-r hover:bg-secondary hover:text-white transition-colors">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mt-auto">
+                    {% if producto.stock > 0 %}
+                    <button onclick="agregarAlCarrito('{{ producto.id }}')" class="btn-primary w-full py-3 mb-3">
+                        <i class="fa-solid fa-cart-plus mr-2"></i>Agregar al Carrito
+                    </button>
+                    <p class="text-sm text-green-600">
+                        <i class="fa-solid fa-check-circle mr-1"></i>
+                        {% if producto.stock > 10 %}
+                        En stock (disponible)
+                        {% else %}
+                        ¡Últimas {{ producto.stock }} unidades!
+                        {% endif %}
+                    </p>
+                    {% else %}
+                    <button disabled class="bg-gray-300 text-gray-600 rounded-lg w-full py-3 mb-3">
+                        <i class="fa-solid fa-cart-plus mr-2"></i>Agotado
+                    </button>
+                    <p class="text-sm text-red-600">
+                        <i class="fa-solid fa-times-circle mr-1"></i>
+                        Producto no disponible
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Productos relacionados -->
+    {% if relacionados %}
+    <div class="mt-12">
+        <h2 class="text-xl font-bold mb-6 text-primary">Productos Relacionados</h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {% for rel in relacionados %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden border border-secondary/30">
+                <!-- Imagen -->
+                <div class="aspect-w-1 aspect-h-1 bg-gray-100">
+                    {% if rel.imagen %}
+                    <img src="{{ rel.imagen.url }}" alt="{{ rel.nombre }}" class="w-full h-48 object-cover">
+                    {% else %}
+                    <div class="w-full h-48 flex items-center justify-center bg-gray-100 border-b border-secondary/20">
+                        <i class="fa-solid fa-box-open text-3xl text-secondary"></i>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Información -->
+                <div class="p-4">
+                    <div class="mb-3">
+                        <h3 class="text-sm font-medium text-primary mb-1 line-clamp-2 h-10">{{ rel.nombre }}</h3>
+                        <p class="text-xs text-dark mb-2">{{ rel.categoria.nombre }}</p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-md font-bold text-primary">{{ rel.precio_formateado }}</span>
+                        <div class="flex space-x-1">
+                            <a href="{% url 'carrito_nuevo:detalle_producto' rel.id %}" class="btn-secondary py-1 px-2 text-xs">Ver</a>
+                            <button class="btn-primary py-1 px-2 text-xs" 
+                                    onclick="agregarAlCarritoDirecto('{{ rel.id }}', 1)">
+                                <i class="fa-solid fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function cambiarCantidad(cambio) {
+        const cantidadInput = document.getElementById('cantidad');
+        let nuevaCantidad = parseInt(cantidadInput.value) + cambio;
+        const stockMaximo = parseInt('{{ producto.stock }}');
+        
+        if (nuevaCantidad < 1) {
+            nuevaCantidad = 1;
+        } else if (nuevaCantidad > stockMaximo) {
+            nuevaCantidad = stockMaximo;
+        }
+        
+        cantidadInput.value = nuevaCantidad;
+    }
+    
+    function agregarAlCarrito(productoId) {
+        const cantidadInput = document.getElementById('cantidad');
+        const cantidad = parseInt(cantidadInput.value);
+        const csrftoken = getCookie('csrftoken');
+        
+        if (isNaN(cantidad) || cantidad < 1) {
+            showAlert('Por favor ingrese una cantidad válida', 'error');
+            return;
+        }
+        
+        $.ajax({
+            url: "{% url 'carrito_nuevo:agregar_al_carrito_ajax' %}",
+            type: "POST",
+            data: {
+                'producto_id': productoId,
+                'cantidad': cantidad,
+                'csrfmiddlewaretoken': csrftoken
+            },
+            success: function(data) {
+                if (data.success) {
+                    // Actualizar contador del carrito
+                    $("#cart-count").text(data.cantidad_total);
+                    
+                    // Mostrar mensaje de éxito
+                    showAlert('Producto agregado al carrito', 'success');
+                } else {
+                    showAlert(data.message || 'Error al agregar el producto', 'error');
+                }
+            },
+            error: function() {
+                showAlert('Error al agregar el producto al carrito', 'error');
+            }
+        });
+    }
+    
+    function agregarAlCarritoDirecto(productoId, cantidad) {
+        const csrftoken = getCookie('csrftoken');
+        
+        $.ajax({
+            url: "{% url 'carrito_nuevo:agregar_al_carrito_ajax' %}",
+            type: "POST",
+            data: {
+                'producto_id': productoId,
+                'cantidad': cantidad,
+                'csrfmiddlewaretoken': csrftoken
+            },
+            success: function(data) {
+                if (data.success) {
+                    // Actualizar contador del carrito
+                    $("#cart-count").text(data.cantidad_total);
+                    
+                    // Mostrar mensaje de éxito
+                    showAlert('Producto agregado al carrito', 'success');
+                } else {
+                    showAlert(data.message || 'Error al agregar el producto', 'error');
+                }
+            },
+            error: function() {
+                showAlert('Error al agregar el producto al carrito', 'error');
+            }
+        });
+    }
+    
+    // Validar entrada de cantidad
+    document.getElementById('cantidad').addEventListener('change', function() {
+        let valor = parseInt(this.value);
+        if (isNaN(valor) || valor < 1) {
+            this.value = 1;
+        } else if (valor > parseInt('{{ producto.stock }}')) {
+            this.value = parseInt('{{ producto.stock }}');
+        }
+    });
+</script>
+{% endblock %}

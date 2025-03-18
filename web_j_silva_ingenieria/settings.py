@@ -19,6 +19,9 @@ DEBUG = os.environ.get("DEBUG", "True") == "True"
 # Hosts permitidos
 ALLOWED_HOSTS = ['web-j-silva.onrender.com', 'localhost', '127.0.0.1']
 
+# Orígenes confiables para CSRF
+CSRF_TRUSTED_ORIGINS = ['https://web-j-silva.onrender.com', 'http://localhost:8000', 'http://127.0.0.1:8000', 'http://127.0.0.1:41038']
+
 # Aplicaciones instaladas
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -31,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django.contrib.staticfiles',
     'contacto',                         # Tu app personalizada
+    'carrito_nuevo',                    # Nueva app de carrito de compras
 ]
 
 # Middlewares

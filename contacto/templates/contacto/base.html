@@ -1,5 +1,5 @@
 {% load static %}
-{% load carrito_extras %}
+{% load carrito_nuevo_tags %}
 
 <!DOCTYPE html>
 <html lang="es">
@@ -26,13 +26,14 @@
 
     <!-- Estilos CSS -->
     <link rel="stylesheet" href="{% static 'contacto/css/index-styles.css' %}">
+    <link rel="stylesheet" href="{% static 'contacto/css/configuracion.css' %}">
     <link rel="stylesheet" href="{% static 'contacto/css/historial.css' %}">
     <link rel="stylesheet" href="{% static 'contacto/css/quienes-somos.css' %}">
     <link rel="stylesheet" href="{% static 'contacto/css/servicios.css' %}">
     <link rel="stylesheet" href="{% static 'contacto/css/reserva.css' %}">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="icon" href="{% static 'contacto/img/jsilva-favicon.png' %}" type="image/x-icon">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-p...tu_hash..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft8vHzBcrLQSZ0j9bXU0S/LNO5bj/8V1koQj4bo1G7F8hJcN8DQ2qxCOJgYWi/lilZ7w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     {% block extra_css %}{% endblock %}
 
@@ -126,23 +127,19 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav__item"><a href="#contact__space" class="nav__link">Contáctenos</a></li>
                 <li class="nav__item">
-                    <a href="tel:+573213249181" class="contact-button button">
-                        <span>+57 321 3249181</span>
+                    <a href="https://wa.me/573213249181" target="_blank" class="whatsapp-button">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp</span>
                     </a>
                 </li>
                 {% if user.is_authenticated %}
                 <div class="relative group">
-                  <a href="{% url 'carrito' %}" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">
-                    <i class="fas fa-shopping-cart text-2xl animate-bounce-on-add"></i>
-                    {% if carrito_cantidad and carrito_cantidad > 0 %}
-                      <span id="carrito-contador" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md animate-pulse">
-                        {{ carrito_cantidad }}
-                      </span>
-                    {% endif %}
-                  </a>
-                </div>
+                    <a href="{% url 'carrito_nuevo:ver_carrito' %}" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">
+                      <i class="fas fa-shopping-cart text-2xl animate-bounce-on-add"></i>
+                      <span id="cart-count" class="inline-block bg-primary text-white text-xs px-1.5 py-0.5 rounded-full ml-1">{% obtener_cantidad_carrito user %}</span>
+                    </a>
+                  </div>
               {% endif %}
                 <li class="nav__item">
                     {% if user.is_authenticated %}
@@ -152,8 +149,8 @@
                             <div class="dropdown-content">
                                 <a>{{ user.email }}</a>
                                 <a href="{% url 'hacer_reserva' %}">Diligenciar</a>
-                                <a href="{% url 'historial_pedidos' %}">Historial de Pedidos</a>
-
+                                <a href="{% url 'carrito_nuevo:catalogo' %}">Catálogo</a>
+                                <a href="{% url 'historial_pedidos' %}">Historial de pedidos</a>
                                 <a href="{% url 'logout' %}">Cerrar sesión</a>
                             </div>
                         </div>

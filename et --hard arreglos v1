@@ -1,0 +1,51 @@
+[33m1d1660b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m arreglos v1
+[33m057d7a5[m otra cosa arreglo V11
+[33m402b72b[m otra cosa arreglo V10
+[33m45415b7[m otra cosa arreglo V9
+[33m9e217d4[m otra cosa arreglo V8
+[33mafa8a05[m otra cosa arreglo V7
+[33m71955ff[m otra cosa arreglo V6
+[33m04308e2[m otra cosa arreglo V5
+[33mcb50054[m otra cosa arreglo V3
+[33mb4e5cdd[m otra cosa arreglo V2
+[33mba3ae83[m otra cosa arreglo
+[33mecb4f69[m otra cosa
+[33m3e6983e[m CARRITO DE COMPRAS v4
+[33m24b90a2[m CARRITO DE COMPRAS v3
+[33mb3b4f23[m CARRITO DE COMPRAS v2
+[33mafa72f6[m CARRITO DE COMPRAS
+[33m25d59a0[m el +=
+[33m83fe030[m A ver
+[33m1827763[m Corrige nombre de campo de precio a precio_base en ProductoForm
+[33m9926a7d[m será hacer resrva o tiendadsfssd.html
+[33m416ddb2[m será hacer resrva o tienda,.html
+[33m8295cef[m fix: configuración completa para static/media con Cloudinary
+[33m5c06ff7[m meter cloudinary actualzaido y mas django y cloud
+[33m5ad4db9[m meter cloudinary actualzaido y mas django
+[33m32c8ab0[m meter cloudinary actualzaido y mas
+[33m2947d92[m meter cloudinary actualzaido
+[33m90e622f[m meter cloudinary
+[33m2f0c276[m vainas
+[33m101a5a6[m Crear superusuario temporalmente
+[33m641fd73[m Quizas punto seguro
+[33m19417d2[m Ajuste de allowed
+[33m4f42e22[m Crear git ignore
+[33mbf2ac74[m Configuración para Render y soporte local con .env
+[33m32a1947[m mas ajustes
+[33m56192cc[m justes para lo de reservas y eso
+[33m0e686c9[m añadido del parentesis
+[33m0bc4bf0[m añadido
+[33mffd8633[m Agregué dj-database-url a requirements para Render
+[33m88d32e0[m Agregué backend personalizado para login con email
+[33m055a39c[m Fix: import os para ver_error_login
+[33mcb1ccb8[m Fix: cambio email por username en authenticate
+[33mc6c1275[m Agrego log en archivo para debug login
+[33m797a7ad[m Eliminar dependencia env para el despliegue en Render
+[33m8bf45a0[m Instalar whitenoise para el despliegue en Render
+[33m631af14[m Instalar whitenoise para el despliegue en Render
+[33m6b32da0[m Actualiza debug para el despliegue en Render
+[33m1e5b8f2[m Actualiza cosas para el despliegue en Render
+[33m3a5835b[m Agregar el dominio en allowed a requirements.txt
+[33meb131d4[m Agregar Gunicorn a requirements.txt
+[33mb467839[m Eliminar archivos .psd grandes del repositorio
+[33maca4b2d[m Primer commit

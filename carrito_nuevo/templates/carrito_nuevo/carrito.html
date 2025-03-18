@@ -1,0 +1,273 @@
+{% extends 'carrito_nuevo/base.html' %}
+{% load static %}
+
+{% block title %}Carrito de Compras | J Silva Ingeniería{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row gap-8">
+        <!-- Contenido del carrito -->
+        <div class="w-full md:w-2/3">
+            <h1 class="text-2xl font-bold mb-4 text-primary">Carrito de Compras</h1>
+            
+            <!-- Cabecera para desktop -->
+            <div class="hidden md:grid grid-cols-6 gap-4 px-6 py-3 bg-gray-100 rounded-t-lg font-medium text-primary border border-secondary/30">
+                <div class="col-span-2">Producto</div>
+                <div class="text-center">Precio</div>
+                <div class="text-center">Cantidad</div>
+                <div class="text-center">Subtotal</div>
+                <div class="text-center">Acciones</div>
+            </div>
+            
+            {% if items %}
+                <div class="bg-white rounded-b-lg shadow-md overflow-hidden border-x border-b border-secondary/30">
+                    {% for item in items %}
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4 p-4 md:p-6 {% if not forloop.last %}border-b border-gray-200{% endif %} items-center" id="item-row-{{ item.id }}">
+                        <!-- Producto (móvil y desktop) -->
+                        <div class="col-span-1 md:col-span-2 flex items-center space-x-4">
+                            <div class="w-20 h-20 flex-shrink-0">
+                                {% if item.producto.imagen %}
+                                <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="w-full h-full object-cover rounded">
+                                {% else %}
+                                <div class="w-full h-full bg-gray-100 flex items-center justify-center rounded border border-secondary/20">
+                                    <i class="fa-solid fa-box-open text-secondary text-xl"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-primary">{{ item.producto.nombre }}</h3>
+                                <p class="text-sm text-secondary">{{ item.producto.categoria.nombre }}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Precio unitario (móvil y desktop) -->
+                        <div class="md:text-center">
+                            <span class="md:hidden text-dark">Precio: </span>
+                            <span class="font-medium text-primary">{{ item.producto.precio_formateado }}</span>
+                        </div>
+                        
+                        <!-- Cantidad (móvil y desktop) -->
+                        <div class="flex items-center md:justify-center">
+                            <span class="md:hidden text-dark mr-2">Cantidad: </span>
+                            <div class="flex items-center space-x-2">
+                                <button type="button" 
+                                        class="w-8 h-8 bg-gray-200 hover:bg-secondary/20 rounded-full flex items-center justify-center focus:outline-none actualizar-cantidad" 
+                                        data-item-id="{{ item.id }}" data-cantidad="{{ item.cantidad|add:'-1' }}">
+                                    <i class="fa-solid fa-minus text-dark"></i>
+                                </button>
+                                
+                                <span id="cantidad-{{ item.id }}" class="w-6 text-center">{{ item.cantidad }}</span>
+                                
+                                <button type="button" 
+                                        class="w-8 h-8 bg-gray-200 hover:bg-secondary/20 rounded-full flex items-center justify-center focus:outline-none actualizar-cantidad" 
+                                        data-item-id="{{ item.id }}" data-cantidad="{{ item.cantidad|add:'1' }}">
+                                    <i class="fa-solid fa-plus text-dark"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Subtotal (móvil y desktop) -->
+                        <div class="md:text-center">
+                            <span class="md:hidden text-dark">Subtotal: </span>
+                            <span id="subtotal-{{ item.id }}" class="font-medium text-primary">{{ item.subtotal_formateado }}</span>
+                        </div>
+                        
+                        <!-- Acciones (móvil y desktop) -->
+                        <div class="flex md:justify-center">
+                            <button type="button" 
+                                    class="w-8 h-8 bg-red-100 hover:bg-red-200 text-red-600 rounded-full flex items-center justify-center focus:outline-none eliminar-del-carrito" 
+                                    data-item-id="{{ item.id }}">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="flex justify-between mt-6">
+                    <a href="{% url 'carrito_nuevo:catalogo' %}" class="btn-secondary flex items-center">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> Seguir comprando
+                    </a>
+                    <button type="button" class="btn-danger flex items-center vaciar-carrito">
+                        <i class="fa-solid fa-trash mr-2"></i> Vaciar carrito
+                    </button>
+                </div>
+            {% else %}
+                <div class="bg-white rounded-lg shadow-md p-8 text-center border border-secondary/30">
+                    <i class="fa-solid fa-cart-shopping text-4xl text-secondary mb-4"></i>
+                    <h2 class="text-xl font-semibold text-primary mb-2">Tu carrito está vacío</h2>
+                    <p class="text-dark mb-6">Agrega productos para comenzar tu compra</p>
+                    <a href="{% url 'carrito_nuevo:catalogo' %}" class="btn-primary inline-block">
+                        <i class="fa-solid fa-store mr-2"></i> Ir al catálogo
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- Resumen del carrito -->
+        <div class="w-full md:w-1/3" id="carrito-resumen">
+            {% if items %}
+            <div class="bg-white rounded-lg shadow-md p-6 sticky top-4 border border-secondary/30">
+                <h2 class="text-lg font-bold mb-4 text-primary">Resumen de compra</h2>
+                
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between pb-2 border-b border-gray-200">
+                        <span class="text-dark">Subtotal</span>
+                        <span class="font-medium text-primary" id="subtotal-general">{{ carrito.total_formateado }}</span>
+                    </div>
+                    <div class="flex justify-between pb-2 border-b border-gray-200">
+                        <span class="text-dark">Envío</span>
+                        <span class="font-medium text-green-600">Gratis</span>
+                    </div>
+                    <div class="flex justify-between pt-2">
+                        <span class="text-lg font-bold text-primary">Total</span>
+                        <span class="text-lg font-bold text-primary" id="total-principal">{{ carrito.total_formateado }}</span>
+                    </div>
+                </div>
+                
+                <a href="{% url 'carrito_nuevo:checkout' %}" class="btn-primary w-full text-center justify-center flex items-center">
+                    <i class="fa-solid fa-credit-card mr-2"></i> Finalizar compra
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Agregar eventos a los botones
+    $(document).ready(function() {
+        // Botones de actualizar cantidad
+        $('.actualizar-cantidad').on('click', function() {
+            const itemId = $(this).data('item-id');
+            const cantidad = $(this).data('cantidad');
+            actualizarCantidad(itemId, cantidad);
+        });
+        
+        // Botones de eliminar del carrito
+        $('.eliminar-del-carrito').on('click', function() {
+            const itemId = $(this).data('item-id');
+            eliminarDelCarrito(itemId);
+        });
+        
+        // Botón de vaciar carrito
+        $('.vaciar-carrito').on('click', function() {
+            vaciarCarrito();
+        });
+    });
+    
+    function actualizarCantidad(itemId, nuevaCantidad) {
+        if (nuevaCantidad < 1) {
+            nuevaCantidad = 1;
+        }
+        
+        const csrftoken = getCookie('csrftoken');
+        
+        $.ajax({
+            url: "{% url 'carrito_nuevo:actualizar_cantidad_ajax' %}",
+            type: "POST",
+            data: {
+                'item_id': itemId,
+                'cantidad': nuevaCantidad,
+                'csrfmiddlewaretoken': csrftoken
+            },
+            success: function(data) {
+                if (data.success) {
+                    // Actualizar la cantidad mostrada
+                    $("#cantidad-" + itemId).text(data.cantidad);
+                    
+                    // Actualizar el subtotal del item
+                    $("#subtotal-" + itemId).text(data.subtotal_formateado);
+                    
+                    // Actualizar totales del carrito
+                    $("#subtotal-general").text(data.total_formateado);
+                    $("#total-principal").text(data.total_formateado);
+                    
+                    // Actualizar contador del carrito
+                    $("#cart-count").text(data.cantidad_total);
+                    
+                    showAlert('Cantidad actualizada', 'success');
+                } else {
+                    showAlert(data.message || 'Error al actualizar cantidad', 'error');
+                }
+            },
+            error: function() {
+                showAlert('Error al actualizar la cantidad', 'error');
+            }
+        });
+    }
+    
+    function eliminarDelCarrito(itemId) {
+        if (!confirm('¿Estás seguro de que quieres eliminar este producto del carrito?')) {
+            return;
+        }
+        
+        const csrftoken = getCookie('csrftoken');
+        
+        $.ajax({
+            url: "{% url 'carrito_nuevo:eliminar_del_carrito_ajax' %}",
+            type: "POST",
+            data: {
+                'item_id': itemId,
+                'csrfmiddlewaretoken': csrftoken
+            },
+            success: function(data) {
+                if (data.success) {
+                    // Eliminar la fila del producto
+                    $("#item-row-" + itemId).fadeOut(300, function() {
+                        $(this).remove();
+                        
+                        // Si no quedan items, recargar la página
+                        if (data.cantidad_items === 0) {
+                            location.reload();
+                            return;
+                        }
+                        
+                        // Actualizar totales del carrito
+                        $("#subtotal-general").text(data.total_formateado);
+                        $("#total-principal").text(data.total_formateado);
+                        
+                        // Actualizar contador del carrito
+                        $("#cart-count").text(data.cantidad_total);
+                    });
+                    
+                    showAlert('Producto eliminado del carrito', 'success');
+                } else {
+                    showAlert(data.message || 'Error al eliminar el producto', 'error');
+                }
+            },
+            error: function() {
+                showAlert('Error al eliminar el producto del carrito', 'error');
+            }
+        });
+    }
+    
+    function vaciarCarrito() {
+        if (!confirm('¿Estás seguro de que quieres vaciar tu carrito?')) {
+            return;
+        }
+        
+        const csrftoken = getCookie('csrftoken');
+        
+        $.ajax({
+            url: "{% url 'carrito_nuevo:vaciar_carrito_ajax' %}",
+            type: "POST",
+            data: {
+                'csrfmiddlewaretoken': csrftoken
+            },
+            success: function(data) {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    showAlert(data.message || 'Error al vaciar el carrito', 'error');
+                }
+            },
+            error: function() {
+                showAlert('Error al vaciar el carrito', 'error');
+            }
+        });
+    }
+</script>
+{% endblock %}

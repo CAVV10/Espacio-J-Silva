@@ -1,0 +1,246 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}J Silva Ingeniería{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#233e37',    // Verde corporativo
+                        secondary: '#b78d41',  // Dorado corporativo
+                        light: '#ffffff',      // Blanco
+                        dark: '#1a1a1a',       // Negro para textos
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .btn-primary {
+            @apply bg-primary hover:bg-primary/90 text-white font-bold py-2 px-4 rounded transition-all;
+        }
+        
+        .btn-secondary {
+            @apply bg-secondary hover:bg-secondary/90 text-white font-bold py-2 px-4 rounded transition-all;
+        }
+        
+        .btn-danger {
+            @apply bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-all;
+        }
+        
+        .btn-success {
+            @apply bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-all;
+        }
+        
+        .form-input {
+            @apply block w-full px-4 py-2 mt-2 text-dark bg-white border border-secondary/50 rounded-md focus:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary/20;
+        }
+        
+        .card {
+            @apply bg-white rounded-lg shadow-md overflow-hidden transition-all hover:shadow-lg border border-secondary/30;
+        }
+        
+        .badge {
+            @apply px-2 py-1 text-xs font-semibold rounded-full;
+        }
+        
+        .nav-link {
+            @apply text-dark hover:text-secondary transition-all;
+        }
+        
+        .nav-link-active {
+            @apply text-primary font-medium;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-secondary/20">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <a href="{% url 'carrito_nuevo:catalogo' %}" class="text-2xl font-bold text-primary">J Silva Ingeniería</a>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="{% url 'carrito_nuevo:catalogo' %}" class="nav-link {% if request.resolver_match.url_name == 'catalogo' %}nav-link-active{% endif %}">Catálogo</a>
+                        
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'carrito_nuevo:mis_pedidos' %}" class="nav-link {% if request.resolver_match.url_name == 'mis_pedidos' %}nav-link-active{% endif %}">Mis Pedidos</a>
+                        {% endif %}
+                    </nav>
+                    
+                    <div class="flex items-center space-x-4">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'carrito_nuevo:ver_carrito' %}" class="relative">
+                                <i class="fa-solid fa-cart-shopping text-xl text-dark hover:text-secondary transition-all"></i>
+                                {% if request.user.is_authenticated %}
+                                    <span id="cart-count" class="badge bg-primary text-white absolute -top-2 -right-2">{{ cantidad_carrito|default:'0' }}</span>
+                                {% endif %}
+                            </a>
+                            
+                            <div class="relative group">
+                                <button class="flex items-center text-dark hover:text-secondary focus:outline-none">
+                                    <i class="fa-solid fa-user text-xl"></i>
+                                    <span class="ml-2 hidden md:inline">{{ user.username }}</span>
+                                </button>
+                                
+                                <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
+                                    <a href="#" class="block px-4 py-2 text-sm text-dark hover:bg-gray-100">Mi Perfil</a>
+                                    <a href="{% url 'carrito_nuevo:mis_pedidos' %}" class="block px-4 py-2 text-sm text-dark hover:bg-gray-100">Mis Pedidos</a>
+                                    <a href="{% url 'logout' %}" class="block px-4 py-2 text-sm text-dark hover:bg-gray-100">Cerrar Sesión</a>
+                                </div>
+                            </div>
+                        {% else %}
+                            <a href="{% url 'login' %}" class="nav-link">Iniciar Sesión</a>
+                            <a href="{% url 'register' %}" class="btn-primary">Registrarse</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="flex-grow">
+        {% if messages %}
+            <div class="container mx-auto px-4 py-4">
+                {% for message in messages %}
+                    <div class="{% if message.tags == 'error' %}bg-red-100 border-red-400 text-red-700{% elif message.tags == 'success' %}bg-green-100 border-green-400 text-green-700{% else %}bg-blue-100 border-blue-400 text-blue-700{% endif %} px-4 py-3 rounded relative mb-4" role="alert">
+                        <span class="block sm:inline">{{ message }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-secondary text-white py-10 mt-10">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">J Silva Ingeniería</h3>
+                    <p class="text-gray-400">Soluciones de ingeniería de alta calidad para proyectos industriales y comerciales.</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Enlaces Rápidos</h3>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'carrito_nuevo:catalogo' %}" class="text-gray-400 hover:text-white transition-all">Catálogo</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-all">Nosotros</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-all">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contacto</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><i class="fa-solid fa-location-dot mr-2"></i> Dirección: Calle Principal 123</li>
+                        <li><i class="fa-solid fa-phone mr-2"></i> Teléfono: +1 234 567 890</li>
+                        <li><i class="fa-solid fa-envelope mr-2"></i> Email: info@jsilva.com</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Síguenos</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-all"><i class="fa-brands fa-facebook text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-all"><i class="fa-brands fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-all"><i class="fa-brands fa-twitter text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-all"><i class="fa-brands fa-linkedin text-xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="border-gray-700 my-8">
+            
+            <div class="text-center text-gray-400">
+                <p>&copy; {% now "Y" %} J Silva Ingeniería. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Scripts -->
+    {% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+    <script>
+        // Función para obtener el token CSRF
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // Configurar AJAX para incluir el token CSRF en todas las solicitudes
+        $(document).ready(function() {
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                    }
+                }
+            });
+        });
+        
+        // Función para mostrar alertas
+        function showAlert(message, type) {
+            const alertDiv = $('<div>').addClass('fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg');
+            
+            if (type === 'success') {
+                alertDiv.addClass('bg-green-100 border border-green-500 text-green-700');
+            } else if (type === 'error') {
+                alertDiv.addClass('bg-red-100 border border-red-500 text-red-700');
+            } else {
+                alertDiv.addClass('bg-blue-100 border border-blue-500 text-blue-700');
+            }
+            
+            alertDiv.text(message);
+            $('body').append(alertDiv);
+            
+            // Ocultar después de 3 segundos
+            setTimeout(function() {
+                alertDiv.fadeOut(300, function() {
+                    $(this).remove();
+                });
+            }, 3000);
+        }
+    </script>
+    {% block extra_js %}{% endblock %}
+    {% endblock %}
+</body>
+</html>

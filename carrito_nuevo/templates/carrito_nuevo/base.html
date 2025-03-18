@@ -1,0 +1,235 @@
+{% load static %}
+{% load carrito_nuevo_tags %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}J Silva Ingeniería{% endblock %}</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#233e37',
+                        secondary: '#b78d41'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="{% static 'carrito_nuevo/css/configuracion-base.css' %}">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="icon" href="{% static 'contacto/img/jsilva-favicon.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-p...tu_hash..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    {% block extra_css %}{% endblock %}
+
+</head>
+<body>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                    {{ message }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- HEADER - Menú de navegación -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="{% url 'inicio' %}">
+                    <img src="{% static 'contacto/img/jsilva.png' %}" alt="Logo de J Silva Ingeniería">
+                </a>
+                <a href="{% url 'inicio' %}">J SILVA INGENIERÍA</a>
+            </div>
+
+            <!-- Toggle para móviles -->
+            <div class="toggle__menu" id="toggle-menu">
+                <i class='bx bx-grid-alt'></i>
+            </div>
+
+            <!-- Menú de navegación -->
+            <ul class="nav__list" id="nav-menu">
+                <div class="close__menu" id="close-menu">
+                    <i class='bx bx-x-circle'></i>
+                </div>
+                <li class="nav__item"><a href="{% url 'inicio' %}" class="nav__link">Inicio</a></li>
+                <li class="nav__item"><a href="{% url 'quienes_somos' %}" class="nav__link">¿Quiénes somos?</a></li>
+
+                <li class="nav__item dropdown">
+                    <a href="#" class="nav__link dropdown__link">Servicios 
+                        <i class='bx bx-chevron-down dropdown__icon'></i>
+                    </a>
+                    <div class="megamenu">
+                        <ul class="content">
+                            <li class="header__megamenu">Higiene y manejo ambiental</li>
+                            <li class="megamenu__item">
+                                <div class="menu__icon"><img src="{% static 'contacto/img/icono_fumigacion-def.png' %}" alt=""></div>
+                                <div class="megamenu__link">
+                                    <a href="{% url 'desinfeccion' %}">Desinfección</a>
+                                    <p>Eliminación de virus, bacterias y patógenos</p>
+                                </div>
+                            </li>
+                            <li class="megamenu__item">
+                                <div class="menu__icon"><img src="{% static 'contacto/img/icono_control-apicola-def.png' %}" alt=""></div>
+                                <div class="megamenu__link">
+                                    <a href="{% url 'control_apicola' %}">Control apícola</a>
+                                    <p>Manejo integrado de abejas</p>
+                                </div>
+                            </li>
+                            <li class="megamenu__item">
+                                <div class="menu__icon"><img src="{% static 'contacto/img/icono_jardineria-def.png' %}" alt=""></div>
+                                <div class="megamenu__link">
+                                    <a href="{% url 'jardineria' %}">Jardinería</a>
+                                    <p>Servicio de jardinería y mantenimiento</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="content">
+                            <li class="header__megamenu">Mantenimiento y soporte</li>
+                            <li class="megamenu__item">
+                                <div class="menu__icon"><img src="{% static 'contacto/img/icono_extintor-def.png' %}" alt=""></div>
+                                <div class="megamenu__link">
+                                    <a href="{% url 'suministros' %}">Suministros</a>
+                                    <p>Venta y mantenimiento de equipos de seguridad</p>
+                                </div>
+                            </li>
+                            <li class="megamenu__item">
+                                <div class="menu__icon"><img src="{% static 'contacto/img/icono_capacitacion-def.png' %}" alt=""></div>
+                                <div class="megamenu__link">
+                                    <a href="{% url 'capacitacion' %}">Capacitación</a>
+                                    <p>Prevención de incendios y plan de saneamiento</p>
+                                </div>
+                            </li>
+                            <li class="megamenu__item">
+                                <div class="menu__icon"><img src="{% static 'contacto/img/icono_planos-3d-def.png' %}" alt=""></div>
+                                <div class="megamenu__link">
+                                    <a href="{% url 'planos_3d' %}">Planos 3D</a>
+                                    <p>Diseño y planificación para emergencias</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="nav__item">
+                    <a href="https://wa.me/573213249181" target="_blank" class="whatsapp-button">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp</span>
+                    </a>
+                </li>
+                {% if user.is_authenticated %}
+                <div class="relative group">
+                  <a href="{% url 'carrito_nuevo:ver_carrito' %}" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">
+                    <i class="fas fa-shopping-cart text-2xl animate-bounce-on-add"></i>
+                    <span id="cart-count" class="inline-block bg-primary text-white text-xs px-1.5 py-0.5 rounded-full ml-1">{% obtener_cantidad_carrito user %}</span>
+                  </a>
+                </div>
+              {% endif %}
+                <li class="nav__item">
+                    {% if user.is_authenticated %}
+                        <!-- Si el usuario está autenticado, mostrar la imagen de perfil -->
+                        <div class="dropdown profile-icon">
+                            <img src="{% static 'contacto/img/imagen-perfil-defecto.jpg' %}" alt="Imagen de perfil">
+                            <div class="dropdown-content">
+                                <a>{{ user.email }}</a>
+                                <a href="{% url 'hacer_reserva' %}">Diligenciar</a>
+                                <a href="{% url 'carrito_nuevo:catalogo' %}">Catálogo</a>
+                                <a href="{% url 'historial_pedidos' %}">Historial de pedidos</a>
+                                <a href="{% url 'logout' %}">Cerrar sesión</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <!-- Si no ha iniciado sesión, mostrar el ícono de inicio de sesión -->
+                        <a href="{% url 'login_view' %}">
+                            <img class="login" src="{% static 'contacto/img/icono-sesion-verde.png' %}" alt="Iniciar sesión">
+                        </a>
+                    {% endif %}
+                </li>
+                
+                
+            </ul>
+        </nav>
+
+    </header>
+    <!-- Espacio para el menú de navegación -->
+    <div style="padding-top: 5rem;"></div>
+
+    <!-- Contenido principal -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Formulario de contacto -->
+    <div id="contact-form" class="contact__us">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.049438171907!2d-75.29279778586938!3d3.0505354548045756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3b7491c7232081%3A0x9ab647d5b00446a2!2sCra.%207%20%232-86%2C%20Neiva%2C%20Huila!5e0!3m2!1ses!2sco!4v1653524713066!5m2!1ses!2sco" class="map" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+        <form class="form" method="post" action="{% url 'enviar_mensaje' %}">
+            {% csrf_token %}
+            <p class="title__form">Contáctenos</p>
+            <p class="message">Envíenos un mensaje y nos comunicaremos lo antes posible.</p>
+
+            <div class="flex">
+                <label>
+                    <input class="input" type="text" name="nombre" required>
+                    <span>Nombre(s)</span>
+                </label>
+
+                <label>
+                    <input class="input" type="text" name="apellido" required>
+                    <span>Apellido(s)</span>
+                </label>
+            </div>
+
+            <label>
+                <input class="input" type="email" name="correo" required>
+                <span>Correo electrónico</span>
+            </label>
+
+            <label>
+                <textarea class="input in__message" name="mensaje" required></textarea>
+                <span>Mensaje</span>
+            </label>
+
+            <button class="button" type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <footer class="spacer__footer layer-4">
+        <div class="overlay__text__footer">
+            <div class="footer-content">
+                <a href="#" target="_blank">
+                    <img src="{% static 'contacto/img/jsilva.png' %}" alt="J Silva Ingeniería" class="footer-logo">
+                </a>
+
+                <p class="footer-address">CRA 7 NO. 2 - 86 Parque industrial. Palermo, Neiva, Colombia</p>
+
+                <div class="social-icons">
+                    <a href="https://web.facebook.com/JSilvaIngenieria" target="_blank">
+                        <i class="fa-brands fa-facebook"></i>
+                    </a>
+                    <a href="https://www.instagram.com/JSilvaIngenieria" target="_blank">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- jQuery y Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'carrito_nuevo/js/configuracion-base.js' %}"></script>
+    <script src="{% static 'contacto/js/main.js' %}"></script>
+    <script src="{% static 'contacto/js/carga-bloqueo.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

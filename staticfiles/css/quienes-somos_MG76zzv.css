@@ -1,0 +1,98 @@
+
+.overlay__text {
+    font-size: 3.9rem;
+}
+
+.about__us {
+    display: grid;
+    grid-template-columns: 1fr;
+    text-align: center;
+    align-items: center;
+    margin: 2rem 2rem 0rem 2rem;
+}
+
+.about__us__description {
+    text-align: justify;
+    font-size: 1.3rem;
+    color: #233e37;
+    border-radius: 0.8rem;
+    margin-bottom: 2rem;
+}
+
+.video {
+    margin: auto;
+    background-color: #b78d41;
+    max-width: 80%;
+    height: 98%;
+    border-radius: 0.8rem;
+    overflow: hidden;
+    border: 0.2rem solid #b78d41;
+}
+
+.video video {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: center;
+    border-radius: inherit;
+}
+
+
+
+.vision__mision{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 4rem 2rem 0rem 2rem;
+}
+
+.vision__mision h3 {
+    text-align: center;
+}
+
+.vision__description, .mision__description {
+    padding: 1rem;
+    border-radius: 0.8rem;
+    text-align: justify;
+    font-size: 1.3rem;
+    color: #233e37;
+    border-radius: 0.8rem;
+    border: 0.2rem solid #b78d41;
+}
+
+/* Responsividad */
+@media (max-width: 1000px) {
+    .overlay__text {
+        font-size: 2.9rem;
+    }
+    .video {
+        max-width: 100%;
+    }
+
+    .vision__mision {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+}
+
+@media (max-width: 760px) {
+    .overlay__text {
+        font-size: 2.1rem;
+    }
+}
+
+@media (max-width: 560px) {
+    .overlay__text {
+        font-size: 1.8rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .overlay__text {
+        font-size: 1.4rem;
+    }
+}

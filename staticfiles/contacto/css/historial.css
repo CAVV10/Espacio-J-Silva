@@ -1,0 +1,55 @@
+/* Import fonts and base styles */
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;600&display=swap');
+
+body {
+    font-family: 'Kanit', sans-serif;
+    background-color: #ffffff; /* White background */
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+
+.history-section {
+    margin: 20px auto;
+    max-width: 800px;
+    padding: 20px;
+    background-color: #ffffff; /* White background for sections */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Softer shadow */
+}
+
+.history-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.history-item {
+    background-color: #f8f8f8; /* Light grey for item background */
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Softer shadow */
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.history-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Slightly more pronounced shadow on hover */
+}
+
+.item-label {
+    font-weight: 600;
+    color: #b78d41; /* Accent color */
+}
+
+@media screen and (max-width: 768px) {
+    .overlay__text, .overlay__text__subtitles {
+        font-size: 1.5rem;
+    }
+
+    .history-item {
+        padding: 10px;
+    }
+}

@@ -1,162 +1,234 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    console.log('Carrito JS cargado');
 
-    // Función para formatear números con puntos como separadores de miles
-    function formatearNumero(numero) {
-        return numero.toLocaleString('es-CO');
-    }
+    // Obtener token CSRF
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+    if (!csrfToken) console.error('No se pudo encontrar el token CSRF');
 
-    // Formatear los valores iniciales
-    document.querySelectorAll('.subtotal').forEach(subtotalElement => {
-        const subtotalText = subtotalElement.textContent.replace('Subtotal: $', '').replace(' COP', '');
-        const subtotalNumero = parseFloat(subtotalText.replace(/\./g, '').replace(',', '.'));
-        subtotalElement.textContent = `Subtotal: $${formatearNumero(subtotalNumero)} COP`;
-    });
-
-    // Formatear el precio unitario
-    document.querySelectorAll('.item-carrito').forEach(item => {
-        const precioUnitarioElement = item.querySelector('.precio-unitario');
-        if (precioUnitarioElement) {
-            const precioUnitarioText = precioUnitarioElement.textContent.replace('Precio unitario: $', '').replace(' COP', '');
-            const precioUnitarioNumero = parseFloat(precioUnitarioText.replace(/\./g, '').replace(',', '.'));
-            precioUnitarioElement.textContent = `Precio unitario: $${formatearNumero(precioUnitarioNumero)} COP`;
-        }
-    });
-
-    const totalCarritoElement = document.querySelector('.total-carrito h3');
-    if (totalCarritoElement) {
-        const totalText = totalCarritoElement.textContent.replace('Total: $', '').replace(' COP', '');
-        const totalNumero = parseFloat(totalText.replace(/\./g, '').replace(',', '.'));
-        totalCarritoElement.textContent = `Total: $${formatearNumero(totalNumero)} COP`;
-    }
-
-    // Función para actualizar el total del carrito
-    function actualizarTotalCarrito() {
-        const items = document.querySelectorAll('.item-carrito');
-        let total = 0;
-
-        items.forEach(item => {
-            const subtotalElement = item.querySelector('.subtotal');
-            if (subtotalElement) {
-                const subtotalText = subtotalElement.textContent.replace('Subtotal: $', '').replace(' COP', '');
-                const subtotal = parseFloat(subtotalText.replace(/\./g, '').replace(',', '.'));
-                total += subtotal;
-            }
-        });
-
-        const totalCarritoElement = document.querySelector('.total-carrito h3');
-        if (totalCarritoElement) {
-            totalCarritoElement.textContent = `Total: $${formatearNumero(total)} COP`;
+    // Función para hacer peticiones AJAX
+    async function fetchData(url, method, body) {
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: body
+            });
+            
+            if (!response.ok) throw new Error(`Error del servidor: ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            console.error('Error en petición:', error);
+            alert('Error en la operación: ' + error.message);
+            throw error;
         }
     }
 
-    // Manejar botones de cantidad
-    document.querySelectorAll('.btn-cantidad').forEach(btn => {
-        btn.addEventListener('click', async function() {
-            const itemId = this.dataset.itemId;
-            const cantidadElement = this.closest('.cantidad-control').querySelector('.cantidad');
-            const cantidad = parseInt(cantidadElement.textContent);
-            const nuevaCantidad = this.classList.contains('increase') ? cantidad + 1 : cantidad - 1;
+    // Actualizar el total del carrito
+    function actualizarTotal(total) {
+        const totalElement = document.querySelector('.text-gray-900.dark\\:text-white.font-bold.text-xl');
+        if (totalElement) {
+            totalElement.textContent = total;
+        }
+    }
 
-            if (nuevaCantidad > 0) {
+    // ASIGNAR EVENTOS A LOS BOTONES DE INCREMENTAR (+)
+    const botonesIncrementar = document.querySelectorAll('button[data-item-id]');
+    botonesIncrementar.forEach(function(boton) {
+        // Verificar si el botón contiene un SVG con el símbolo +
+        if (boton.innerHTML.includes('M7 2.33331V11.6666M2.33333 7H11.6667')) {
+            const itemId = boton.getAttribute('data-item-id');
+            
+            boton.addEventListener('click', async function(e) {
+                e.preventDefault();
+                
+                // Encontrar el span de cantidad (hermano adyacente)
+                const cantidadElement = this.parentNode.querySelector('span');
+                if (!cantidadElement) return;
+                
+                const cantidad = parseInt(cantidadElement.textContent);
+                const nuevaCantidad = cantidad + 1;
+                
                 try {
-                    const response = await fetch(`/carrito/actualizar/${itemId}/`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                            'X-CSRFToken': csrfToken
-                        },
-                        body: `cantidad=${nuevaCantidad}`
-                    });
-
-                    const data = await response.json();
+                    const data = await fetchData(
+                        `/carrito/actualizar/${itemId}/`, 
+                        'POST', 
+                        `cantidad=${nuevaCantidad}`
+                    );
+                    
                     if (data.success) {
-                        // Actualizar la cantidad en la interfaz
+                        // Actualizar cantidad en UI
                         cantidadElement.textContent = nuevaCantidad;
-
-                        // Actualizar el subtotal
-                        const subtotalElement = cantidadElement.closest('.item-carrito').querySelector('.subtotal');
+                        
+                        // Actualizar subtotal de línea
+                        const row = this.closest('tr');
+                        const subtotalElement = row.querySelector('td:nth-child(4) p');
                         if (subtotalElement) {
-                            subtotalElement.textContent = `Subtotal: $${formatearNumero(data.nuevo_subtotal)} COP`;
+                            subtotalElement.textContent = data.nuevo_subtotal_formateado;
                         }
-
-                        // Actualizar el total del carrito
-                        actualizarTotalCarrito();
+                        
+                        // Actualizar total
+                        if (data.nuevo_total_formateado) {
+                            actualizarTotal(data.nuevo_total_formateado);
+                        }
                     } else {
-                        alert(data.message || 'Error al actualizar cantidad');
+                        alert(data.message || "Error al actualizar cantidad");
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('Error al actualizar cantidad');
                 }
-            }
-        });
-    });
-
-    // Manejar eliminación de items
-    document.querySelectorAll('.btn-eliminar').forEach(btn => {
-        btn.addEventListener('click', async function() {
-            if (confirm('¿Está seguro de eliminar este producto del carrito?')) {
-                const itemId = this.dataset.itemId;
-                try {
-                    const response = await fetch(`/carrito/eliminar/${itemId}/`, {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRFToken': csrfToken
-                        }
-                    });
-
-                    const data = await response.json();
-                    if (data.success) {
-                        // Eliminar el ítem del DOM
-                        const itemElement = this.closest('.item-carrito');
-                        if (itemElement) {
-                            itemElement.remove();
-                        }
-
-                        // Actualizar el total del carrito
-                        actualizarTotalCarrito();
-                    } else {
-                        alert(data.message);
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Error al eliminar el item');
-                }
-            }
-        });
-    });
-
-    // Manejar pago
-    const btnPagar = document.getElementById('btn-pagar');
-    if (btnPagar) {
-        btnPagar.addEventListener('click', function() {
-            document.getElementById('modal-nequi').style.display = 'block';
-        });
-    }
-
-    // Cerrar modales con botón X
-    document.querySelectorAll('.close').forEach(closeBtn => {
-        closeBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const modal = this.closest('.modal');
-            if (modal) {
-                modal.style.display = 'none';
-            }
-        });
-    });
-
-    // Cerrar modal al hacer clic fuera
-    window.addEventListener('click', function(event) {
-        if (event.target.classList.contains('modal')) {
-            event.target.style.display = 'none';
+            });
         }
     });
 
-    // Prevenir que el clic en el contenido del modal lo cierre
-    document.querySelectorAll('.modal-content').forEach(content => {
-        content.addEventListener('click', function(e) {
-            e.stopPropagation();
+    // ASIGNAR EVENTOS A LOS BOTONES DE DECREMENTAR (-)
+    const botonesDecrementar = document.querySelectorAll('button[data-item-id]');
+    botonesDecrementar.forEach(function(boton) {
+        // Verificar si el botón contiene un SVG con el símbolo -
+        if (boton.innerHTML.includes('M2.33398 7H11.6673')) {
+            const itemId = boton.getAttribute('data-item-id');
+            
+            boton.addEventListener('click', async function(e) {
+                e.preventDefault();
+                
+                // Encontrar el span de cantidad (hermano adyacente)
+                const cantidadElement = this.parentNode.querySelector('span');
+                if (!cantidadElement) return;
+                
+                const cantidad = parseInt(cantidadElement.textContent);
+                if (cantidad <= 1) {
+                    alert('La cantidad mínima es 1');
+                    return;
+                }
+                
+                const nuevaCantidad = cantidad - 1;
+                
+                try {
+                    const data = await fetchData(
+                        `/carrito/actualizar/${itemId}/`, 
+                        'POST', 
+                        `cantidad=${nuevaCantidad}`
+                    );
+                    
+                    if (data.success) {
+                        // Actualizar cantidad en UI
+                        cantidadElement.textContent = nuevaCantidad;
+                        
+                        // Actualizar subtotal de línea
+                        const row = this.closest('tr');
+                        const subtotalElement = row.querySelector('td:nth-child(4) p');
+                        if (subtotalElement) {
+                            subtotalElement.textContent = data.nuevo_subtotal_formateado;
+                        }
+                        
+                        // Actualizar total
+                        if (data.nuevo_total_formateado) {
+                            actualizarTotal(data.nuevo_total_formateado);
+                        }
+                    } else {
+                        alert(data.message || "Error al actualizar cantidad");
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+    });
+
+    // ASIGNAR EVENTOS A LOS BOTONES DE ELIMINAR (X)
+    const botonesEliminar = document.querySelectorAll('.text-gray-400.hover\\:text-red-500 button');
+    botonesEliminar.forEach(function(boton) {
+        const itemId = boton.getAttribute('data-item-id');
+        if (!itemId) return;
+        
+        boton.addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            if (confirm('¿Está seguro de eliminar este producto del carrito?')) {
+                try {
+                    const data = await fetchData(`/carrito/eliminar/${itemId}/`, 'POST');
+                    
+                    if (data.success) {
+                        // Eliminar fila
+                        const row = this.closest('tr');
+                        if (row) row.remove();
+                        
+                        // Actualizar total
+                        if (data.nuevo_total_formateado) {
+                            actualizarTotal(data.nuevo_total_formateado);
+                        }
+                        
+                        // Si no hay más filas, mostrar mensaje de carrito vacío
+                        const filas = document.querySelectorAll('tbody tr');
+                        if (filas.length === 0) {
+                            const tbody = document.querySelector('tbody');
+                            if (tbody) {
+                                const emptyRow = document.createElement('tr');
+                                emptyRow.innerHTML = '<td colspan="5" class="py-4 px-4 text-center text-gray-600 dark:text-gray-400">Tu carrito está vacío</td>';
+                                tbody.appendChild(emptyRow);
+                            }
+                        }
+                    } else {
+                        alert(data.message || "Error al eliminar el producto");
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
         });
     });
+
+    // Fallback: Asignar eventos a TODOS los botones con data-item-id
+    if (botonesIncrementar.length === 0 || botonesDecrementar.length === 0) {
+        console.log('Usando fallback para detectar botones');
+        
+        document.querySelectorAll('button[data-item-id]').forEach(function(boton) {
+            const itemId = boton.getAttribute('data-item-id');
+            
+            // Determinar el tipo de botón basado en su ubicación y contenido
+            if (boton.closest('.text-gray-400.hover\\:text-red-500')) {
+                // Es botón de eliminar
+                boton.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    
+                    if (confirm('¿Está seguro de eliminar este producto del carrito?')) {
+                        try {
+                            const data = await fetchData(`/carrito/eliminar/${itemId}/`, 'POST');
+                            
+                            if (data.success) {
+                                const row = this.closest('tr');
+                                if (row) row.remove();
+                                
+                                if (data.nuevo_total_formateado) {
+                                    actualizarTotal(data.nuevo_total_formateado);
+                                }
+                                
+                                const filas = document.querySelectorAll('tbody tr');
+                                if (filas.length === 0) {
+                                    const tbody = document.querySelector('tbody');
+                                    if (tbody) {
+                                        const emptyRow = document.createElement('tr');
+                                        emptyRow.innerHTML = '<td colspan="5" class="py-4 px-4 text-center text-gray-600 dark:text-gray-400">Tu carrito está vacío</td>';
+                                        tbody.appendChild(emptyRow);
+                                    }
+                                }
+                            } else {
+                                alert(data.message || "Error al eliminar el producto");
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                        }
+                    }
+                });
+            } else {
+                // Es botón de + o -
+                boton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Click en botón:', boton.innerHTML);
+                });
+            }
+        });
+    }
 });

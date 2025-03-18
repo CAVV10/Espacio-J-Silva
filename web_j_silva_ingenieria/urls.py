@@ -7,4 +7,5 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('contacto.urls')),  # Incluyendo todas las rutas de contacto
+    path('carrito-nuevo/', include('carrito_nuevo.urls')),  # Nueva aplicación de carrito
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)   
