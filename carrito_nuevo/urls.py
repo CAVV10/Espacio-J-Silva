@@ -1,11 +1,16 @@
 from django.urls import path
+from django.views.generic import RedirectView
 from . import views
 
 app_name = 'carrito_nuevo'
 
 urlpatterns = [
+    # Redirección de la URL base
+    path('', RedirectView.as_view(pattern_name='carrito_nuevo:catalogo'), name='index'),
+    
     # Catálogo y productos
-    path('', views.catalogo, name='catalogo'),
+    path('catalogo/', views.catalogo, name='catalogo'),
+    path('catalogo/filtrar-ajax/', views.filtrar_productos_ajax, name='filtrar_productos_ajax'),
     path('producto/<int:producto_id>/', views.detalle_producto, name='detalle_producto'),
     
     # Carrito

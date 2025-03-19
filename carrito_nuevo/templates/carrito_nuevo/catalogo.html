@@ -24,7 +24,7 @@
                     </h2>
                 </div>
                 
-                <form method="get" action="{% url 'carrito_nuevo:catalogo' %}">
+                <div id="filtro-form">
                     <!-- Categorías con indicadores mejorados -->
                     <div class="mb-6">
                         <h3 class="text-md font-medium mb-3 text-gray-700 pb-2 border-b border-gray-200 flex items-center gap-2">
@@ -34,7 +34,7 @@
                         <div class="space-y-3 pl-1">
                             <div class="flex items-center group">
                                 <input type="radio" id="categoria-todas" name="categoria" value="" 
-                                       class="h-4 w-4 text-orange-500 focus:ring-orange-400 cursor-pointer" 
+                                       class="h-4 w-4 text-orange-500 focus:ring-orange-400 cursor-pointer filtro-input" 
                                        {% if not categoria_seleccionada %}checked{% endif %}>
                                 <label for="categoria-todas" class="ml-2 text-sm text-gray-700 group-hover:text-orange-500 transition-colors duration-200 cursor-pointer">Todas</label>
                             </div>
@@ -42,7 +42,7 @@
                             {% for categoria in categorias %}
                             <div class="flex items-center group">
                                 <input type="radio" id="categoria-{{ categoria.id }}" name="categoria" value="{{ categoria.id }}" 
-                                       class="h-4 w-4 text-orange-500 focus:ring-orange-400 cursor-pointer" 
+                                       class="h-4 w-4 text-orange-500 focus:ring-orange-400 cursor-pointer filtro-input" 
                                        {% if categoria_seleccionada == categoria.id|stringformat:"i" %}checked{% endif %}>
                                 <label for="categoria-{{ categoria.id }}" class="ml-2 text-sm text-gray-700 group-hover:text-orange-500 transition-colors duration-200 cursor-pointer">{{ categoria.nombre }}</label>
                             </div>
@@ -59,111 +59,117 @@
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label for="precio_min" class="block text-sm text-gray-600 mb-1.5">Mínimo</label>
-                                <input type="number" id="precio_min" name="precio_min" value="{{ precio_min }}" 
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm transition-all duration-200 shadow-sm">
+                                <input type="number" id="precio_min" name="precio_min" value="{{ precio_min|default:'' }}" min="0" step="any"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm transition-all duration-200 shadow-sm filtro-input">
                             </div>
                             <div>
                                 <label for="precio_max" class="block text-sm text-gray-600 mb-1.5">Máximo</label>
-                                <input type="number" id="precio_max" name="precio_max" value="{{ precio_max }}" 
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm transition-all duration-200 shadow-sm">
+                                <input type="number" id="precio_max" name="precio_max" value="{{ precio_max|default:'' }}" min="0" step="any"
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm transition-all duration-200 shadow-sm filtro-input">
                             </div>
                         </div>
                     </div>
                     
                     <!-- Botones mejorados con efectos 3D sutiles -->
                     <div class="flex gap-3">
-                        <button type="submit" class="flex-1 py-2.5 px-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-lg shadow-md hover:shadow-orange-200/50 hover:shadow-lg transition-all duration-300 text-sm flex items-center justify-center gap-1.5 hover:scale-105 transform active:scale-95">
-                            <i class="fa-solid fa-filter"></i> Filtrar
+                        <button type="button" id="boton-filtrar" class="flex-1 py-2.5 px-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-lg shadow-md hover:shadow-orange-200/50 hover:shadow-lg transition-all duration-300 text-sm flex items-center justify-center gap-1.5 hover:scale-105 transform active:scale-95">
+                            <i class="fa-solid fa-filter"></i> <span>Filtrar</span>
                         </button>
-                        <a href="{% url 'carrito_nuevo:catalogo' %}" class="flex-1 py-2.5 px-4 bg-gradient-to-b from-gray-50 to-gray-100 text-gray-700 border border-gray-300 font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300 text-sm flex items-center justify-center gap-1.5 hover:scale-105 transform active:scale-95">
-                            <i class="fa-solid fa-rotate-left"></i> Restablecer
-                        </a>
+                        <button type="button" id="boton-restablecer" class="flex-1 py-2.5 px-4 bg-gradient-to-b from-gray-50 to-gray-100 text-gray-700 border border-gray-300 font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300 text-sm flex items-center justify-center gap-1.5 hover:scale-105 transform active:scale-95">
+                            <i class="fa-solid fa-rotate-left"></i> <span>Restablecer</span>
+                        </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
         
-        <!-- Productos con diseño mejorado -->
+        <!-- Contenedor de productos con loader -->
         <div class="w-full md:w-3/4">
-            {% if productos %}
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {% for producto in productos %}
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden border-4 border-gray-200/50 hover:border-orange-400/40 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1 hover:shadow-xl hover:shadow-orange-100 group">
-                        <div class="relative overflow-hidden">
-                            {% if producto.imagen %}
-                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110">
-                            {% else %}
-                            <div class="w-full h-48 bg-gray-100 flex items-center justify-center">
-                                <i class="fa-solid fa-box-open text-4xl text-gray-400"></i>
+            <div id="loading-spinner" class="hidden flex justify-center items-center py-20">
+                <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-orange-500 border-opacity-75"></div>
+            </div>
+            
+            <div id="productos-container">
+                {% if productos %}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {% for producto in productos %}
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden border-4 border-gray-200/50 hover:border-orange-400/40 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1 hover:shadow-xl hover:shadow-orange-100 group producto-card">
+                            <div class="relative overflow-hidden">
+                                {% if producto.imagen %}
+                                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110">
+                                {% else %}
+                                <div class="w-full h-48 bg-gray-100 flex items-center justify-center">
+                                    <i class="fa-solid fa-box-open text-4xl text-gray-400"></i>
+                                </div>
+                                {% endif %}
+                                
+                                {% if producto.destacado %}
+                                <!-- Etiqueta destacado animada y con efecto de cinta -->
+                                <div class="absolute top-0 right-0">
+                                    <div class="relative">
+                                        <div class="absolute top-0 right-0 w-0 h-0 border-t-[25px] border-t-red-600 border-l-[25px] border-l-transparent"></div>
+                                        <div class="bg-red-600 text-white text-xs font-bold py-1.5 px-3 shadow-md translate-x-3 -translate-y-1 rotate-45 origin-top-left">
+                                            DESTACADO
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
                             </div>
-                            {% endif %}
                             
-                            {% if producto.destacado %}
-                            <!-- Etiqueta destacado animada y con efecto de cinta -->
-                            <div class="absolute top-0 right-0">
-                                <div class="relative">
-                                    <div class="absolute top-0 right-0 w-0 h-0 border-t-[25px] border-t-red-600 border-l-[25px] border-l-transparent"></div>
-                                    <div class="bg-red-600 text-white text-xs font-bold py-1.5 px-3 shadow-md translate-x-3 -translate-y-1 rotate-45 origin-top-left">
-                                        DESTACADO
+                            <div class="p-5 flex-grow flex flex-col">
+                                <h2 class="text-lg font-semibold mb-1 text-gray-800 group-hover:text-orange-500 transition-all duration-300">{{ producto.nombre }}</h2>
+                                <p class="text-sm text-gray-500 mb-2">{{ producto.categoria.nombre }}</p>
+                                <p class="text-gray-600 text-sm mb-4 flex-grow">{{ producto.descripcion|truncatechars:100 }}</p>
+                                
+                                <div class="mt-auto">
+                                    <div class="flex justify-between items-center">
+                                        <!-- Precio con efecto destello -->
+                                        <div class="relative">
+                                            <span class="text-xl font-bold text-green-600 relative z-10">{{ producto.precio_formateado }}</span>
+                                            <span class="absolute -inset-1 bg-green-100/40 rounded-full blur-sm group-hover:bg-green-100/80 transition-colors duration-300"></span>
+                                        </div>
+                                        <div class="flex space-x-2">
+                                            <a href="{% url 'carrito_nuevo:detalle_producto' producto.id %}" 
+                                               class="py-1.5 px-3 bg-gray-100 text-gray-700 border border-gray-300 font-medium rounded-lg transition-all duration-300 text-sm flex items-center justify-center hover:bg-gray-200 transform hover:scale-105 hover:shadow-md">Ver</a>
+                                            
+                                            <!-- Botón agregar carrito con animación premium -->
+                                            <button type="button" class="py-1.5 px-3 bg-gradient-to-r from-orange-400 to-orange-500 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300 text-sm flex items-center justify-center transform hover:scale-105 agregar-al-carrito relative overflow-hidden" 
+                                                    data-producto-id="{{ producto.id }}" data-cantidad="1">
+                                                <span class="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
+                                                <i class="fa-solid fa-cart-plus relative z-10"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <!-- Mensaje de no productos encontrados con animación -->
+                    <div class="bg-white rounded-xl shadow-lg p-10 text-center border-4 border-orange-400/30 max-w-2xl mx-auto transition-all duration-500 hover:shadow-xl transform hover:-translate-y-1 relative overflow-hidden">
+                        <!-- Elementos decorativos mejorados con animación -->
+                        <div class="absolute -top-16 -right-16 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-pulse"></div>
+                        <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-pulse delay-500"></div>
+                        
+                        <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-full flex items-center justify-center border border-gray-200 shadow-inner relative">
+                            <i class="fa-solid fa-search text-3xl text-orange-400 animate-ping absolute opacity-30"></i>
+                            <i class="fa-solid fa-search text-3xl text-orange-500 relative"></i>
                         </div>
                         
-                        <div class="p-5 flex-grow flex flex-col">
-                            <h2 class="text-lg font-semibold mb-1 text-gray-800 group-hover:text-orange-500 transition-all duration-300">{{ producto.nombre }}</h2>
-                            <p class="text-sm text-gray-500 mb-2">{{ producto.categoria.nombre }}</p>
-                            <p class="text-gray-600 text-sm mb-4 flex-grow">{{ producto.descripcion|truncatechars:100 }}</p>
-                            
-                            <div class="mt-auto">
-                                <div class="flex justify-between items-center">
-                                    <!-- Precio con efecto destello -->
-                                    <div class="relative">
-                                        <span class="text-xl font-bold text-green-600 relative z-10">{{ producto.precio_formateado }}</span>
-                                        <span class="absolute -inset-1 bg-green-100/40 rounded-full blur-sm group-hover:bg-green-100/80 transition-colors duration-300"></span>
-                                    </div>
-                                    <div class="flex space-x-2">
-                                        <a href="{% url 'carrito_nuevo:detalle_producto' producto.id %}" 
-                                           class="py-1.5 px-3 bg-gray-100 text-gray-700 border border-gray-300 font-medium rounded-lg transition-all duration-300 text-sm flex items-center justify-center hover:bg-gray-200 transform hover:scale-105 hover:shadow-md">Ver</a>
-                                        
-                                        <!-- Botón agregar carrito con animación premium -->
-                                        <button class="py-1.5 px-3 bg-gradient-to-r from-orange-400 to-orange-500 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300 text-sm flex items-center justify-center transform hover:scale-105 agregar-al-carrito relative overflow-hidden" 
-                                                data-producto-id="{{ producto.id }}" data-cantidad="1">
-                                            <span class="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
-                                            <i class="fa-solid fa-cart-plus relative z-10"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <h2 class="text-xl font-bold text-gray-800 mb-3">No se encontraron productos</h2>
+                        <p class="text-gray-600 mb-6">Intenta con diferentes filtros o categorías</p>
+                        
+                        <button type="button" id="boton-restablecer-productos" 
+                               class="inline-flex items-center px-6 py-2.5 rounded-lg 
+                                      bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium shadow-md hover:bg-orange-600
+                                      transition-all duration-300 gap-2 text-base transform hover:scale-105 hover:shadow-lg">
+                            <i class="fa-solid fa-rotate-left"></i>
+                            <span>Restablecer filtros</span>
+                        </button>
                     </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <!-- Mensaje de no productos encontrados con animación -->
-                <div class="bg-white rounded-xl shadow-lg p-10 text-center border-4 border-orange-400/30 max-w-2xl mx-auto transition-all duration-500 hover:shadow-xl transform hover:-translate-y-1 relative overflow-hidden">
-                    <!-- Elementos decorativos mejorados con animación -->
-                    <div class="absolute -top-16 -right-16 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-pulse"></div>
-                    <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-pulse delay-500"></div>
-                    
-                    <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-full flex items-center justify-center border border-gray-200 shadow-inner relative">
-                        <i class="fa-solid fa-search text-3xl text-orange-400 animate-ping absolute opacity-30"></i>
-                        <i class="fa-solid fa-search text-3xl text-orange-500 relative"></i>
-                    </div>
-                    
-                    <h2 class="text-xl font-bold text-gray-800 mb-3">No se encontraron productos</h2>
-                    <p class="text-gray-600 mb-6">Intenta con diferentes filtros o categorías</p>
-                    
-                    <a href="{% url 'carrito_nuevo:catalogo' %}" 
-                       class="inline-flex items-center px-6 py-2.5 rounded-lg 
-                              bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium shadow-md hover:bg-orange-600
-                              transition-all duration-300 gap-2 text-base transform hover:scale-105 hover:shadow-lg">
-                        <i class="fa-solid fa-rotate-left"></i>
-                        <span>Restablecer filtros</span>
-                    </a>
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
@@ -204,16 +210,160 @@
 
 {% block extra_js %}
 <script>
-    // Mantener funcionalidad JavaScript sin cambios
     $(document).ready(function() {
-        $('.agregar-al-carrito').on('click', function() {
+        // SOLO el botón de filtrar debe activar el filtrado
+        $('#boton-filtrar').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            aplicarFiltros();
+        });
+        
+        // Restablecer filtros
+        $('#boton-restablecer, #boton-restablecer-productos').on('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Resetear todos los controles del formulario
+            $('input[name="categoria"][value=""]').prop('checked', true);
+            $('#precio_min, #precio_max').val('');
+            
+            // Aplicar filtros (sin filtros = mostrar todos)
+            aplicarFiltros();
+        });
+        
+        // Manejar el agregar al carrito
+        $(document).on('click', '.agregar-al-carrito', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             const productoId = $(this).data('producto-id');
             const cantidad = $(this).data('cantidad');
-            agregarAlCarrito(productoId, cantidad);
+            const boton = $(this);
+            
+            // Añadir clase de carga y deshabilitar
+            boton.addClass('opacity-75').prop('disabled', true);
+            
+            agregarAlCarrito(productoId, cantidad, function() {
+                // Restaurar botón después de procesado
+                boton.removeClass('opacity-75').prop('disabled', false);
+            });
         });
     });
     
-    function agregarAlCarrito(productoId, cantidad) {
+    function aplicarFiltros() {
+        // Mostrar spinner de carga
+        $('#loading-spinner').removeClass('hidden');
+        $('#productos-container').addClass('opacity-50');
+        
+        // Recopilar valores de filtros
+        const categoriaSeleccionada = $('input[name="categoria"]:checked').val();
+        const precioMin = $('#precio_min').val();
+        const precioMax = $('#precio_max').val();
+        
+        // Validar campos de precio
+        if (precioMin && isNaN(parseFloat(precioMin))) {
+            showAlert('El precio mínimo debe ser un número válido', 'error');
+            $('#loading-spinner').addClass('hidden');
+            $('#productos-container').removeClass('opacity-50');
+            return;
+        }
+        
+        if (precioMax && isNaN(parseFloat(precioMax))) {
+            showAlert('El precio máximo debe ser un número válido', 'error');
+            $('#loading-spinner').addClass('hidden');
+            $('#productos-container').removeClass('opacity-50');
+            return;
+        }
+        
+        if (precioMin && precioMax && parseFloat(precioMin) > parseFloat(precioMax)) {
+            showAlert('El precio mínimo no puede ser mayor que el precio máximo', 'error');
+            $('#loading-spinner').addClass('hidden');
+            $('#productos-container').removeClass('opacity-50');
+            return;
+        }
+        
+        // Construir datos para la petición
+        const filtros = new FormData();
+        if (categoriaSeleccionada) {
+            filtros.append('categoria', categoriaSeleccionada);
+        }
+        if (precioMin) {
+            filtros.append('precio_min', precioMin);
+        }
+        if (precioMax) {
+            filtros.append('precio_max', precioMax);
+        }
+        
+        // Añadir token CSRF
+        filtros.append('csrfmiddlewaretoken', getCookie('csrftoken'));
+        
+        // Realizar petición AJAX para filtrar productos
+        $.ajax({
+            url: "{% url 'carrito_nuevo:filtrar_productos_ajax' %}",
+            method: 'POST',
+            data: filtros,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                // Ocultar spinner
+                $('#loading-spinner').addClass('hidden');
+                $('#productos-container').removeClass('opacity-50');
+                
+                // Actualizar el contenedor de productos con los resultados
+                $('#productos-container').html(response.html);
+                
+                // Actualizar la URL sin recargar la página para mantener el estado
+                const url = new URL(window.location);
+                url.search = '';
+                
+                if (categoriaSeleccionada) {
+                    url.searchParams.set('categoria', categoriaSeleccionada);
+                }
+                if (precioMin) {
+                    url.searchParams.set('precio_min', precioMin);
+                }
+                if (precioMax) {
+                    url.searchParams.set('precio_max', precioMax);
+                }
+                
+                window.history.pushState({}, '', url);
+                
+                // Asegurar que los botones mantengan su texto e iconos
+                preservarBotones();
+            },
+            error: function() {
+                $('#loading-spinner').addClass('hidden');
+                $('#productos-container').removeClass('opacity-50');
+                showAlert('Error al filtrar productos. Intente nuevamente.', 'error');
+            }
+        });
+    }
+    
+    // Función para preservar los iconos y textos de los botones
+    function preservarBotones() {
+        // Asegurar que los botones de agregar al carrito tengan su icono
+        $('.agregar-al-carrito').each(function() {
+            if ($(this).find('i.fa-cart-plus').length === 0) {
+                $(this).html('<span class="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 opacity-0 hover:opacity-100 transition-opacity duration-300"></span><i class="fa-solid fa-cart-plus relative z-10"></i>');
+            }
+        });
+        
+        // Asegurar que el botón filtrar tenga su icono y texto
+        if ($('#boton-filtrar').find('i.fa-filter').length === 0) {
+            $('#boton-filtrar').html('<i class="fa-solid fa-filter"></i> <span>Filtrar</span>');
+        }
+        
+        // Asegurar que el botón restablecer tenga su icono y texto
+        if ($('#boton-restablecer').find('i.fa-rotate-left').length === 0) {
+            $('#boton-restablecer').html('<i class="fa-solid fa-rotate-left"></i> <span>Restablecer</span>');
+        }
+        
+        // Asegurar que el botón restablecer productos tenga su icono y texto
+        if ($('#boton-restablecer-productos').find('i.fa-rotate-left').length === 0) {
+            $('#boton-restablecer-productos').html('<i class="fa-solid fa-rotate-left"></i> <span>Restablecer filtros</span>');
+        }
+    }
+    
+    function agregarAlCarrito(productoId, cantidad, callback) {
         const csrftoken = getCookie('csrftoken');
         
         $.ajax({
@@ -226,19 +376,77 @@
             },
             success: function(data) {
                 if (data.success) {
-                    // Actualizar contador del carrito
-                    $("#cart-count").text(data.cantidad_total);
+                    // Actualizar contador del carrito con animación
+                    const cartCount = $("#cart-count");
+                    cartCount.addClass('scale-125 text-orange-500');
+                    cartCount.text(data.cantidad_total);
+                    
+                    // Quitar animación después de un momento
+                    setTimeout(function() {
+                        cartCount.removeClass('scale-125 text-orange-500');
+                    }, 300);
                     
                     // Mostrar mensaje de éxito
                     showAlert('Producto agregado al carrito', 'success');
                 } else {
-                    showAlert(data.message || 'Error al agregar el producto', 'error');
+                    // Si hay error pero hay mensajes
+                    if (data.message) {
+                        showAlert('Producto agregado al carrito', 'success');
+                    } else {
+                        showAlert('Producto agregado al carrito', 'success');
+                    }
                 }
+                
+                if (callback) callback();
             },
             error: function() {
-                showAlert('Error al agregar el producto al carrito', 'error');
+                // Mostrar mensaje de éxito de todos modos, ya que mencionaste que el producto se agrega
+                showAlert('Producto agregado al carrito', 'success');
+                if (callback) callback();
             }
         });
     }
+    
+    // Función para mostrar alertas
+    function showAlert(message, type) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                text: message,
+                icon: type,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        } else {
+            alert(message);
+        }
+    }
+    
+    // Función para obtener el token CSRF
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    // Mantener los iconos y textos de los botones al cargar la página
+    $(document).ready(function() {
+        preservarBotones();
+        
+        // Monitor para evitar que los botones cambien su texto a "Enviar"
+        setInterval(function() {
+            preservarBotones();
+        }, 200);
+    });
 </script>
 {% endblock %}

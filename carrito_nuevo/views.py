@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import F, Sum
 from django.views.decorators.http import require_POST
 from decimal import Decimal
+from django.template.loader import render_to_string
 
 from .models import Producto, Categoria, Carrito, ItemCarrito, Pedido, EstadoPedido, ItemPedido
 
@@ -600,3 +601,46 @@ def detalle_pedido(request, pedido_id):
     }
     
     return render(request, 'carrito_nuevo/detalle_pedido.html', context)
+
+def filtrar_productos_ajax(request):
+    if request.method == 'POST':
+        # Obtener parámetros de filtro
+        categoria_id = request.POST.get('categoria', '')
+        precio_min = request.POST.get('precio_min', '')
+        precio_max = request.POST.get('precio_max', '')
+        
+        # Iniciar con todos los productos
+        productos = Producto.objects.all()
+        
+        # Filtrar por categoría si se especifica
+        if categoria_id:
+            productos = productos.filter(categoria_id=categoria_id)
+        
+        # Filtrar por precio mínimo si se especifica
+        if precio_min:
+            productos = productos.filter(precio__gte=float(precio_min))
+        
+        # Filtrar por precio máximo si se especifica
+        if precio_max:
+            productos = productos.filter(precio__lte=float(precio_max))
+        
+        # Obtener categorías para el contexto
+        categorias = Categoria.objects.all()
+        
+        # Renderizar el HTML parcial con los productos filtrados
+        html = render_to_string('carrito_nuevo/partials/productos_lista.html', {
+            'productos': productos,
+            'categoria_seleccionada': categoria_id,
+            'precio_min': precio_min,
+            'precio_max': precio_max,
+            'categorias': categorias,
+        }, request=request)
+        
+        # Devolver respuesta JSON con el HTML generado
+        return JsonResponse({
+            'success': True,
+            'html': html,
+            'count': productos.count()
+        })
+    
+    return JsonResponse({'success': False, 'message': 'Método no permitido'})
