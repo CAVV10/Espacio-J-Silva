@@ -5,100 +5,133 @@
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
-    <div class="flex flex-col md:flex-row gap-8">
-        <!-- Filtros -->
+    <!-- Título mejorado con efecto de resplandor -->
+    <h1 class="text-3xl font-bold mb-10 text-center relative pb-3">
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-700 drop-shadow-sm">Catálogo de Productos</span>
+        <span class="block absolute bottom-0 left-1/2 -translate-x-1/2 w-40 h-1 rounded-full bg-gradient-to-r from-orange-400 to-orange-600 animate-pulse"></span>
+    </h1>
+    
+    <div class="flex flex-col md:flex-row gap-8 relative">
+        <!-- Filtros mejorados con posición sticky -->
         <div class="w-full md:w-1/4">
-            <div class="bg-white rounded-lg shadow-md p-6 border border-secondary/30">
-                <h2 class="text-lg font-semibold mb-4 text-primary">Filtrar Productos</h2>
+            <div class="sticky top-4 bg-white rounded-xl shadow-lg p-6 border-4 border-orange-400/30 hover:border-orange-500/50 transition-all duration-300 transform hover:-translate-y-1 backdrop-blur-sm">
+                <!-- Título con icono y animación -->
+                <div class="flex items-center gap-2 mb-5">
+                    <i class="fa-solid fa-filter text-orange-500 text-xl animate-bounce-slow"></i>
+                    <h2 class="text-lg font-semibold text-gray-800 relative">
+                        Filtrar Productos
+                        <span class="block w-16 h-1 bg-orange-500/60 mt-2 rounded-full"></span>
+                    </h2>
+                </div>
                 
                 <form method="get" action="{% url 'carrito_nuevo:catalogo' %}">
-                    <!-- Categorías -->
+                    <!-- Categorías con indicadores mejorados -->
                     <div class="mb-6">
-                        <h3 class="text-md font-medium mb-2 text-dark">Categorías</h3>
-                        <div class="space-y-2">
-                            <div class="flex items-center">
+                        <h3 class="text-md font-medium mb-3 text-gray-700 pb-2 border-b border-gray-200 flex items-center gap-2">
+                            <i class="fa-solid fa-tags text-orange-400 text-sm"></i>
+                            Categorías
+                        </h3>
+                        <div class="space-y-3 pl-1">
+                            <div class="flex items-center group">
                                 <input type="radio" id="categoria-todas" name="categoria" value="" 
-                                       class="h-4 w-4 text-primary focus:ring-secondary/30" 
+                                       class="h-4 w-4 text-orange-500 focus:ring-orange-400 cursor-pointer" 
                                        {% if not categoria_seleccionada %}checked{% endif %}>
-                                <label for="categoria-todas" class="ml-2 text-sm text-dark">Todas</label>
+                                <label for="categoria-todas" class="ml-2 text-sm text-gray-700 group-hover:text-orange-500 transition-colors duration-200 cursor-pointer">Todas</label>
                             </div>
                             
                             {% for categoria in categorias %}
-                            <div class="flex items-center">
+                            <div class="flex items-center group">
                                 <input type="radio" id="categoria-{{ categoria.id }}" name="categoria" value="{{ categoria.id }}" 
-                                       class="h-4 w-4 text-primary focus:ring-secondary/30" 
+                                       class="h-4 w-4 text-orange-500 focus:ring-orange-400 cursor-pointer" 
                                        {% if categoria_seleccionada == categoria.id|stringformat:"i" %}checked{% endif %}>
-                                <label for="categoria-{{ categoria.id }}" class="ml-2 text-sm text-dark">{{ categoria.nombre }}</label>
+                                <label for="categoria-{{ categoria.id }}" class="ml-2 text-sm text-gray-700 group-hover:text-orange-500 transition-colors duration-200 cursor-pointer">{{ categoria.nombre }}</label>
                             </div>
                             {% endfor %}
                         </div>
                     </div>
                     
-                    <!-- Precio -->
+                    <!-- Precio con rango visual -->
                     <div class="mb-6">
-                        <h3 class="text-md font-medium mb-2 text-dark">Precio</h3>
-                        <div class="grid grid-cols-2 gap-2">
+                        <h3 class="text-md font-medium mb-3 text-gray-700 pb-2 border-b border-gray-200 flex items-center gap-2">
+                            <i class="fa-solid fa-dollar-sign text-orange-400 text-sm"></i>
+                            Precio
+                        </h3>
+                        <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label for="precio_min" class="block text-sm text-dark mb-1">Mínimo</label>
+                                <label for="precio_min" class="block text-sm text-gray-600 mb-1.5">Mínimo</label>
                                 <input type="number" id="precio_min" name="precio_min" value="{{ precio_min }}" 
-                                       class="w-full px-3 py-2 border border-secondary/30 rounded-md focus:outline-none focus:ring-1 focus:ring-secondary/30 text-sm">
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm transition-all duration-200 shadow-sm">
                             </div>
                             <div>
-                                <label for="precio_max" class="block text-sm text-dark mb-1">Máximo</label>
+                                <label for="precio_max" class="block text-sm text-gray-600 mb-1.5">Máximo</label>
                                 <input type="number" id="precio_max" name="precio_max" value="{{ precio_max }}" 
-                                       class="w-full px-3 py-2 border border-secondary/30 rounded-md focus:outline-none focus:ring-1 focus:ring-secondary/30 text-sm">
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm transition-all duration-200 shadow-sm">
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Botones -->
-                    <div class="flex space-x-2">
-                        <button type="submit" class="btn-primary py-2 px-4 text-sm">
-                            <i class="fa-solid fa-filter mr-1"></i> Filtrar
+                    <!-- Botones mejorados con efectos 3D sutiles -->
+                    <div class="flex gap-3">
+                        <button type="submit" class="flex-1 py-2.5 px-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-lg shadow-md hover:shadow-orange-200/50 hover:shadow-lg transition-all duration-300 text-sm flex items-center justify-center gap-1.5 hover:scale-105 transform active:scale-95">
+                            <i class="fa-solid fa-filter"></i> Filtrar
                         </button>
-                        <a href="{% url 'carrito_nuevo:catalogo' %}" class="btn-secondary py-2 px-4 text-sm">
-                            <i class="fa-solid fa-rotate-left mr-1"></i> Restablecer
+                        <a href="{% url 'carrito_nuevo:catalogo' %}" class="flex-1 py-2.5 px-4 bg-gradient-to-b from-gray-50 to-gray-100 text-gray-700 border border-gray-300 font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300 text-sm flex items-center justify-center gap-1.5 hover:scale-105 transform active:scale-95">
+                            <i class="fa-solid fa-rotate-left"></i> Restablecer
                         </a>
                     </div>
                 </form>
             </div>
         </div>
         
-        <!-- Productos -->
+        <!-- Productos con diseño mejorado -->
         <div class="w-full md:w-3/4">
-            <h1 class="text-2xl font-bold mb-6 text-primary">Catálogo de Productos</h1>
-            
             {% if productos %}
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {% for producto in productos %}
-                    <div class="card h-full flex flex-col hover:border-secondary transition-all">
-                        <div class="relative">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden border-4 border-gray-200/50 hover:border-orange-400/40 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1 hover:shadow-xl hover:shadow-orange-100 group">
+                        <div class="relative overflow-hidden">
                             {% if producto.imagen %}
-                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-full h-48 object-cover">
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110">
                             {% else %}
                             <div class="w-full h-48 bg-gray-100 flex items-center justify-center">
-                                <i class="fa-solid fa-box-open text-secondary text-4xl"></i>
+                                <i class="fa-solid fa-box-open text-4xl text-gray-400"></i>
                             </div>
                             {% endif %}
                             
                             {% if producto.destacado %}
-                            <span class="absolute top-2 right-2 badge bg-secondary text-white">Destacado</span>
+                            <!-- Etiqueta destacado animada y con efecto de cinta -->
+                            <div class="absolute top-0 right-0">
+                                <div class="relative">
+                                    <div class="absolute top-0 right-0 w-0 h-0 border-t-[25px] border-t-red-600 border-l-[25px] border-l-transparent"></div>
+                                    <div class="bg-red-600 text-white text-xs font-bold py-1.5 px-3 shadow-md translate-x-3 -translate-y-1 rotate-45 origin-top-left">
+                                        DESTACADO
+                                    </div>
+                                </div>
+                            </div>
                             {% endif %}
                         </div>
                         
-                        <div class="p-4 flex-grow flex flex-col">
-                            <h2 class="text-lg font-semibold mb-1 text-primary">{{ producto.nombre }}</h2>
-                            <p class="text-sm text-secondary mb-2">{{ producto.categoria.nombre }}</p>
-                            <p class="text-dark text-sm mb-4 flex-grow">{{ producto.descripcion|truncatechars:100 }}</p>
+                        <div class="p-5 flex-grow flex flex-col">
+                            <h2 class="text-lg font-semibold mb-1 text-gray-800 group-hover:text-orange-500 transition-all duration-300">{{ producto.nombre }}</h2>
+                            <p class="text-sm text-gray-500 mb-2">{{ producto.categoria.nombre }}</p>
+                            <p class="text-gray-600 text-sm mb-4 flex-grow">{{ producto.descripcion|truncatechars:100 }}</p>
                             
                             <div class="mt-auto">
                                 <div class="flex justify-between items-center">
-                                    <span class="text-lg font-bold text-primary">{{ producto.precio_formateado }}</span>
+                                    <!-- Precio con efecto destello -->
+                                    <div class="relative">
+                                        <span class="text-xl font-bold text-green-600 relative z-10">{{ producto.precio_formateado }}</span>
+                                        <span class="absolute -inset-1 bg-green-100/40 rounded-full blur-sm group-hover:bg-green-100/80 transition-colors duration-300"></span>
+                                    </div>
                                     <div class="flex space-x-2">
-                                        <a href="{% url 'carrito_nuevo:detalle_producto' producto.id %}" class="btn-secondary py-1 px-2 text-sm">Ver</a>
-                                        <button class="btn-primary py-1 px-2 text-sm agregar-al-carrito" 
+                                        <a href="{% url 'carrito_nuevo:detalle_producto' producto.id %}" 
+                                           class="py-1.5 px-3 bg-gray-100 text-gray-700 border border-gray-300 font-medium rounded-lg transition-all duration-300 text-sm flex items-center justify-center hover:bg-gray-200 transform hover:scale-105 hover:shadow-md">Ver</a>
+                                        
+                                        <!-- Botón agregar carrito con animación premium -->
+                                        <button class="py-1.5 px-3 bg-gradient-to-r from-orange-400 to-orange-500 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300 text-sm flex items-center justify-center transform hover:scale-105 agregar-al-carrito relative overflow-hidden" 
                                                 data-producto-id="{{ producto.id }}" data-cantidad="1">
-                                            <i class="fa-solid fa-cart-plus"></i>
+                                            <span class="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
+                                            <i class="fa-solid fa-cart-plus relative z-10"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -108,20 +141,70 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <div class="bg-gray-100 rounded-lg p-8 text-center border border-secondary/30">
-                    <i class="fa-solid fa-search text-4xl text-secondary mb-4"></i>
-                    <h2 class="text-xl font-semibold text-primary mb-2">No se encontraron productos</h2>
-                    <p class="text-dark">Intenta con diferentes filtros o categorías</p>
+                <!-- Mensaje de no productos encontrados con animación -->
+                <div class="bg-white rounded-xl shadow-lg p-10 text-center border-4 border-orange-400/30 max-w-2xl mx-auto transition-all duration-500 hover:shadow-xl transform hover:-translate-y-1 relative overflow-hidden">
+                    <!-- Elementos decorativos mejorados con animación -->
+                    <div class="absolute -top-16 -right-16 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-pulse"></div>
+                    <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-pulse delay-500"></div>
+                    
+                    <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-full flex items-center justify-center border border-gray-200 shadow-inner relative">
+                        <i class="fa-solid fa-search text-3xl text-orange-400 animate-ping absolute opacity-30"></i>
+                        <i class="fa-solid fa-search text-3xl text-orange-500 relative"></i>
+                    </div>
+                    
+                    <h2 class="text-xl font-bold text-gray-800 mb-3">No se encontraron productos</h2>
+                    <p class="text-gray-600 mb-6">Intenta con diferentes filtros o categorías</p>
+                    
+                    <a href="{% url 'carrito_nuevo:catalogo' %}" 
+                       class="inline-flex items-center px-6 py-2.5 rounded-lg 
+                              bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium shadow-md hover:bg-orange-600
+                              transition-all duration-300 gap-2 text-base transform hover:scale-105 hover:shadow-lg">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Restablecer filtros</span>
+                    </a>
                 </div>
             {% endif %}
         </div>
     </div>
 </div>
+
+<style>
+    /* Animaciones mejoradas */
+    @keyframes pulse {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+    }
+    
+    .animate-pulse {
+        animation: pulse 2s infinite ease-in-out;
+    }
+    
+    .delay-500 {
+        animation-delay: 0.5s;
+    }
+    
+    @keyframes bounce-slow {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-3px); }
+    }
+    
+    .animate-bounce-slow {
+        animation: bounce-slow 3s infinite ease-in-out;
+    }
+    
+    @keyframes ping {
+        75%, 100% { transform: scale(1.2); opacity: 0; }
+    }
+    
+    .animate-ping {
+        animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+</style>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // Agregar eventos a los botones
+    // Mantener funcionalidad JavaScript sin cambios
     $(document).ready(function() {
         $('.agregar-al-carrito').on('click', function() {
             const productoId = $(this).data('producto-id');

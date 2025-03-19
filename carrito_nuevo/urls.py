@@ -5,7 +5,7 @@ app_name = 'carrito_nuevo'
 
 urlpatterns = [
     # Catálogo y productos
-    path('catalogo/', views.catalogo, name='catalogo'),
+    path('', views.catalogo, name='catalogo'),
     path('producto/<int:producto_id>/', views.detalle_producto, name='detalle_producto'),
     
     # Carrito

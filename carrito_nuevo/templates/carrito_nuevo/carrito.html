@@ -4,135 +4,271 @@
 {% block title %}Carrito de Compras | J Silva Ingeniería{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+    <!-- Título eliminado como solicitaste -->
+    
     <div class="flex flex-col md:flex-row gap-8">
         <!-- Contenido del carrito -->
-        <div class="w-full md:w-2/3">
-            <h1 class="text-2xl font-bold mb-4 text-primary">Carrito de Compras</h1>
-            
-            <!-- Cabecera para desktop -->
-            <div class="hidden md:grid grid-cols-6 gap-4 px-6 py-3 bg-gray-100 rounded-t-lg font-medium text-primary border border-secondary/30">
-                <div class="col-span-2">Producto</div>
-                <div class="text-center">Precio</div>
-                <div class="text-center">Cantidad</div>
-                <div class="text-center">Subtotal</div>
-                <div class="text-center">Acciones</div>
-            </div>
-            
+        <div class="w-full {% if items %}md:w-2/3{% endif %} mx-auto">
             {% if items %}
-                <div class="bg-white rounded-b-lg shadow-md overflow-hidden border-x border-b border-secondary/30">
+                <!-- Cabecera para desktop con glassmorphism -->
+                <div class="hidden md:grid grid-cols-6 gap-4 px-6 py-4 bg-gradient-to-r from-gray-50/90 to-secondary/5 backdrop-blur-sm rounded-t-xl font-medium text-primary border border-secondary/20 shadow-md">
+                    <div class="col-span-2 flex items-center gap-2">
+                        <i class="fa-solid fa-box-open text-secondary"></i>
+                        <span>Producto</span>
+                    </div>
+                    <div class="text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-tag text-secondary"></i>
+                        <span>Precio</span>
+                    </div>
+                    <div class="text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-hashtag text-secondary"></i>
+                        <span>Cantidad</span>
+                    </div>
+                    <div class="text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-calculator text-secondary"></i>
+                        <span>Subtotal</span>
+                    </div>
+                    <div class="text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-gear text-secondary"></i>
+                        <span>Acciones</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white/90 backdrop-blur-sm rounded-b-xl shadow-xl overflow-hidden border-x border-b border-secondary/20 transition-all duration-300">
                     {% for item in items %}
-                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4 p-4 md:p-6 {% if not forloop.last %}border-b border-gray-200{% endif %} items-center" id="item-row-{{ item.id }}">
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4 p-4 md:p-6 {% if not forloop.last %}border-b border-gray-200{% endif %} items-center hover:bg-secondary/5 transition-all duration-300 group" id="item-row-{{ item.id }}">
                         <!-- Producto (móvil y desktop) -->
                         <div class="col-span-1 md:col-span-2 flex items-center space-x-4">
-                            <div class="w-20 h-20 flex-shrink-0">
+                            <div class="w-20 h-20 flex-shrink-0 overflow-hidden rounded-xl shadow-md group-hover:shadow-lg transition-all duration-300">
                                 {% if item.producto.imagen %}
-                                <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="w-full h-full object-cover rounded">
+                                <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-110">
                                 {% else %}
-                                <div class="w-full h-full bg-gray-100 flex items-center justify-center rounded border border-secondary/20">
+                                <div class="w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center rounded-xl border border-secondary/10 group-hover:from-secondary/5 group-hover:to-secondary/10 transition-all duration-300">
                                     <i class="fa-solid fa-box-open text-secondary text-xl"></i>
                                 </div>
                                 {% endif %}
                             </div>
                             <div>
-                                <h3 class="font-medium text-primary">{{ item.producto.nombre }}</h3>
-                                <p class="text-sm text-secondary">{{ item.producto.categoria.nombre }}</p>
+                                <h3 class="font-medium text-primary group-hover:text-secondary transition-colors duration-300">{{ item.producto.nombre }}</h3>
+                                <p class="text-sm text-secondary/80">{{ item.producto.categoria.nombre }}</p>
                             </div>
                         </div>
                         
-                        <!-- Precio unitario (móvil y desktop) -->
+                        <!-- Precio unitario -->
                         <div class="md:text-center">
                             <span class="md:hidden text-dark">Precio: </span>
-                            <span class="font-medium text-primary">{{ item.producto.precio_formateado }}</span>
+                            <span class="font-medium text-primary group-hover:text-secondary transition-colors duration-300">{{ item.producto.precio_formateado }}</span>
                         </div>
                         
-                        <!-- Cantidad (móvil y desktop) -->
+                        <!-- Cantidad con controles mejorados -->
                         <div class="flex items-center md:justify-center">
                             <span class="md:hidden text-dark mr-2">Cantidad: </span>
-                            <div class="flex items-center space-x-2">
+                            <div class="flex items-center bg-gray-50 p-1 rounded-full shadow-inner border border-gray-200 group-hover:bg-white group-hover:border-secondary/20 transition-all duration-300">
                                 <button type="button" 
-                                        class="w-8 h-8 bg-gray-200 hover:bg-secondary/20 rounded-full flex items-center justify-center focus:outline-none actualizar-cantidad" 
+                                        class="w-8 h-8 bg-white hover:bg-secondary/10 rounded-full flex items-center justify-center focus:outline-none shadow-sm hover:shadow actualizar-cantidad transition-all duration-200 hover:scale-105" 
                                         data-item-id="{{ item.id }}" data-cantidad="{{ item.cantidad|add:'-1' }}">
-                                    <i class="fa-solid fa-minus text-dark"></i>
+                                    <i class="fa-solid fa-minus text-secondary/80"></i>
                                 </button>
                                 
-                                <span id="cantidad-{{ item.id }}" class="w-6 text-center">{{ item.cantidad }}</span>
+                                <span id="cantidad-{{ item.id }}" class="w-8 text-center font-medium text-primary">{{ item.cantidad }}</span>
                                 
                                 <button type="button" 
-                                        class="w-8 h-8 bg-gray-200 hover:bg-secondary/20 rounded-full flex items-center justify-center focus:outline-none actualizar-cantidad" 
+                                        class="w-8 h-8 bg-white hover:bg-secondary/10 rounded-full flex items-center justify-center focus:outline-none shadow-sm hover:shadow actualizar-cantidad transition-all duration-200 hover:scale-105" 
                                         data-item-id="{{ item.id }}" data-cantidad="{{ item.cantidad|add:'1' }}">
-                                    <i class="fa-solid fa-plus text-dark"></i>
+                                    <i class="fa-solid fa-plus text-secondary/80"></i>
                                 </button>
                             </div>
                         </div>
                         
-                        <!-- Subtotal (móvil y desktop) -->
+                        <!-- Subtotal -->
                         <div class="md:text-center">
                             <span class="md:hidden text-dark">Subtotal: </span>
-                            <span id="subtotal-{{ item.id }}" class="font-medium text-primary">{{ item.subtotal_formateado }}</span>
+                            <span id="subtotal-{{ item.id }}" class="font-medium text-primary group-hover:text-secondary transition-colors duration-300">{{ item.subtotal_formateado }}</span>
                         </div>
                         
-                        <!-- Acciones (móvil y desktop) -->
+                        <!-- Acciones -->
                         <div class="flex md:justify-center">
                             <button type="button" 
-                                    class="w-8 h-8 bg-red-100 hover:bg-red-200 text-red-600 rounded-full flex items-center justify-center focus:outline-none eliminar-del-carrito" 
+                                    class="w-10 h-10 bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-600 rounded-full flex items-center justify-center focus:outline-none shadow-sm hover:shadow-md transition-all duration-300 hover:scale-110 eliminar-del-carrito relative overflow-hidden" 
                                     data-item-id="{{ item.id }}">
-                                <i class="fa-solid fa-trash"></i>
+                                <i class="fa-solid fa-trash relative z-10"></i>
+                                <span class="absolute inset-0 bg-red-200 transform scale-0 rounded-full transition-transform duration-300 ease-out group-hover:scale-100"></span>
                             </button>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
                 
-                <div class="flex justify-between mt-6">
-                    <a href="{% url 'carrito_nuevo:catalogo' %}" class="btn-secondary flex items-center">
-                        <i class="fa-solid fa-arrow-left mr-2"></i> Seguir comprando
+                <!-- Botones de acción mejorados -->
+                <div class="flex justify-between mt-8">
+                    <a href="{% url 'carrito_nuevo:catalogo' %}" 
+                       class="action-button flex items-center px-6 py-3 rounded-xl 
+                              bg-gradient-to-br from-gray-50 to-gray-100 text-primary border border-gray-200
+                              shadow-md hover:shadow-lg transition-all duration-300 gap-2 group
+                              hover:bg-gradient-to-br hover:from-primary/5 hover:to-secondary/10
+                              hover:border-secondary/20 hover:text-secondary">
+                        <span class="bg-white p-2 rounded-full shadow group-hover:shadow-md transition-all duration-300">
+                            <i class="fa-solid fa-arrow-left text-secondary"></i>
+                        </span>
+                        <span class="font-medium">Seguir comprando</span>
                     </a>
-                    <button type="button" class="btn-danger flex items-center vaciar-carrito">
-                        <i class="fa-solid fa-trash mr-2"></i> Vaciar carrito
+                    
+                    <button type="button" 
+                            class="action-button flex items-center px-6 py-3 rounded-xl
+                                  bg-gradient-to-br from-red-50 to-red-100 text-red-500 border border-red-200
+                                  shadow-md hover:shadow-lg transition-all duration-300 gap-2 group
+                                  hover:bg-gradient-to-br hover:from-red-100 hover:to-red-200
+                                  hover:border-red-300 hover:text-red-600 vaciar-carrito">
+                        <span class="bg-white p-2 rounded-full shadow group-hover:shadow-md transition-all duration-300">
+                            <i class="fa-solid fa-trash text-red-500"></i>
+                        </span>
+                        <span class="font-medium">Vaciar carrito</span>
                     </button>
                 </div>
             {% else %}
-                <div class="bg-white rounded-lg shadow-md p-8 text-center border border-secondary/30">
-                    <i class="fa-solid fa-cart-shopping text-4xl text-secondary mb-4"></i>
-                    <h2 class="text-xl font-semibold text-primary mb-2">Tu carrito está vacío</h2>
-                    <p class="text-dark mb-6">Agrega productos para comenzar tu compra</p>
-                    <a href="{% url 'carrito_nuevo:catalogo' %}" class="btn-primary inline-block">
-                        <i class="fa-solid fa-store mr-2"></i> Ir al catálogo
+                <!-- Carrito vacío optimizado con ajustes de texto y colores -->
+                <div class="bg-white/98 backdrop-blur-sm rounded-2xl shadow-xl p-8 text-center 
+                            border-4 border-secondary/60 max-w-xl mx-auto 
+                            transition-all duration-500 hover:shadow-2xl hover:border-secondary/80
+                            transform hover:-translate-y-1 relative overflow-hidden
+                            group/container">
+                    <!-- Elementos decorativos de fondo -->
+                    <div class="absolute -top-16 -right-16 w-32 h-32 bg-primary/15 rounded-full blur-xl group-hover/container:bg-primary/30 group-hover/container:w-40 group-hover/container:h-40 transition-all duration-700"></div>
+                    <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-secondary/15 rounded-full blur-xl group-hover/container:bg-secondary/30 group-hover/container:w-40 group-hover/container:h-40 transition-all duration-700"></div>
+                    
+                    <!-- Efecto de brillo en hover -->
+                    <div class="absolute inset-0 bg-gradient-to-tr from-primary/5 via-secondary/5 to-primary/5 
+                                group-hover/container:from-primary/15 group-hover/container:via-secondary/20 group-hover/container:to-primary/15 
+                                transition-all duration-700 opacity-50 group-hover/container:opacity-100"></div>
+                    
+                    <!-- Línea decorativa superior -->
+                    <div class="w-32 h-1.5 bg-gradient-to-r from-primary/70 to-secondary/70 rounded-full mx-auto mb-6 
+                                group-hover/container:w-48 group-hover/container:from-primary/90 group-hover/container:to-secondary/90
+                                transition-all duration-500"></div>
+                    
+                    <!-- Contenedor del icono con efectos -->
+                    <div class="relative w-24 h-24 mx-auto mb-5">
+                        <div class="absolute inset-0 bg-secondary/15 rounded-full animate-pulse 
+                                    group-hover/container:bg-secondary/30 transition-colors duration-300"></div>
+                        <div class="absolute inset-2 bg-white rounded-full shadow-inner border-2 border-secondary/20 
+                                    group-hover/container:border-secondary/40 transition-colors duration-300"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fa-solid fa-cart-shopping text-4xl text-secondary animate-bounce-subtle"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Textos más compactos y llamativos -->
+                    <h2 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2 drop-shadow-sm">Tu carrito está vacío</h2>
+                    <p class="text-dark mb-6 text-base">Agrega productos para comenzar tu compra</p>
+                    
+                    <!-- Botón con texto más ligero y fondos más oscuros para mejor contraste -->
+                    <a href="{% url 'carrito_nuevo:catalogo' %}" 
+                       class="catalog-button inline-flex items-center px-8 py-3 rounded-xl 
+                              bg-gradient-to-r from-primary/90 to-secondary/90 text-white font-normal
+                              shadow-lg hover:shadow-2xl transition-all duration-500 gap-3 text-base
+                              transform hover:scale-105 relative overflow-hidden group">
+                        <!-- Efectos internos con colores más oscuros -->
+                        <span class="absolute inset-0 bg-gradient-to-r from-secondary/90 to-primary/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                        <span class="absolute bottom-0 left-0 right-0 h-1 bg-white/60 transform scale-x-0 origin-left transition-transform duration-500 group-hover:scale-x-100"></span>
+                        
+                        <!-- Icono flotante -->
+                        <span class="relative z-10 bg-white/30 p-2 rounded-lg backdrop-blur-sm group-hover:bg-white/50 transition-all duration-300">
+                            <i class="fa-solid fa-store text-lg text-white group-hover:text-white transition-all duration-300"></i>
+                        </span>
+                        
+                        <!-- Texto con fuente más ligera para mejor legibilidad -->
+                        <span class="relative z-10 transition-all duration-300 text-white group-hover:text-white group-hover:font-medium tracking-wide group-hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.9)]">Ir al catálogo</span>
                     </a>
+                    
+                    <!-- Línea decorativa inferior -->
+                    <div class="w-24 h-1.5 bg-gradient-to-r from-secondary/70 to-primary/70 rounded-full mx-auto mt-6 
+                                group-hover/container:w-32 group-hover/container:from-secondary/90 group-hover/container:to-primary/90
+                                transition-all duration-500"></div>
                 </div>
             {% endif %}
         </div>
         
-        <!-- Resumen del carrito -->
+        <!-- Resumen del carrito con diseño mejorado -->
+        {% if items %}
         <div class="w-full md:w-1/3" id="carrito-resumen">
-            {% if items %}
-            <div class="bg-white rounded-lg shadow-md p-6 sticky top-4 border border-secondary/30">
-                <h2 class="text-lg font-bold mb-4 text-primary">Resumen de compra</h2>
+            <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 sticky top-4 border border-secondary/20 hover:shadow-2xl transition-all duration-300 overflow-hidden group">
+                <!-- Elementos decorativos -->
+                <div class="absolute -right-10 -top-10 w-20 h-20 bg-secondary/5 rounded-full blur-xl transform group-hover:scale-150 transition-transform duration-500"></div>
                 
-                <div class="space-y-2 mb-4">
-                    <div class="flex justify-between pb-2 border-b border-gray-200">
-                        <span class="text-dark">Subtotal</span>
-                        <span class="font-medium text-primary" id="subtotal-general">{{ carrito.total_formateado }}</span>
+                <h2 class="text-xl font-bold mb-5 text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-gradient-to-r after:from-primary/30 after:to-secondary/30">Resumen de compra</h2>
+                
+                <div class="space-y-4 mb-6 relative">
+                    <div class="flex justify-between pb-3 border-b border-gray-200 group/item hover:border-secondary/20 transition-colors duration-300">
+                        <span class="text-dark group-hover/item:text-primary transition-colors duration-300">Subtotal</span>
+                        <span class="font-medium text-primary group-hover/item:text-secondary transition-colors duration-300" id="subtotal-general">{{ carrito.total_formateado }}</span>
                     </div>
-                    <div class="flex justify-between pb-2 border-b border-gray-200">
-                        <span class="text-dark">Envío</span>
+                    <div class="flex justify-between pb-3 border-b border-gray-200 group/item hover:border-secondary/20 transition-colors duration-300">
+                        <span class="text-dark group-hover/item:text-primary transition-colors duration-300">Envío</span>
                         <span class="font-medium text-green-600">Gratis</span>
                     </div>
-                    <div class="flex justify-between pt-2">
-                        <span class="text-lg font-bold text-primary">Total</span>
-                        <span class="text-lg font-bold text-primary" id="total-principal">{{ carrito.total_formateado }}</span>
+                    <div class="flex justify-between pt-3 group/item">
+                        <span class="text-lg font-bold text-primary group-hover/item:text-secondary transition-colors duration-300">Total</span>
+                        <span class="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary" id="total-principal">{{ carrito.total_formateado }}</span>
                     </div>
                 </div>
                 
-                <a href="{% url 'carrito_nuevo:checkout' %}" class="btn-primary w-full text-center justify-center flex items-center">
-                    <i class="fa-solid fa-credit-card mr-2"></i> Finalizar compra
+                <!-- Botón de finalizar compra mejorado -->
+                <a href="{% url 'carrito_nuevo:checkout' %}" 
+                   class="checkout-button w-full text-center justify-center flex items-center py-4 px-6 rounded-xl
+                         bg-gradient-to-r from-primary to-secondary text-white font-bold
+                         shadow-md hover:shadow-xl transition-all duration-300 gap-2 text-lg
+                         relative overflow-hidden group/btn">
+                    <span class="absolute inset-0 bg-gradient-to-r from-secondary to-primary opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></span>
+                    <i class="fa-solid fa-credit-card text-xl relative z-10"></i>
+                    <span class="relative z-10">Finalizar compra</span>
                 </a>
             </div>
-            {% endif %}
         </div>
+        {% endif %}
     </div>
 </div>
+
+<style>
+    /* Animación de rebote sutil para el icono del carrito */
+    @keyframes bounce-subtle {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+    
+    .animate-bounce-subtle {
+        animation: bounce-subtle 2s infinite ease-in-out;
+    }
+    
+    /* Efecto resplandor para botones */
+    .catalog-button::after, 
+    .checkout-button::after {
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: -100%;
+        width: 300%;
+        height: 300%;
+        background: linear-gradient(60deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transform: rotate(30deg);
+        transition: transform 0.8s ease-out;
+    }
+    
+    .catalog-button:hover::after,
+    .checkout-button:hover::after {
+        transform: rotate(30deg) translate(50%, 50%);
+    }
+    
+    /* Sombra de texto sutil */
+    .text-shadow-sm {
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    /* Efectos adicionales para botones de acción */
+    .action-button:hover {
+        transform: translateY(-2px);
+    }
+</style>
 {% endblock %}
 
 {% block extra_js %}

@@ -5,66 +5,94 @@
 
 {% block content %}
 <div class="container mx-auto px-4 py-8">
-    <!-- Breadcrumbs -->
-    <nav class="text-sm text-dark mb-6">
-        <ol class="flex items-center space-x-2">
-            <li><a href="{% url 'carrito_nuevo:catalogo' %}" class="hover:text-secondary">Catálogo</a></li>
-            <li class="flex items-center space-x-2">
-                <span class="text-dark mx-2">/</span>
-                <a href="{% url 'carrito_nuevo:catalogo' %}?categoria={{ producto.categoria.id }}" class="hover:text-secondary">{{ producto.categoria.nombre }}</a>
+    <!-- MIGAS DE PAN COMPACTAS Y SIN ESPACIOS -->
+    <nav class="text-sm mb-6 inline-block bg-white/90 rounded-lg shadow-sm py-2 px-4 border border-orange-200/30">
+        <ol class="inline-flex items-center flex-wrap">
+            <li class="inline-flex items-center">
+                <a href="{% url 'carrito_nuevo:catalogo' %}" class="text-gray-600 hover:text-orange-500 transition-colors">Catálogo</a>
             </li>
-            <li class="flex items-center space-x-2">
-                <span class="text-dark mx-2">/</span>
-                <span class="text-primary">{{ producto.nombre }}</span>
+            <li class="inline-flex items-center">
+                <span class="text-orange-400 mx-1">/</span>
+                <a href="{% url 'carrito_nuevo:catalogo' %}?categoria={{ producto.categoria.id }}" class="text-gray-600 hover:text-orange-500 transition-colors">{{ producto.categoria.nombre }}</a>
+            </li>
+            <li class="inline-flex items-center">
+                <span class="text-orange-400 mx-1">/</span>
+                <span class="text-gray-800 font-medium">{{ producto.nombre }}</span>
             </li>
         </ol>
     </nav>
     
-    <!-- Detalle del producto -->
-    <div class="bg-white rounded-lg shadow-md overflow-hidden border border-secondary/30">
+    <!-- Detalle del producto con diseño premium -->
+    <div class="bg-white rounded-xl shadow-xl overflow-hidden border-4 border-orange-400/30 hover:shadow-2xl transition-duration-300">
         <div class="md:flex">
             <!-- Imágenes del producto -->
             <div class="w-full md:w-1/2">
                 <div class="p-6">
-                    <div class="aspect-w-1 aspect-h-1 bg-gray-100 rounded-lg overflow-hidden border border-secondary/20">
+                    <div class="aspect-w-1 aspect-h-1 bg-gray-50 rounded-xl overflow-hidden border-2 border-orange-200/30 shadow-md group">
                         {% if producto.imagen %}
-                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-full h-full object-cover">
+                        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                         {% else %}
                         <div class="w-full h-full flex items-center justify-center">
-                            <i class="fa-solid fa-box-open text-5xl text-secondary"></i>
+                            <i class="fa-solid fa-box-open text-5xl text-gray-300"></i>
                         </div>
                         {% endif %}
                     </div>
+                    
+                    {% if producto.destacado %}
+                    <div class="mt-4 inline-block bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-2 px-4 text-sm rounded-lg shadow-md animate-pulse">
+                        <i class="fa-solid fa-star mr-1"></i> PRODUCTO DESTACADO
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             
             <!-- Información del producto -->
             <div class="w-full md:w-1/2 p-6 flex flex-col">
-                <h1 class="text-2xl font-bold mb-2 text-primary">{{ producto.nombre }}</h1>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2 relative">
+                    {{ producto.nombre }}
+                    <span class="block w-24 h-1 bg-orange-500/60 mt-2 rounded-full"></span>
+                </h1>
                 
                 <div class="mb-4">
-                    <span class="text-sm text-dark">Categoría: </span>
-                    <a href="{% url 'carrito_nuevo:catalogo' %}?categoria={{ producto.categoria.id }}" class="text-sm text-secondary hover:underline">
-                        {{ producto.categoria.nombre }}
-                    </a>
+                    <span class="text-sm text-gray-500 flex items-center gap-1">
+                        <i class="fa-solid fa-tag text-orange-400"></i>
+                        Categoría: 
+                        <a href="{% url 'carrito_nuevo:catalogo' %}?categoria={{ producto.categoria.id }}" class="text-orange-500 hover:underline">
+                            {{ producto.categoria.nombre }}
+                        </a>
+                    </span>
                 </div>
                 
-                <div class="text-2xl font-bold mb-4 text-secondary">{{ producto.precio_formateado }}</div>
+                <!-- Precio con efecto destello -->
+                <div class="mb-6 relative">
+                    <div class="absolute -inset-2 bg-green-100/40 rounded-lg blur-xl animate-pulse-slow"></div>
+                    <div class="relative z-10">
+                        <span class="text-3xl font-bold text-green-600">{{ producto.precio_formateado }}</span>
+                    </div>
+                </div>
                 
+                <!-- Descripción mejorada -->
+                <div class="mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200/50">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-info text-orange-400"></i>
+                        Descripción
+                    </h2>
+                    <p class="text-gray-600 pl-1">{{ producto.descripcion }}</p>
+                </div>
+                
+                <!-- Selector de cantidad mejorado -->
                 <div class="mb-6">
-                    <h2 class="text-lg font-semibold mb-2 text-primary">Descripción</h2>
-                    <p class="text-dark">{{ producto.descripcion }}</p>
-                </div>
-                
-                <div class="mb-8">
-                    <h2 class="text-lg font-semibold mb-3 text-primary">Cantidad</h2>
-                    <div class="flex items-center">
-                        <button type="button" onclick="cambiarCantidad(-1)" class="bg-gray-200 text-dark p-2 rounded-l hover:bg-secondary hover:text-white transition-colors">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-1.5">
+                        <i class="fa-solid fa-cubes text-orange-400"></i>
+                        Cantidad
+                    </h2>
+                    <div class="flex items-center bg-gray-100 p-1.5 rounded-lg shadow-inner border border-gray-200 transition-all duration-300 hover:border-orange-200 w-max">
+                        <button type="button" onclick="cambiarCantidad(-1)" class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-orange-500 hover:bg-white rounded-full transition-all duration-200">
                             <i class="fa-solid fa-minus"></i>
                         </button>
                         <input type="number" id="cantidad" name="cantidad" value="1" min="1" max="{{ producto.stock }}" 
-                               class="w-16 py-2 px-3 text-center border-t border-b border-secondary/30">
-                        <button type="button" onclick="cambiarCantidad(1)" class="bg-gray-200 text-dark p-2 rounded-r hover:bg-secondary hover:text-white transition-colors">
+                               class="w-14 text-center bg-transparent border-0 text-gray-800 focus:outline-none font-medium">
+                        <button type="button" onclick="cambiarCantidad(1)" class="w-9 h-9 flex items-center justify-center text-gray-600 hover:text-orange-500 hover:bg-white rounded-full transition-all duration-200">
                             <i class="fa-solid fa-plus"></i>
                         </button>
                     </div>
@@ -72,10 +100,12 @@
                 
                 <div class="mt-auto">
                     {% if producto.stock > 0 %}
-                    <button onclick="agregarAlCarrito('{{ producto.id }}')" class="btn-primary w-full py-3 mb-3">
-                        <i class="fa-solid fa-cart-plus mr-2"></i>Agregar al Carrito
+                    <!-- Botón agregar al carrito premium -->
+                    <button onclick="agregarAlCarrito('{{ producto.id }}')" class="w-full py-3 px-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 transform hover:scale-105 active:scale-95">
+                        <i class="fa-solid fa-cart-plus text-xl"></i>
+                        <span>Agregar al Carrito</span>
                     </button>
-                    <p class="text-sm text-green-600">
+                    <p class="text-sm text-green-600 flex items-center justify-center mt-3">
                         <i class="fa-solid fa-check-circle mr-1"></i>
                         {% if producto.stock > 10 %}
                         En stock (disponible)
@@ -84,10 +114,11 @@
                         {% endif %}
                     </p>
                     {% else %}
-                    <button disabled class="bg-gray-300 text-gray-600 rounded-lg w-full py-3 mb-3">
-                        <i class="fa-solid fa-cart-plus mr-2"></i>Agotado
+                    <button disabled class="w-full py-3 px-6 bg-gray-300 text-gray-600 font-medium rounded-lg shadow-md flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cart-plus text-xl"></i>
+                        <span>Agotado</span>
                     </button>
-                    <p class="text-sm text-red-600">
+                    <p class="text-sm text-red-600 flex items-center justify-center mt-3">
                         <i class="fa-solid fa-times-circle mr-1"></i>
                         Producto no disponible
                     </p>
@@ -97,37 +128,53 @@
         </div>
     </div>
     
-    <!-- Productos relacionados -->
+    <!-- PRODUCTOS RELACIONADOS MEJORADOS -->
     {% if relacionados %}
-    <div class="mt-12">
-        <h2 class="text-xl font-bold mb-6 text-primary">Productos Relacionados</h2>
+    <div class="mt-14 mb-8 relative">
+        <!-- Fondo decorativo para toda la sección -->
+        <div class="absolute inset-0 -mx-4 bg-gradient-to-b from-orange-50/50 to-transparent rounded-3xl -z-10"></div>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Título con diseño premium -->
+        <div class="text-center mb-10 relative">
+            <h2 class="text-2xl font-bold relative inline-block">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-700">Productos Relacionados</span>
+                <div class="absolute left-0 right-0 h-1 bottom-0 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full animate-pulse"></div>
+            </h2>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {% for rel in relacionados %}
-            <div class="bg-white rounded-lg shadow-md overflow-hidden border border-secondary/30">
-                <!-- Imagen -->
-                <div class="aspect-w-1 aspect-h-1 bg-gray-100">
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden border-4 border-gray-200/50 hover:border-orange-400/40 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-2 hover:shadow-xl group">
+                <!-- Imagen con overlay en hover -->
+                <div class="relative overflow-hidden">
                     {% if rel.imagen %}
-                    <img src="{{ rel.imagen.url }}" alt="{{ rel.nombre }}" class="w-full h-48 object-cover">
+                    <img src="{{ rel.imagen.url }}" alt="{{ rel.nombre }}" class="w-full h-40 object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-3">
+                        <a href="{% url 'carrito_nuevo:detalle_producto' rel.id %}" class="text-white font-medium text-sm bg-orange-500/90 rounded-lg py-1.5 px-3 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                            <i class="fa-solid fa-eye mr-1"></i> Ver detalles
+                        </a>
+                    </div>
                     {% else %}
-                    <div class="w-full h-48 flex items-center justify-center bg-gray-100 border-b border-secondary/20">
-                        <i class="fa-solid fa-box-open text-3xl text-secondary"></i>
+                    <div class="w-full h-40 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+                        <i class="fa-solid fa-box-open text-3xl text-gray-400"></i>
                     </div>
                     {% endif %}
                 </div>
                 
-                <!-- Información -->
-                <div class="p-4">
-                    <div class="mb-3">
-                        <h3 class="text-sm font-medium text-primary mb-1 line-clamp-2 h-10">{{ rel.nombre }}</h3>
-                        <p class="text-xs text-dark mb-2">{{ rel.categoria.nombre }}</p>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-md font-bold text-primary">{{ rel.precio_formateado }}</span>
-                        <div class="flex space-x-1">
-                            <a href="{% url 'carrito_nuevo:detalle_producto' rel.id %}" class="btn-secondary py-1 px-2 text-xs">Ver</a>
-                            <button class="btn-primary py-1 px-2 text-xs" 
-                                    onclick="agregarAlCarritoDirecto('{{ rel.id }}', 1)">
+                <div class="p-4 flex-grow flex flex-col">
+                    <h3 class="text-md font-semibold mb-1 text-gray-800 group-hover:text-orange-500 transition-all duration-300 line-clamp-2 h-12">{{ rel.nombre }}</h3>
+                    <p class="text-xs text-gray-500 mb-2">{{ rel.categoria.nombre }}</p>
+                    
+                    <div class="mt-auto pt-3 border-t border-gray-100">
+                        <div class="flex justify-between items-center">
+                            <!-- Precio con efecto destello -->
+                            <div class="relative">
+                                <span class="text-lg font-bold text-green-600 relative z-10">{{ rel.precio_formateado }}</span>
+                                <span class="absolute -inset-1 bg-green-100/40 rounded-full blur-sm group-hover:bg-green-100/80 transition-colors duration-300"></span>
+                            </div>
+                            
+                            <!-- Botón para agregar directamente al carrito -->
+                            <button onclick="agregarAlCarritoDirecto('{{ rel.id }}', 1)" class="py-1.5 px-3 bg-gradient-to-r from-orange-400 to-orange-500 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300 text-xs flex items-center justify-center transform hover:scale-105">
                                 <i class="fa-solid fa-cart-plus"></i>
                             </button>
                         </div>
@@ -139,6 +186,40 @@
     </div>
     {% endif %}
 </div>
+
+<style>
+    /* Animaciones mejoradas */
+    @keyframes pulse {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+    }
+    
+    .animate-pulse {
+        animation: pulse 2s infinite ease-in-out;
+    }
+    
+    @keyframes pulse-slow {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.5; }
+    }
+    
+    .animate-pulse-slow {
+        animation: pulse-slow 3s infinite ease-in-out;
+    }
+    
+    /* Capa z negativa para elemento de fondo */
+    .-z-10 {
+        z-index: -10;
+    }
+    
+    /* Limitar líneas para títulos */
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;  
+        overflow: hidden;
+    }
+</style>
 {% endblock %}
 
 {% block extra_js %}
