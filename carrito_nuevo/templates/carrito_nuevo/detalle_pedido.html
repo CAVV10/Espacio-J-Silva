@@ -3,6 +3,105 @@
 
 {% block title %}Detalle de Pedido #{{ pedido.id }} | J Silva Ingeniería{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Estilos para la coherencia con carrito.html */
+    .container.mx-auto {
+        max-width: 95% !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    /* CORRECCIÓN DEFINITIVA DE HOVER DE NAVEGACIÓN */
+    header .nav__list .nav__item a, 
+    header .megamenu__link a,
+    header .dropdown__link {
+        transition: color 0.3s ease !important;
+    }
+    
+    header .nav__list .nav__item a:hover, 
+    header .megamenu__link a:hover, 
+    header .dropdown__link:hover,
+    header .nav__link:hover {
+        color: #b78d41 !important;
+    }
+    
+    header .dropdown__icon {
+        transition: transform 0.3s ease !important;
+    }
+    
+    header .nav__item:hover .dropdown__icon,
+    header .dropdown__link:hover .dropdown__icon {
+        color: #b78d41 !important;
+        transform: rotate(180deg) !important;
+    }
+    
+    /* Mejorar la apariencia del detalle del pedido */
+    .bg-white.rounded-lg {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05) !important;
+        border-color: rgba(35, 62, 55, 0.1) !important;
+    }
+    
+    /* Estilos mejorados para el enlace de "Volver" */
+    a.text-primary {
+        display: inline-flex;
+        align-items: center;
+        font-weight: 500;
+        padding: 0.5rem 0;
+        transition: all 0.3s ease;
+    }
+    
+    a.text-primary:hover {
+        color: #b78d41 !important;
+        transform: translateX(-3px);
+    }
+    
+    /* Mejora en la tabla */
+    table {
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    
+    thead tr {
+        background-color: #f8f9fa !important;
+    }
+    
+    tbody tr:hover {
+        background-color: rgba(183, 141, 65, 0.05);
+    }
+    
+    /* Mejora para las etiquetas de estado */
+    .inline-block.px-3.py-1.rounded-full {
+        font-weight: 600;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+    }
+    
+    /* Garantizar el color correcto de los botones */
+    .btn-primary,
+    .btn-carrito,
+    button.btn-carrito,
+    a.btn-carrito,
+    a.btn-primary {
+        background-color: #233e37 !important;
+        color: white !important;
+        border: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .btn-primary:hover,
+    .btn-carrito:hover {
+        opacity: 0.9 !important;
+        transform: translateY(-1px) !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container mx-auto px-4 py-8">
     <div class="mb-4">

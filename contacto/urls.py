@@ -1,8 +1,9 @@
-# contacto/urls.py
 from django.urls import path
 from . import views
 from .views import login_view, logout_view, obtener_reservas
 from .views import password_reset_request, password_reset_confirm
+
+app_name = 'contacto'
 
 
 urlpatterns = [
@@ -21,9 +22,6 @@ urlpatterns = [
     path('login/', login_view, name='login_view'),
     path('password-reset/', password_reset_request, name='password_reset_request'),
     path('password-reset-confirm/<uidb64>/<token>/', password_reset_confirm, name='password_reset_confirm'),
-    
-    # Las rutas del carrito han sido eliminadas, ahora se usan las de carrito_nuevo
-    
     path('panel-usuario/', views.panel_usuario_view, name='panel_usuario'),
     path('obtener-reservas/', obtener_reservas, name='obtener_reservas'),
     path('crear-admin/', views.crear_superusuario),

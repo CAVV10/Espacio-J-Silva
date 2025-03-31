@@ -24,20 +24,400 @@
         }
     </script>
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .alertas-superiores {
+            z-index: 9999 !important;
+            margin-top: 4rem !important;
+        }
+    </style>
+
     <!-- Estilos CSS -->
     <link rel="stylesheet" href="{% static 'carrito_nuevo/css/configuracion-base.css' %}">
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="icon" href="{% static 'contacto/img/jsilva-favicon.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-p...tu_hash..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    
+    <!-- TailwindCSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'carrito_nuevo/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'carrito_nuevo/css/carrito-override.css' %}">
+    <link rel="stylesheet" href="{% static 'carrito_nuevo/css/botones-carrito.css' %}">
+    <link rel="stylesheet" href="{% static 'carrito_nuevo/css/correccion-botones.css' %}">
+
     {% block extra_css %}{% endblock %}
 
+    <style>
+        /* ESQUEMA DE COLORES PREMIUM */
+        :root {
+            --color-primary: #233e37;        /* Verde oscuro corporativo */
+            --color-primary-light: #3a6259;  /* Verde más claro */
+            --color-secondary: #b78d41;      /* Dorado corporativo */
+            --color-secondary-light: #d4ab62; /* Dorado más claro */
+        }
+
+        /* Estilos para las alertas */
+        .alert {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            transform: translateX(0);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .alert-success {
+            background-color: #f0fdf4;
+            color: #166534;
+            border-left: 4px solid #22c55e;
+        }
+
+        .alert-error {
+            background-color: #fef2f2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* ESQUEMA DE COLORES PREMIUM */
+        :root {
+            --color-primary: #233e37;        /* Verde oscuro corporativo */
+            --color-primary-light: #3a6259;  /* Verde más claro */
+            --color-secondary: #b78d41;      /* Dorado corporativo */
+            --color-secondary-light: #d4ab62; /* Dorado más claro */
+            --color-accent: #3f826d;         /* Verde esmeralda */
+            --color-accent-light: #49a285;   /* Verde esmeralda claro */
+            --color-neutral-100: #f9f9f9;    /* Gris muy claro */
+            --color-neutral-200: #eef2f6;    /* Gris claro */
+            --color-neutral-300: #e2e8f0;    /* Gris medio claro */
+            --color-neutral-900: #2d3748;    /* Gris oscuro */
+        }
+
+        /* ESTILOS GENERALES MEJORADOS */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* TARJETAS Y CONTENEDORES */
+        .container .bg-white,
+        .container .rounded-lg,
+        .container .rounded-xl,
+        .container .card,
+        .container .shadow-md,
+        .container .shadow-lg {
+            border: none !important;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05), 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+            border-radius: 12px !important;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .container .bg-white:hover,
+        .container .card:hover {
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.07), 0 5px 15px rgba(0, 0, 0, 0.05) !important;
+            transform: translateY(-3px);
+        }
+        
+        /* BORDES DORADOS ELEGANTES */
+        .container .border-4,
+        .container .border-orange-400\/30,
+        .container .border-orange-500\/50,
+        .container .hover\:border-orange-500\/50,
+        .container .hover\:border-orange-400\/40 {
+            border: none !important;
+            position: relative;
+        }
+        
+        .container .border-4::after,
+        .container .border-orange-400\/30::after,
+        .container .border-orange-500\/50::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid var(--color-secondary-light);
+            border-radius: inherit;
+            opacity: 0.4;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* BOTONES PREMIUM */
+        .container button,
+        .container .btn,
+        .container a.rounded-lg,
+        .container button.py-1\.5,
+        .container button.py-2,
+        .container button.py-2\.5,
+        .container button.py-3,
+        .container a.py-1\.5,
+        .container a.py-2,
+        .container a.py-2\.5,
+        .container a.py-3 {
+            background: var(--color-accent) !important;
+            color: white !important;
+            border: none !important;
+            box-shadow: 0 4px 10px rgba(63, 130, 109, 0.2) !important;
+            transition: all 0.3s ease !important;
+            position: relative !important;
+            overflow: hidden !important;
+            text-transform: uppercase !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.5px !important;
+        }
+        
+        .container button:hover,
+        .container .btn:hover,
+        .container a.rounded-lg:hover,
+        .container button.py-1\.5:hover,
+        .container button.py-2:hover,
+        .container button.py-2\.5:hover,
+        .container button.py-3:hover,
+        .container a.py-1\.5:hover,
+        .container a.py-2:hover,
+        .container a.py-2\.5:hover,
+        .container a.py-3:hover {
+            background: var(--color-accent-light) !important;
+            box-shadow: 0 6px 15px rgba(63, 130, 109, 0.3) !important;
+            transform: translateY(-2px) !important;
+        }
+        
+        .container button:before,
+        .container .btn:before,
+        .container a.rounded-lg:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .container button:hover:before,
+        .container .btn:hover:before,
+        .container a.rounded-lg:hover:before {
+            left: 100%;
+        }
+        
+        /* ICONOS EN BOTONES */
+        .container button i,
+        .container .btn i {
+            font-size: 1.1em;
+            margin-right: 5px;
+        }
+        
+        /* CAMPOS DE ENTRADA MEJORADOS */
+        .container input[type="text"],
+        .container input[type="number"],
+        .container input[type="email"],
+        .container input[type="password"],
+        .container select,
+        .container textarea {
+            border: 2px solid var(--color-neutral-300) !important;
+            border-radius: 8px !important;
+            padding: 10px 15px !important;
+            transition: all 0.3s ease !important;
+            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.05) !important;
+        }
+        
+        .container input[type="text"]:focus,
+        .container input[type="number"]:focus,
+        .container input[type="email"]:focus,
+        .container input[type="password"]:focus,
+        .container select:focus,
+        .container textarea:focus {
+            border-color: var(--color-secondary) !important;
+            box-shadow: 0 0 0 3px rgba(183, 141, 65, 0.2) !important;
+            outline: none !important;
+        }
+        
+        /* COLORES DE TEXTO */
+        .container .text-primary,
+        .container .text-orange-500,
+        .container .text-orange-400,
+        .container .hover\:text-orange-500 {
+            color: var(--color-secondary) !important;
+        }
+        
+        .container h1, .container h2, .container h3 {
+            color: var(--color-primary) !important;
+        }
+        
+        /* PRECIO DESTACADO */
+        .container .text-green-600 {
+            color: var(--color-accent) !important;
+            font-weight: 700 !important;
+        }
+        
+        /* EFECTOS DE RESALTADO */
+        .container .bg-green-100\/40,
+        .container .bg-green-100\/80 {
+            background-color: rgba(63, 130, 109, 0.1) !important;
+        }
+        
+        /* ANIMACIONES MEJORADAS */
+        @keyframes shine {
+            0% {
+                background-position: -100%;
+            }
+            100% {
+                background-position: 200%;
+            }
+        }
+        
+        .container .animate-pulse {
+            animation: pulse 2s infinite cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        
+        /* GRADIENTES MEJORADOS */
+        .container .bg-gradient-to-r.from-orange-500.to-orange-700,
+        .container .bg-gradient-to-r.from-orange-400.to-orange-600 {
+            background: linear-gradient(135deg, var(--color-secondary), var(--color-secondary-light)) !important;
+            background-clip: text !important;
+            -webkit-background-clip: text !important;
+        }
+        
+        .container .bg-gradient-to-r.from-orange-500.to-orange-600,
+        .container .bg-gradient-to-r.from-orange-400.to-orange-500 {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-light)) !important;
+        }
+        
+        /* OVERLAY PARA TARJETAS */
+        .container .producto-card {
+            position: relative;
+        }
+        
+        .container .producto-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--color-secondary), var(--color-secondary-light));
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .container .producto-card:hover::before {
+            opacity: 1;
+        }
+        
+        /* ETIQUETA DE DESTACADO */
+        .container .bg-red-600 {
+            background-color: var(--color-secondary) !important;
+        }
+        
+        /* ALERTA SOBRE NAVEGACIÓN */
+        .swal2-container {
+            z-index: 9999 !important;
+        }
+        
+        .swal2-popup {
+            border-radius: 15px !important;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1) !important;
+            padding: 1.5em !important;
+        }
+        
+        /* TIPOGRAFÍA MEJORADA */
+        .container {
+            letter-spacing: 0.2px;
+            color: var(--color-neutral-900);
+        }
+        
+        .container h1 {
+            letter-spacing: -0.5px;
+        }
+        
+        /* SPINNERS Y LOADERS */
+        .container .animate-spin {
+            border-top-color: var(--color-accent) !important;
+        }
+        
+        /* AJUSTES PARA MÓVILES */
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            
+            .container h1 {
+                font-size: 1.8rem !important;
+            }
+        }
+        
+        /* Reemplazar @apply con clases directas de Tailwind */
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: #4B5563;
+            transition-property: all;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+        }
+        
+        .nav-link:hover {
+            color: #F97316;
+            background-color: rgba(249, 115, 22, 0.1);
+        }
+        
+        .nav-link.active {
+            color: #F97316;
+            background-color: rgba(249, 115, 22, 0.1);
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
+    <!-- Alert Container -->
+    <div id="alert-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 max-w-sm"></div>
+
     {% if messages %}
-        <ul class="messages">
+        <ul class="messages fixed top-20 right-4 z-50">
             {% for message in messages %}
-                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+                <li {% if message.tags %} class="{{ message.tags }} bg-white shadow-lg rounded-lg p-4 mb-2" {% endif %}>
                     {{ message }}
                 </li>
             {% endfor %}
@@ -48,10 +428,10 @@
     <header>
         <nav class="navbar">
             <div class="logo">
-                <a href="{% url 'inicio' %}">
+                <a href="{% url 'contacto:inicio' %}">
                     <img src="{% static 'contacto/img/jsilva.png' %}" alt="Logo de J Silva Ingeniería">
                 </a>
-                <a href="{% url 'inicio' %}">J SILVA INGENIERÍA</a>
+                <a href="{% url 'contacto:inicio' %}">J SILVA INGENIERÍA</a>
             </div>
 
             <!-- Toggle para móviles -->
@@ -64,8 +444,8 @@
                 <div class="close__menu" id="close-menu">
                     <i class='bx bx-x-circle'></i>
                 </div>
-                <li class="nav__item"><a href="{% url 'inicio' %}" class="nav__link">Inicio</a></li>
-                <li class="nav__item"><a href="{% url 'quienes_somos' %}" class="nav__link">¿Quiénes somos?</a></li>
+                <li class="nav__item"><a href="{% url 'contacto:inicio' %}" class="nav__link">Inicio</a></li>
+                <li class="nav__item"><a href="{% url 'contacto:quienes_somos' %}" class="nav__link">¿Quiénes somos?</a></li>
 
                 <li class="nav__item dropdown">
                     <a href="#" class="nav__link dropdown__link">Servicios 
@@ -77,21 +457,21 @@
                             <li class="megamenu__item">
                                 <div class="menu__icon"><img src="{% static 'contacto/img/icono_fumigacion-def.png' %}" alt=""></div>
                                 <div class="megamenu__link">
-                                    <a href="{% url 'desinfeccion' %}">Desinfección</a>
+                                    <a href="{% url 'contacto:desinfeccion' %}">Desinfección</a>
                                     <p>Eliminación de virus, bacterias y patógenos</p>
                                 </div>
                             </li>
                             <li class="megamenu__item">
                                 <div class="menu__icon"><img src="{% static 'contacto/img/icono_control-apicola-def.png' %}" alt=""></div>
                                 <div class="megamenu__link">
-                                    <a href="{% url 'control_apicola' %}">Control apícola</a>
+                                    <a href="{% url 'contacto:control_apicola' %}">Control apícola</a>
                                     <p>Manejo integrado de abejas</p>
                                 </div>
                             </li>
                             <li class="megamenu__item">
                                 <div class="menu__icon"><img src="{% static 'contacto/img/icono_jardineria-def.png' %}" alt=""></div>
                                 <div class="megamenu__link">
-                                    <a href="{% url 'jardineria' %}">Jardinería</a>
+                                    <a href="{% url 'contacto:jardineria' %}">Jardinería</a>
                                     <p>Servicio de jardinería y mantenimiento</p>
                                 </div>
                             </li>
@@ -101,27 +481,29 @@
                             <li class="megamenu__item">
                                 <div class="menu__icon"><img src="{% static 'contacto/img/icono_extintor-def.png' %}" alt=""></div>
                                 <div class="megamenu__link">
-                                    <a href="{% url 'suministros' %}">Suministros</a>
+                                    <a href="{% url 'contacto:suministros' %}">Suministros</a>
                                     <p>Venta y mantenimiento de equipos de seguridad</p>
                                 </div>
                             </li>
                             <li class="megamenu__item">
                                 <div class="menu__icon"><img src="{% static 'contacto/img/icono_capacitacion-def.png' %}" alt=""></div>
                                 <div class="megamenu__link">
-                                    <a href="{% url 'capacitacion' %}">Capacitación</a>
+                                    <a href="{% url 'contacto:capacitacion' %}">Capacitación</a>
                                     <p>Prevención de incendios y plan de saneamiento</p>
                                 </div>
                             </li>
                             <li class="megamenu__item">
                                 <div class="menu__icon"><img src="{% static 'contacto/img/icono_planos-3d-def.png' %}" alt=""></div>
                                 <div class="megamenu__link">
-                                    <a href="{% url 'planos_3d' %}">Planos 3D</a>
+                                    <a href="{% url 'contacto:planos_3d' %}">Planos 3D</a>
                                     <p>Diseño y planificación para emergencias</p>
                                 </div>
                             </li>
                         </ul>
                     </div>
                 </li>
+                <li class="nav__item"><a href="{% url 'carrito_nuevo:catalogo' %}" class="nav__link">Catálogo de productos</a></li>
+
                 <li class="nav__item">
                     <a href="https://wa.me/573213249181" target="_blank" class="whatsapp-button">
                         <i class="fab fa-whatsapp"></i>
@@ -143,15 +525,14 @@
                             <img src="{% static 'contacto/img/imagen-perfil-defecto.jpg' %}" alt="Imagen de perfil">
                             <div class="dropdown-content">
                                 <a>{{ user.email }}</a>
-                                <a href="{% url 'hacer_reserva' %}">Diligenciar</a>
-                                <a href="{% url 'carrito_nuevo:catalogo' %}">Catálogo</a>
-                                <a href="{% url 'historial_pedidos' %}">Historial de pedidos</a>
-                                <a href="{% url 'logout' %}">Cerrar sesión</a>
+                                <a href="{% url 'contacto:hacer_reserva' %}">Diligenciar</a>
+                                <a href="{% url 'contacto:historial_pedidos' %}">Historial de pedidos</a>
+                                <a href="{% url 'contacto:logout' %}">Cerrar sesión</a>
                             </div>
                         </div>
                     {% else %}
                         <!-- Si no ha iniciado sesión, mostrar el ícono de inicio de sesión -->
-                        <a href="{% url 'login_view' %}">
+                        <a href="{% url 'contacto:login_view' %}">
                             <img class="login" src="{% static 'contacto/img/icono-sesion-verde.png' %}" alt="Iniciar sesión">
                         </a>
                     {% endif %}
@@ -170,11 +551,13 @@
         {% block content %}{% endblock %}
     </main>
 
+    <div class="spacer layer-1" id="contact__space"></div>
+
     <!-- Formulario de contacto -->
     <div id="contact-form" class="contact__us">
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3984.049438171907!2d-75.29279778586938!3d3.0505354548045756!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e3b7491c7232081%3A0x9ab647d5b00446a2!2sCra.%207%20%232-86%2C%20Neiva%2C%20Huila!5e0!3m2!1ses!2sco!4v1653524713066!5m2!1ses!2sco" class="map" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 
-        <form class="form" method="post" action="{% url 'enviar_mensaje' %}">
+        <form class="form" method="post" action="{% url 'contacto:enviar_mensaje' %}">
             {% csrf_token %}
             <p class="title__form">Contáctenos</p>
             <p class="message">Envíenos un mensaje y nos comunicaremos lo antes posible.</p>
@@ -231,5 +614,10 @@
     <script src="{% static 'contacto/js/main.js' %}"></script>
     <script src="{% static 'contacto/js/carga-bloqueo.js' %}"></script>
     {% block extra_js %}{% endblock %}
+
+    {% block custom_styles %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {% endblock %}
 </body>
 </html>

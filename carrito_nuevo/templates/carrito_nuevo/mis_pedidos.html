@@ -3,6 +3,31 @@
 
 {% block title %}Mis Pedidos | J Silva Ingeniería{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Garantizar el color correcto de los botones */
+    .btn-primary,
+    .btn-carrito,
+    button.btn-carrito,
+    a.btn-carrito,
+    a.btn-primary {
+        background-color: #233e37 !important;
+        color: white !important;
+        border: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .btn-primary:hover,
+    .btn-carrito:hover {
+        opacity: 0.9 !important;
+        transform: translateY(-1px) !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-2xl font-bold mb-6 text-primary">Mis Pedidos</h1>
@@ -25,7 +50,10 @@
                         </div>
                         
                         <div class="mt-4 md:mt-0 flex space-x-2">
-                            <a href="{% url 'carrito_nuevo:detalle_pedido' pedido.id %}" class="btn-primary py-2 px-4 text-sm">Ver detalles</a>
+                            <a href="{% url 'carrito_nuevo:detalle_pedido' pedido.id %}" class="btn-carrito py-2 px-4 text-sm flex items-center justify-center gap-2 rounded-md">
+                                <i class="fa-solid fa-eye mr-1"></i>
+                                Ver detalles
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -36,7 +64,10 @@
             <i class="fa-solid fa-shopping-bag text-4xl text-secondary mb-4"></i>
             <h2 class="text-xl font-semibold text-primary mb-2">No tienes pedidos</h2>
             <p class="text-dark mb-4">¡Explora nuestro catálogo y haz tu primer pedido!</p>
-            <a href="{% url 'carrito_nuevo:catalogo' %}" class="btn-primary py-2 px-4">Ver catálogo</a>
+            <a href="{% url 'carrito_nuevo:catalogo' %}" class="btn-carrito py-2 px-4 rounded-md flex items-center justify-center gap-2 mx-auto w-fit">
+                <i class="fa-solid fa-th-list mr-1"></i>
+                Ver catálogo
+            </a>
         </div>
     {% endif %}
 </div>

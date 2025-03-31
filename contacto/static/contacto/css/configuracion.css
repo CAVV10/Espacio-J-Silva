@@ -8,9 +8,6 @@
     font-family: 'Kanit', sans-serif;
 }
 
-
-
-
 /* Estilos para el spinner de carga */
 #spinner {
     position: fixed;
@@ -39,10 +36,43 @@
     100% { transform: rotate(360deg); }
 }
 
+/* Animación para el icono del carrito */
+@keyframes bounce-on-add {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-10px);}
+    60% {transform: translateY(-5px);}
+}
+
+.animate-bounce-on-add {
+    animation: bounce-on-add 1s;
+}
+
+/* Estilos para el botón de WhatsApp */
+.whatsapp-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #25D366;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 24px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.whatsapp-button:hover {
+    background-color: #1da851;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.whatsapp-button i {
+    font-size: 1.2rem;
+}
 
 .logo {
     display: flex;
-    
 }
 
 .logo a {
@@ -76,9 +106,11 @@ li {
 body {
     background-color: white;
 }
+
 h2 {
     color: #233e37;
 }
+
 header {
     position: fixed;
     top: 0;
@@ -106,12 +138,10 @@ nav {
     display: none;
 }
 
-
 .nav__list {
     display: flex;
     align-items: center;
 }
-
 
 .nav__item {
     margin: 0 0.8rem;
@@ -136,7 +166,6 @@ nav {
 
 .login:hover {
     filter: brightness(0) saturate(100%) invert(45%) sepia(73%) saturate(353%) hue-rotate(8deg) brightness(92%) contrast(85%);
-
 }
 
 .nav__link {
@@ -274,7 +303,6 @@ a:hover {
     display: block;
 }
 
-
 /* Estilo del contenedor de la imagen de perfil */
 .profile-icon {
     position: relative;
@@ -293,7 +321,6 @@ a:hover {
 .user-menu .dropdown-content {
     min-width: 120px; /* Puedes ajustar el tamaño aquí si lo deseas */
 }
-
 
 .buttons {
     display: flex;
@@ -386,8 +413,6 @@ a:hover {
     background-image: url("../img/v2-forma-fondo-titulos.svg");
 }
 
-
-
 .overlay__text {
     position: absolute;
     top: 50%; /* Posiciona el texto verticalmente al centro */
@@ -397,9 +422,6 @@ a:hover {
     font-size: 4.5rem; /* Ajusta el tamaño del texto */
     text-align: center; /* Centra el texto */
 }
-
-
-
 
 .spacer {
     aspect-ratio: 960/100;
@@ -441,6 +463,7 @@ iframe {
 .form {
     height: 100%;
     width: 100%;
+    max-width: 450px; /* Añadido: limita el ancho máximo del formulario */
     border: 0.2rem solid #b78d41;
     display: flex;
     flex-direction: column;
@@ -449,6 +472,7 @@ iframe {
     padding: 20px;
     border-radius: 10px;
     position: relative;
+    margin: 0 auto; /* Añadido: centra el formulario horizontalmente */
 }
   
 .title__form {
@@ -484,10 +508,12 @@ iframe {
     outline: 0;
     border: 1px solid #b78d41;
     border-radius: 10px;
+    color: #333; /* Color de texto oscuro */
 }
   
 .form label .in__message {
     padding: 10px 10px 100px 10px;
+    color: #333; /* Color de texto oscuro para el área de mensaje */
 }
 
   
@@ -515,6 +541,7 @@ iframe {
 .form label .input:valid + span {
     color: #233e37;
 }
+
 .spacer__footer {
     width: 100%;
     background-color: #b78d41; /* Cambia este color según tu preferencia */
@@ -533,7 +560,6 @@ iframe {
     width: 100%;
     text-align: center;
     justify-content: center;
-
     color: #fff; /* Color del texto en blanco */
 }
 
@@ -592,71 +618,23 @@ iframe {
     100% { opacity: 0; display: none; }
 }
 
-
 .carrito-icono {
     position: relative;
     display: inline-block;
     margin-left: 15px;
     font-size: 20px;
     text-decoration: none;
-    color: black;
-}
-
-.contador-carrito {
-    position: absolute;
-    top: -8px;
-    right: -10px;
-    background: red;
-    color: white;
-    font-size: 11px;
-    padding: 2px 5px;
-    border-radius: 50%;
-}
-
-@keyframes bounce-on-add {
-    0%, 100% {transform: translateY(0);}
-    50% {transform: translateY(-10px);}
-}
-
-.animate-bounce-on-add {
-    animation: bounce-on-add 0.4s ease-in-out;
-}
-
-/* Estilos para el botón de WhatsApp */
-.whatsapp-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background-color: #25D366;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 24px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.whatsapp-button:hover {
-    background-color: #1da851;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.whatsapp-button i {
-    font-size: 1.2rem;
-}
-
-/* Animación para el icono del carrito */
-@keyframes bounce-on-add {
-    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-    40% {transform: translateY(-10px);}
-    60% {transform: translateY(-5px);}
-}
-
-.animate-bounce-on-add {
     animation: bounce-on-add 1s;
 }
 
+/* Ajustes para pantallas grandes */
+@media screen and (min-width: 1400px) {
+    .form {
+        max-width: 450px; /* Mantiene el formulario con un ancho máximo en pantallas grandes */
+    }
+}
+
+/* Estilos para móviles */
 @media screen and (max-width: 1000px) {
     .megamenu {
         justify-content: start;
@@ -762,10 +740,7 @@ iframe {
 
     .form {
         max-width: 26rem; 
-
     }
-    
-
 }
 
 @media screen and (max-width: 960px) {
@@ -785,7 +760,6 @@ iframe {
         visibility: visible;
         opacity: 1;
     }
-    
 }
 
 @media screen and (max-width: 760px) {
@@ -813,8 +787,6 @@ iframe {
     .show__menu {
         left: 45%;
     }
-
-
 }
 
 @media screen and (max-width: 560px) {
@@ -822,12 +794,9 @@ iframe {
         font-size: 1.5rem;
     }
 
-
-
     p {
         font-size: 1rem;
     }
-
 
     .logo a {
         font-size: 1.3rem;

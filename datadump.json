@@ -1,0 +1,75 @@
+[
+{
+  "model": "sessions.session",
+  "pk": "s3r87drsq2s5ooq4bl0lkjqqlhgtqfxe",
+  "fields": {
+    "session_data": ".eJxVi0EOwiAQRe_C2jSdUWBwadJzkAGG0KhtInRlvLs06UI3f_H-e2_leWvFb1Vefk7qqkCdflngeJdlP-K6NI5tHQ5Uh-nJ8-N2CH9V4Vp6orPRgYRtEnRWWyTnEISzCTEjAOOZKaRukWQhSJRGFLqYPtoAqc8XTlkz1A:1tvbDP:M3jjYeFLMApsukZ7W7p7q5n_R13ADHf-0q6h9T-SBS0",
+    "expire_date": "2025-04-04T12:11:07.330Z"
+  }
+},
+{
+  "model": "contacto.customuser",
+  "pk": 1,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$TVgIttlZ0nweZlcZuHN1Ah$6DjB1b5QD7T607jQ6dmnKxbjxQR4d65s9LUHn9lIT4c=",
+    "last_login": "2025-03-21T12:11:07.326Z",
+    "is_superuser": false,
+    "username": "vargasvillanuevacarlosalberto@gmail.com",
+    "first_name": "A",
+    "last_name": "B",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-03-21T12:11:06.208Z",
+    "email": "vargasvillanuevacarlosalberto@gmail.com",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "contacto.customuser",
+  "pk": 2,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$QZECuB9B26Y58WVJKU5ZQU$4ULsWn+j4A8KtyIvACKv4UMq+9+V/UeJOPnQdEHzwAo=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "eladmin",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-03-21T12:13:29.340Z",
+    "email": "admin@admin.com",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "contacto.customuser",
+  "pk": 3,
+  "fields": {
+    "password": "pbkdf2_sha256$870000$IyPVYFh877oGYUdrEcrZWd$7qmf9/Jp/xHu9L4Pew6yiaADGlgafdrMK8M4Msu68d8=",
+    "last_login": null,
+    "is_superuser": true,
+    "username": "cavv",
+    "first_name": "",
+    "last_name": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-03-21T12:23:53.288Z",
+    "email": "cavvcavv2005@gmail.com",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "carrito_nuevo.carrito",
+  "pk": 1,
+  "fields": {
+    "usuario": 1,
+    "creado": "2025-03-21T12:11:14.341Z",
+    "actualizado": "2025-03-21T12:11:14.341Z",
+    "completado": false
+  }
+}
+]
+

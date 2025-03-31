@@ -5,8 +5,13 @@ from django.db.models import F, Sum
 from django.views.decorators.http import require_POST
 from decimal import Decimal
 from django.template.loader import render_to_string
+from django.urls import reverse
+from .utils.email_utils import enviar_correo_confirmacion_pedido, enviar_notificacion_admin_pedido
 
-from .models import Producto, Categoria, Carrito, ItemCarrito, Pedido, EstadoPedido, ItemPedido
+
+
+
+from .models import Producto, Categoria, Carrito, ItemCarrito, Pedido, EstadoPedido, ItemPedido, MetodoPago
 
 # Vistas para catálogo y productos
 def catalogo(request):
@@ -93,10 +98,13 @@ def ver_carrito(request):
     
     return render(request, 'carrito_nuevo/carrito.html', context)
 
-@login_required
+
 @require_POST
 def agregar_al_carrito(request):
     """Añadir un producto al carrito"""
+    if not request.user.is_authenticated:
+        return redirect('login')  # Redirect to login if not authenticated
+
     producto_id = request.POST.get('producto_id')
     cantidad = int(request.POST.get('cantidad', 1))
     
@@ -155,10 +163,16 @@ def agregar_al_carrito(request):
         'total_carrito': carrito.total
     })
 
-@login_required
+
 @require_POST
 def agregar_al_carrito_ajax(request):
     """Añadir un producto al carrito mediante AJAX"""
+    if not request.user.is_authenticated:
+        return JsonResponse({
+            'success': False,
+            'redirect_url': reverse('contacto:login_view')  # Use the correct namespace and name
+        })
+
     producto_id = request.POST.get('producto_id')
     cantidad = int(request.POST.get('cantidad', 1))
     
@@ -217,6 +231,12 @@ def agregar_al_carrito_ajax(request):
         'total_carrito': float(carrito.total),
         'total_formateado': carrito.total_formateado
     })
+
+
+def catalogo_productos(request):
+    """Mostrar catálogo de productos"""
+    productos = Producto.objects.filter(disponible=True)
+    return render(request, 'catalogo_productos.html', {'productos': productos})
 
 @login_required
 @require_POST
@@ -322,6 +342,9 @@ def actualizar_cantidad_ajax(request):
     carrito = item.carrito
     carrito.save()
     
+    # Calcular la cantidad total de productos en el carrito
+    cantidad_total = carrito.items.aggregate(total=Sum('cantidad'))['total'] or 0
+    
     return JsonResponse({
         'success': True,
         'message': 'Cantidad actualizada',
@@ -329,7 +352,8 @@ def actualizar_cantidad_ajax(request):
         'subtotal': float(item.subtotal),
         'subtotal_formateado': item.subtotal_formateado,
         'total': float(carrito.total),
-        'total_formateado': carrito.total_formateado
+        'total_formateado': carrito.total_formateado,
+        'cantidad_total': cantidad_total
     })
 
 @login_required
@@ -410,12 +434,18 @@ def eliminar_del_carrito_ajax(request):
     # Recalcular total
     nuevo_total = carrito.total
     
+    # Calcular la cantidad total de productos en el carrito
+    cantidad_total = carrito.items.aggregate(total=Sum('cantidad'))['total'] or 0
+    items_count = carrito.items.count()
+    
     return JsonResponse({
         'success': True,
         'message': f'{nombre_producto} eliminado del carrito',
         'total_carrito': float(nuevo_total),
         'total_formateado': carrito.total_formateado,
-        'carrito_vacio': carrito.esta_vacio
+        'carrito_vacio': carrito.esta_vacio,
+        'cantidad_total': cantidad_total,
+        'items_count': items_count
     })
 
 @login_required
@@ -447,21 +477,29 @@ def vaciar_carrito(request):
 @require_POST
 def vaciar_carrito_ajax(request):
     """Eliminar todos los productos del carrito mediante AJAX"""
-    # Obtener el carrito del usuario
+    # Obtener carrito del usuario
     try:
         carrito = Carrito.objects.get(usuario=request.user, completado=False)
-        # Eliminar todos los items
-        carrito.items.all().delete()
-        
-        return JsonResponse({
-            'success': True,
-            'message': 'Carrito vaciado correctamente'
-        })
     except Carrito.DoesNotExist:
         return JsonResponse({
             'success': False,
-            'message': 'No se encontró un carrito activo'
+            'message': 'No tiene un carrito activo'
         })
+    
+    # Eliminar todos los items
+    carrito.items.all().delete()
+    
+    # Recalcular totales
+    carrito.save()
+    
+    return JsonResponse({
+        'success': True,
+        'message': 'Carrito vaciado correctamente',
+        'total_carrito': float(carrito.total),
+        'total_formateado': carrito.total_formateado,
+        'cantidad_total': 0,
+        'items_count': 0
+    })
 
 # Vistas para proceso de checkout
 @login_required
@@ -488,86 +526,124 @@ def checkout(request):
         return redirect('carrito_nuevo:catalogo')
 
 @login_required
-@require_POST
-def procesar_pedido(request):
-    """Procesar un nuevo pedido"""
+def comprobacion(request):
+    """Vista para la comprobación final y proceso de pago"""
     # Obtener carrito del usuario
     try:
         carrito = Carrito.objects.get(usuario=request.user, completado=False)
         
         # Verificar que el carrito no esté vacío
         if carrito.esta_vacio:
-            return JsonResponse({
-                'success': False,
-                'message': 'El carrito está vacío'
-            })
+            return redirect('carrito_nuevo:ver_carrito')
         
-        # Obtener datos de envío
-        direccion = request.POST.get('direccion', '')
-        telefono = request.POST.get('telefono', '')
-        notas = request.POST.get('notas', '')
-        
-        # Verificar disponibilidad de stock
         items = carrito.items.select_related('producto').all()
-        for item in items:
-            if item.cantidad > item.producto.stock:
-                return JsonResponse({
-                    'success': False,
-                    'message': f'No hay suficiente stock de {item.producto.nombre}'
-                })
         
-        # Obtener estado inicial (pendiente)
-        estado_pendiente = EstadoPedido.objects.get_or_create(nombre='Pendiente')[0]
+        # Obtener métodos de pago activos ordenados
+        metodos_pago = MetodoPago.objects.filter(activo=True).order_by('orden', 'nombre')
+        metodo_predeterminado = MetodoPago.objects.filter(es_predeterminado=True, activo=True).first()
+        
+        context = {
+            'carrito': carrito,
+            'items': items,
+            'metodos_pago': metodos_pago,
+            'metodo_predeterminado': metodo_predeterminado
+        }
+        
+        return render(request, 'carrito_nuevo/comprobacion.html', context)
+    
+    except Carrito.DoesNotExist:
+        return redirect('carrito_nuevo:catalogo')
+
+@login_required
+@require_POST
+def procesar_pedido(request):
+    """Procesar un nuevo pedido"""
+    try:
+        carrito = Carrito.objects.get(usuario=request.user, completado=False)
+        
+        # Verificar que el carrito no esté vacío
+        if carrito.esta_vacio:
+            return JsonResponse({'error': 'El carrito está vacío'}, status=400)
+        
+        # Obtener datos del formulario
+        nombre = request.POST.get('nombre')
+        email = request.POST.get('email')
+        direccion = request.POST.get('direccion')
+        ciudad = request.POST.get('ciudad')
+        telefono = request.POST.get('telefono')
+        metodo_pago_id = request.POST.get('metodo_pago')
+        
+        # Validar datos mínimos
+        if not all([nombre, email, direccion, ciudad, telefono, metodo_pago_id]):
+            return JsonResponse({'error': 'Todos los campos son requeridos'}, status=400)
+            
+        # Obtener el método de pago
+        try:
+            metodo_pago = MetodoPago.objects.get(id=metodo_pago_id, activo=True)
+        except MetodoPago.DoesNotExist:
+            return JsonResponse({'error': 'El método de pago seleccionado no es válido'}, status=400)
+        
+        # Generar la dirección completa
+        direccion_completa = f"{direccion}, {ciudad}"
         
         # Crear el pedido
+        estado_pendiente = EstadoPedido.objects.get(nombre='Pendiente')
         pedido = Pedido.objects.create(
             usuario=request.user,
             estado=estado_pendiente,
-            direccion_entrega=direccion,
+            direccion_entrega=direccion_completa,
             telefono_contacto=telefono,
-            notas=notas,
-            total=carrito.total
+            total=carrito.total,
+            metodo_pago=metodo_pago,
+            notas=f"Pedido realizado por {nombre} ({email})"
         )
         
-        # Crear items del pedido y actualizar stock
-        for item in items:
+        # Transferir items del carrito al pedido y actualizar stock
+        for item in carrito.items.all():
+            # Crear el ítem de pedido
             ItemPedido.objects.create(
                 pedido=pedido,
                 producto=item.producto,
                 cantidad=item.cantidad,
-                precio_unitario=item.producto.precio,
+                precio_unitario=item.precio_unitario,
                 subtotal=item.subtotal
             )
             
-            # Actualizar stock
+            # Actualizar el stock del producto
             producto = item.producto
-            producto.stock -= item.cantidad
-            producto.save()
+            if producto.stock >= item.cantidad:
+                producto.stock -= item.cantidad
+                producto.save()
+            else:
+                # Si no hay suficiente stock, ajustar al máximo disponible
+                producto.stock = 0
+                producto.save()
         
-        # Marcar carrito como completado
+        # Marcar el carrito como completado
         carrito.completado = True
         carrito.save()
         
-        return JsonResponse({
-            'success': True,
-            'message': 'Pedido procesado correctamente',
-            'pedido_id': pedido.id
-        })
+        # Obtener los items del pedido para los correos
+        items = pedido.items.select_related('producto').all()
         
-    except Carrito.DoesNotExist:
-        return JsonResponse({
-            'success': False,
-            'message': 'No se encontró un carrito activo'
-        })
+        # Enviar correo de confirmación al cliente
+        enviar_correo_confirmacion_pedido(pedido, items)
+        
+        # Enviar notificación al administrador
+        enviar_notificacion_admin_pedido(pedido, items)
+        
+        # Redirigir a la página de confirmación
+        url_confirmacion = reverse('carrito_nuevo:confirmacion_pedido', args=[pedido.id])
+        
+        return JsonResponse({'success': True, 'redirect_url': url_confirmacion})
+        
     except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'message': f'Error al procesar el pedido: {str(e)}'
-        })
+        return JsonResponse({'error': str(e)}, status=500)
 
 @login_required
 def confirmacion_pedido(request, pedido_id):
     """Vista de confirmación del pedido"""
+    # Obtener el pedido y verificar que pertenezca al usuario
     pedido = get_object_or_404(Pedido, id=pedido_id, usuario=request.user)
     items = pedido.items.select_related('producto').all()
     

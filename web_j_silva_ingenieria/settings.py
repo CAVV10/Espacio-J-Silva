@@ -82,12 +82,12 @@ else:
     # Configuración local (desarrollo)
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
+            'ENGINE': 'django.db.backends.mysql',
             'NAME': os.environ.get("DB_NAME", "mi_db"),
             'USER': os.environ.get("DB_USER", "admin"),
             'PASSWORD': os.environ.get("DB_PASSWORD", "1234"),
             'HOST': os.environ.get("DB_HOST", "localhost"),
-            'PORT': os.environ.get("DB_PORT", "5432"),
+            'PORT': os.environ.get("DB_PORT", "3306"),
         }
     }
 
@@ -146,11 +146,11 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = os.environ.get('EMAIL_ADMIN', '')
-
+SITE_URL = 'http://127.0.0.1:8000' 
 # === 👤 Autenticación personalizada ===
 AUTH_USER_MODEL = 'contacto.CustomUser'
 AUTHENTICATION_BACKENDS = [
-    'contacto.backends.EmailBackend',  # Permite login con email
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 # === 🔐 Seguridad y sesión ===

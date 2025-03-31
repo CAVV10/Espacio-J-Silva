@@ -1,0 +1,102 @@
+/* Corrección definitiva para botones - Prioridad máxima */
+
+/* Reset completo para TODOS los botones */
+.agregar-al-carrito,
+button.agregar-al-carrito,
+.btn-carrito,
+button.btn-carrito,
+a.btn-carrito,
+#boton-filtrar,
+#boton-restablecer,
+#boton-restablecer-productos,
+.btn-agregar-carrito,
+.accion-rapida,
+.btn-primary,
+a.btn-primary,
+button.btn-primary {
+    background-color: #233e37 !important;
+    color: white !important;
+    border: none !important;
+}
+
+/* Corrección del hover para todos los botones */
+.agregar-al-carrito:hover,
+button.agregar-al-carrito:hover,
+.btn-carrito:hover,
+button.btn-carrito:hover,
+a.btn-carrito:hover,
+#boton-filtrar:hover,
+#boton-restablecer:hover,
+#boton-restablecer-productos:hover,
+.btn-agregar-carrito:hover,
+.accion-rapida:hover,
+.btn-primary:hover,
+a.btn-primary:hover,
+button.btn-primary:hover,
+.hover\:bg-primary:hover {
+    background-color: #2d534a !important; /* Versión ligeramente más clara para hover */
+    color: white !important;
+}
+
+/* Específico para botones circulares en hover de productos */
+.agregar-al-carrito.bg-white,
+button.agregar-al-carrito.bg-white {
+    background-color: #233e37 !important;
+    color: white !important;
+}
+
+/* Corrección hover para botones circulares */
+.agregar-al-carrito.bg-white:hover,
+button.agregar-al-carrito.bg-white:hover,
+.agregar-al-carrito.hover\:bg-primary:hover,
+button.agregar-al-carrito.hover\:bg-primary:hover {
+    background-color: #2d534a !important;
+    color: white !important;
+}
+
+/* Botones en bg-primary (verde esmeralda) */
+.bg-primary,
+button.bg-primary,
+a.bg-primary {
+    background-color: #233e37 !important;
+}
+
+/* Botones de texto en primary */
+.text-primary,
+button.text-primary,
+a.text-primary {
+    color: #233e37 !important;
+}
+
+/* Para Tailwind - sobrescribir clases */
+.hover\:bg-primary:hover {
+    background-color: #233e37 !important;
+}
+
+.hover\:text-primary:hover {
+    color: #233e37 !important;
+}
+
+/* Estilos para botones con clases dinámicas */
+[class*="agregar-al-carrito"],
+[class*="btn-carrito"] {
+    background-color: #233e37 !important;
+    color: white !important;
+}
+
+/* Corrección hover para clases dinámicas */
+[class*="agregar-al-carrito"]:hover,
+[class*="btn-carrito"]:hover {
+    background-color: #2d534a !important;
+    color: white !important;
+}
+
+/* Animaciones para botones */
+.agregar-al-carrito:hover,
+button.agregar-al-carrito:hover,
+.btn-carrito:hover,
+button.btn-carrito:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(35, 62, 55, 0.3) !important;
+    transition: all 0.3s ease !important;
+}

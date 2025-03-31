@@ -145,7 +145,7 @@ def login_view(request):
                 return JsonResponse({
                     'success': True,
                     'message': 'Inicio de sesión exitoso.',
-                    'redirect_url': reverse('inicio')
+                    'redirect_url': reverse('contacto:inicio')
                 })
             else:
                 return JsonResponse({
@@ -224,7 +224,7 @@ def register_view(request):
         return JsonResponse({
             'success': True,
             'message': 'Registro exitoso. Bienvenido/a a J Silva Ingeniería.',
-            'redirect_url': reverse('inicio')
+            'redirect_url': reverse('contacto:inicio')
         })
         
     except Exception as e:
@@ -237,7 +237,7 @@ def register_view(request):
 # Función cerrar sesión
 def logout_view(request):
     logout(request)
-    return redirect('inicio')
+    return redirect('contacto:inicio')
 
 # Función para recuperar contraseña
 def password_reset_request(request):

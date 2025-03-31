@@ -1,51 +1,80 @@
 {% if productos %}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for producto in productos %}
-        <div class="bg-white rounded-xl shadow-lg overflow-hidden border-4 border-gray-200/50 hover:border-orange-400/40 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1 hover:shadow-xl hover:shadow-orange-100 group producto-card">
-            <div class="relative overflow-hidden">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 transition-all duration-300 flex flex-col h-full group producto-card hover:shadow-xl">
+            <!-- Imagen con overlay y efecto hover -->
+            <div class="relative overflow-hidden aspect-video bg-gray-100">
                 {% if producto.imagen %}
-                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110">
+                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110">
                 {% else %}
-                <div class="w-full h-48 bg-gray-100 flex items-center justify-center">
-                    <i class="fa-solid fa-box-open text-4xl text-gray-400"></i>
+                <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                    <i class="fa-solid fa-box-open text-4xl text-gray-300"></i>
                 </div>
                 {% endif %}
                 
+                <!-- Overlay con acciones rápidas -->
+                <div class="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <a href="{% url 'carrito_nuevo:detalle_producto' producto.id %}" class="bg-white text-primary p-3 rounded-full shadow-lg mx-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover:scale-110">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                    {% if user.is_authenticated and producto.stock > 0 %}
+                    <button class="agregar-al-carrito bg-white p-3 rounded-full shadow-lg mx-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover:scale-110"
+                            data-producto-id="{{ producto.id }}" 
+                            data-cantidad="1"
+                            style="background-color: #233e37 !important; color: white !important;">
+                        <i class="fa-solid fa-cart-plus"></i>
+                    </button>
+                    {% endif %}
+                </div>
+                
                 {% if producto.destacado %}
-                <!-- Etiqueta destacado animada y con efecto de cinta -->
-                <div class="absolute top-0 right-0">
-                    <div class="relative">
-                        <div class="absolute top-0 right-0 w-0 h-0 border-t-[25px] border-t-red-600 border-l-[25px] border-l-transparent"></div>
-                        <div class="bg-red-600 text-white text-xs font-bold py-1.5 px-3 shadow-md translate-x-3 -translate-y-1 rotate-45 origin-top-left">
-                            DESTACADO
-                        </div>
-                    </div>
+                <!-- Badge de destacado -->
+                <div class="absolute top-3 left-3 bg-primary/90 text-white text-xs font-bold py-1 px-2 rounded-md shadow-md flex items-center gap-1 animate-pulse-slow">
+                    <i class="fa-solid fa-star text-yellow-300"></i>
+                    DESTACADO
+                </div>
+                {% endif %}
+                
+                {% if producto.stock < 1 %}
+                <!-- Badge de agotado -->
+                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <div class="bg-red-500 text-white py-1.5 px-5 rotate-45 font-bold text-sm shadow-md absolute" style="width: 200px; text-align: center; top: 40px; right: -50px;">AGOTADO</div>
+                </div>
+                {% elif producto.stock < 5 %}
+                <!-- Badge de pocas unidades -->
+                <div class="absolute bottom-3 right-3 bg-orange-500 text-white text-xs font-medium py-1 px-2 rounded shadow-sm">
+                    ¡Últimas {{ producto.stock }} unidades!
                 </div>
                 {% endif %}
             </div>
             
+            <!-- Contenido del producto -->
             <div class="p-5 flex-grow flex flex-col">
-                <h2 class="text-lg font-semibold mb-1 text-gray-800 group-hover:text-orange-500 transition-all duration-300">{{ producto.nombre }}</h2>
-                <p class="text-sm text-gray-500 mb-2">{{ producto.categoria.nombre }}</p>
-                <p class="text-gray-600 text-sm mb-4 flex-grow">{{ producto.descripcion|truncatechars:100 }}</p>
+                <!-- Categoría -->
+                <div class="mb-1">
+                    <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ producto.categoria.nombre }}</span>
+                </div>
+                
+                <!-- Nombre con truncate -->
+                <h2 class="text-lg font-medium mb-2 text-gray-800 line-clamp-2 min-h-[3.5rem]">{{ producto.nombre }}</h2>
+                
+                <!-- Descripción con ellipsis -->
+                <p class="text-gray-600 text-sm mb-4 line-clamp-2 flex-grow">{{ producto.descripcion|truncatechars:100 }}</p>
                 
                 <div class="mt-auto">
+                    <!-- Precio con badge -->
                     <div class="flex justify-between items-center">
-                        <!-- Precio con efecto destello -->
-                        <div class="relative">
-                            <span class="text-xl font-bold text-green-600 relative z-10">{{ producto.precio_formateado }}</span>
-                            <span class="absolute -inset-1 bg-green-100/40 rounded-full blur-sm group-hover:bg-green-100/80 transition-colors duration-300"></span>
+                        <div class="bg-green-50 text-green-700 px-3 py-1 rounded-full font-medium text-lg">
+                            {{ producto.precio_formateado }}
                         </div>
-                        <div class="flex space-x-2">
+                        
+                        <!-- Botón para móviles/tablets -->
+                        <div class="sm:hidden">
                             <a href="{% url 'carrito_nuevo:detalle_producto' producto.id %}" 
-                               class="py-1.5 px-3 bg-gray-100 text-gray-700 border border-gray-300 font-medium rounded-lg transition-all duration-300 text-sm flex items-center justify-center hover:bg-gray-200 transform hover:scale-105 hover:shadow-md">Ver</a>
-                            
-                            <!-- Botón agregar carrito con animación premium -->
-                            <button type="button" class="py-1.5 px-3 bg-gradient-to-r from-orange-400 to-orange-500 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300 text-sm flex items-center justify-center transform hover:scale-105 agregar-al-carrito relative overflow-hidden" 
-                                    data-producto-id="{{ producto.id }}" data-cantidad="1">
-                                <span class="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
-                                <i class="fa-solid fa-cart-plus relative z-10"></i>
-                            </button>
+                               style="background-color: #233e37 !important; color: white !important; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; border: none; padding: 6px 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-size: 14px; transition: all 0.3s ease;">
+                                <i class="fa-solid fa-eye mr-1"></i>
+                                <span>Ver</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -54,26 +83,21 @@
         {% endfor %}
     </div>
 {% else %}
-    <!-- Mensaje de no productos encontrados con animación -->
-    <div class="bg-white rounded-xl shadow-lg p-10 text-center border-4 border-orange-400/30 max-w-2xl mx-auto transition-all duration-500 hover:shadow-xl transform hover:-translate-y-1 relative overflow-hidden">
-        <!-- Elementos decorativos mejorados con animación -->
-        <div class="absolute -top-16 -right-16 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-pulse"></div>
-        <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-pulse delay-500"></div>
-        
-        <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-full flex items-center justify-center border border-gray-200 shadow-inner relative">
-            <i class="fa-solid fa-search text-3xl text-orange-400 animate-ping absolute opacity-30"></i>
-            <i class="fa-solid fa-search text-3xl text-orange-500 relative"></i>
+    <!-- Mensaje de no productos encontrados con diseño premium -->
+    <div class="bg-white rounded-xl shadow-md p-10 text-center border border-gray-200 max-w-2xl mx-auto">
+        <div class="w-24 h-24 mx-auto mb-6 bg-gray-50 rounded-full flex items-center justify-center shadow-inner relative">
+            <i class="fa-solid fa-search text-3xl text-primary/80"></i>
         </div>
         
         <h2 class="text-xl font-bold text-gray-800 mb-3">No se encontraron productos</h2>
         <p class="text-gray-600 mb-6">Intenta con diferentes filtros o categorías</p>
         
         <button type="button" id="boton-restablecer-productos" 
-               class="inline-flex items-center px-6 py-2.5 rounded-lg 
-                      bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium shadow-md hover:bg-orange-600
-                      transition-all duration-300 gap-2 text-base transform hover:scale-105 hover:shadow-lg">
+            class="inline-flex items-center px-6 py-3 rounded-lg 
+                bg-primary text-white font-medium shadow-md hover:bg-primary/90
+                transition-all duration-300 gap-2">
             <i class="fa-solid fa-rotate-left"></i>
             <span>Restablecer filtros</span>
         </button>
     </div>
-{% endif %} 
+{% endif %}

@@ -3,181 +3,95 @@
 
 {% block title %}Catálogo de Productos | J Silva Ingeniería{% endblock %}
 
-{% block content %}
-<div class="container mx-auto px-4 py-8">
-    <!-- Título mejorado con efecto de resplandor -->
-    <h1 class="text-3xl font-bold mb-10 text-center relative pb-3">
-        <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-700 drop-shadow-sm">Catálogo de Productos</span>
-        <span class="block absolute bottom-0 left-1/2 -translate-x-1/2 w-40 h-1 rounded-full bg-gradient-to-r from-orange-400 to-orange-600 animate-pulse"></span>
-    </h1>
-    
-    <div class="flex flex-col md:flex-row gap-8 relative">
-        <!-- Filtros mejorados con posición sticky -->
-        <div class="w-full md:w-1/4">
-            <div class="sticky top-4 bg-white rounded-xl shadow-lg p-6 border-4 border-orange-400/30 hover:border-orange-500/50 transition-all duration-300 transform hover:-translate-y-1 backdrop-blur-sm">
-                <!-- Título con icono y animación -->
-                <div class="flex items-center gap-2 mb-5">
-                    <i class="fa-solid fa-filter text-orange-500 text-xl animate-bounce-slow"></i>
-                    <h2 class="text-lg font-semibold text-gray-800 relative">
-                        Filtrar Productos
-                        <span class="block w-16 h-1 bg-orange-500/60 mt-2 rounded-full"></span>
-                    </h2>
-                </div>
-                
-                <div id="filtro-form">
-                    <!-- Categorías con indicadores mejorados -->
-                    <div class="mb-6">
-                        <h3 class="text-md font-medium mb-3 text-gray-700 pb-2 border-b border-gray-200 flex items-center gap-2">
-                            <i class="fa-solid fa-tags text-orange-400 text-sm"></i>
-                            Categorías
-                        </h3>
-                        <div class="space-y-3 pl-1">
-                            <div class="flex items-center group">
-                                <input type="radio" id="categoria-todas" name="categoria" value="" 
-                                       class="h-4 w-4 text-orange-500 focus:ring-orange-400 cursor-pointer filtro-input" 
-                                       {% if not categoria_seleccionada %}checked{% endif %}>
-                                <label for="categoria-todas" class="ml-2 text-sm text-gray-700 group-hover:text-orange-500 transition-colors duration-200 cursor-pointer">Todas</label>
-                            </div>
-                            
-                            {% for categoria in categorias %}
-                            <div class="flex items-center group">
-                                <input type="radio" id="categoria-{{ categoria.id }}" name="categoria" value="{{ categoria.id }}" 
-                                       class="h-4 w-4 text-orange-500 focus:ring-orange-400 cursor-pointer filtro-input" 
-                                       {% if categoria_seleccionada == categoria.id|stringformat:"i" %}checked{% endif %}>
-                                <label for="categoria-{{ categoria.id }}" class="ml-2 text-sm text-gray-700 group-hover:text-orange-500 transition-colors duration-200 cursor-pointer">{{ categoria.nombre }}</label>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    
-                    <!-- Precio con rango visual -->
-                    <div class="mb-6">
-                        <h3 class="text-md font-medium mb-3 text-gray-700 pb-2 border-b border-gray-200 flex items-center gap-2">
-                            <i class="fa-solid fa-dollar-sign text-orange-400 text-sm"></i>
-                            Precio
-                        </h3>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label for="precio_min" class="block text-sm text-gray-600 mb-1.5">Mínimo</label>
-                                <input type="number" id="precio_min" name="precio_min" value="{{ precio_min|default:'' }}" min="0" step="any"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm transition-all duration-200 shadow-sm filtro-input">
-                            </div>
-                            <div>
-                                <label for="precio_max" class="block text-sm text-gray-600 mb-1.5">Máximo</label>
-                                <input type="number" id="precio_max" name="precio_max" value="{{ precio_max|default:'' }}" min="0" step="any"
-                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent text-sm transition-all duration-200 shadow-sm filtro-input">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Botones mejorados con efectos 3D sutiles -->
-                    <div class="flex gap-3">
-                        <button type="button" id="boton-filtrar" class="flex-1 py-2.5 px-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-lg shadow-md hover:shadow-orange-200/50 hover:shadow-lg transition-all duration-300 text-sm flex items-center justify-center gap-1.5 hover:scale-105 transform active:scale-95">
-                            <i class="fa-solid fa-filter"></i> <span>Filtrar</span>
-                        </button>
-                        <button type="button" id="boton-restablecer" class="flex-1 py-2.5 px-4 bg-gradient-to-b from-gray-50 to-gray-100 text-gray-700 border border-gray-300 font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300 text-sm flex items-center justify-center gap-1.5 hover:scale-105 transform active:scale-95">
-                            <i class="fa-solid fa-rotate-left"></i> <span>Restablecer</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Contenedor de productos con loader -->
-        <div class="w-full md:w-3/4">
-            <div id="loading-spinner" class="hidden flex justify-center items-center py-20">
-                <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-orange-500 border-opacity-75"></div>
-            </div>
-            
-            <div id="productos-container">
-                {% if productos %}
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {% for producto in productos %}
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden border-4 border-gray-200/50 hover:border-orange-400/40 transition-all duration-300 flex flex-col h-full transform hover:-translate-y-1 hover:shadow-xl hover:shadow-orange-100 group producto-card">
-                            <div class="relative overflow-hidden">
-                                {% if producto.imagen %}
-                                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-full h-48 object-cover transition-transform duration-700 group-hover:scale-110">
-                                {% else %}
-                                <div class="w-full h-48 bg-gray-100 flex items-center justify-center">
-                                    <i class="fa-solid fa-box-open text-4xl text-gray-400"></i>
-                                </div>
-                                {% endif %}
-                                
-                                {% if producto.destacado %}
-                                <!-- Etiqueta destacado animada y con efecto de cinta -->
-                                <div class="absolute top-0 right-0">
-                                    <div class="relative">
-                                        <div class="absolute top-0 right-0 w-0 h-0 border-t-[25px] border-t-red-600 border-l-[25px] border-l-transparent"></div>
-                                        <div class="bg-red-600 text-white text-xs font-bold py-1.5 px-3 shadow-md translate-x-3 -translate-y-1 rotate-45 origin-top-left">
-                                            DESTACADO
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="p-5 flex-grow flex flex-col">
-                                <h2 class="text-lg font-semibold mb-1 text-gray-800 group-hover:text-orange-500 transition-all duration-300">{{ producto.nombre }}</h2>
-                                <p class="text-sm text-gray-500 mb-2">{{ producto.categoria.nombre }}</p>
-                                <p class="text-gray-600 text-sm mb-4 flex-grow">{{ producto.descripcion|truncatechars:100 }}</p>
-                                
-                                <div class="mt-auto">
-                                    <div class="flex justify-between items-center">
-                                        <!-- Precio con efecto destello -->
-                                        <div class="relative">
-                                            <span class="text-xl font-bold text-green-600 relative z-10">{{ producto.precio_formateado }}</span>
-                                            <span class="absolute -inset-1 bg-green-100/40 rounded-full blur-sm group-hover:bg-green-100/80 transition-colors duration-300"></span>
-                                        </div>
-                                        <div class="flex space-x-2">
-                                            <a href="{% url 'carrito_nuevo:detalle_producto' producto.id %}" 
-                                               class="py-1.5 px-3 bg-gray-100 text-gray-700 border border-gray-300 font-medium rounded-lg transition-all duration-300 text-sm flex items-center justify-center hover:bg-gray-200 transform hover:scale-105 hover:shadow-md">Ver</a>
-                                            
-                                            <!-- Botón agregar carrito con animación premium -->
-                                            <button type="button" class="py-1.5 px-3 bg-gradient-to-r from-orange-400 to-orange-500 text-white font-medium rounded-lg shadow-sm hover:shadow-md transition-all duration-300 text-sm flex items-center justify-center transform hover:scale-105 agregar-al-carrito relative overflow-hidden" 
-                                                    data-producto-id="{{ producto.id }}" data-cantidad="1">
-                                                <span class="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
-                                                <i class="fa-solid fa-cart-plus relative z-10"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <!-- Mensaje de no productos encontrados con animación -->
-                    <div class="bg-white rounded-xl shadow-lg p-10 text-center border-4 border-orange-400/30 max-w-2xl mx-auto transition-all duration-500 hover:shadow-xl transform hover:-translate-y-1 relative overflow-hidden">
-                        <!-- Elementos decorativos mejorados con animación -->
-                        <div class="absolute -top-16 -right-16 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-pulse"></div>
-                        <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-orange-500/10 rounded-full blur-xl animate-pulse delay-500"></div>
-                        
-                        <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-full flex items-center justify-center border border-gray-200 shadow-inner relative">
-                            <i class="fa-solid fa-search text-3xl text-orange-400 animate-ping absolute opacity-30"></i>
-                            <i class="fa-solid fa-search text-3xl text-orange-500 relative"></i>
-                        </div>
-                        
-                        <h2 class="text-xl font-bold text-gray-800 mb-3">No se encontraron productos</h2>
-                        <p class="text-gray-600 mb-6">Intenta con diferentes filtros o categorías</p>
-                        
-                        <button type="button" id="boton-restablecer-productos" 
-                               class="inline-flex items-center px-6 py-2.5 rounded-lg 
-                                      bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium shadow-md hover:bg-orange-600
-                                      transition-all duration-300 gap-2 text-base transform hover:scale-105 hover:shadow-lg">
-                            <i class="fa-solid fa-rotate-left"></i>
-                            <span>Restablecer filtros</span>
-                        </button>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</div>
-
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'carrito_nuevo/css/carrito-override.css' %}">
+<link rel="stylesheet" href="{% static 'carrito_nuevo/css/botones-carrito.css' %}">
 <style>
+    /* Estilos para la coherencia con carrito.html */
+    .container.mx-auto {
+        max-width: 95% !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    /* CORRECCIÓN DEFINITIVA DE HOVER DE NAVEGACIÓN */
+    header .nav__list .nav__item a, 
+    header .megamenu__link a,
+    header .dropdown__link {
+        transition: color 0.3s ease !important;
+    }
+    
+    header .nav__list .nav__item a:hover, 
+    header .megamenu__link a:hover, 
+    header .dropdown__link:hover,
+    header .nav__link:hover {
+        color: #b78d41 !important;
+    }
+    
+    header .dropdown__icon {
+        transition: transform 0.3s ease !important;
+    }
+    
+    header .nav__item:hover .dropdown__icon,
+    header .dropdown__link:hover .dropdown__icon {
+        color: #b78d41 !important;
+        transform: rotate(180deg) !important;
+    }
+    
+    /* Convertir las imágenes de productos a proporción 1:1 (cuadradas) */
+    .producto-card .relative.overflow-hidden {
+        aspect-ratio: 1/1 !important;
+    }
+    
+    /* Mejoras visuales para tarjetas de productos */
+    .producto-card {
+        border-color: rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease !important;
+    }
+    
+    .producto-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        border-color: rgba(183, 141, 65, 0.3);
+    }
+    
+    /* Estilo específico para el foco de los campos de filtro */
+    .filtro-input:focus {
+        border-color: #b78d41 !important;
+        box-shadow: 0 0 0 2px rgba(183, 141, 65, 0.2) !important;
+    }
+    
+    /* Garantizar el color correcto de los botones */
+    .btn-carrito, 
+    button.btn-carrito,
+    a.btn-carrito,
+    #boton-filtrar,
+    #boton-restablecer,
+    #boton-restablecer-productos {
+        background-color: #233e37 !important;
+        color: white !important;
+        transition: all 0.3s ease !important;
+        border: none !important;
+    }
+    
+    /* Estilo para el botón de agregar al carrito */
+    .agregar-al-carrito {
+        background-color: #233e37 !important;
+        color: white !important;
+        transition: all 0.3s ease !important;
+        border: none !important;
+    }
+    
+    .agregar-al-carrito:hover {
+        background-color: #b78d41 !important;
+        transform: translateY(0) scale(1.1) !important;
+        box-shadow: 0 4px 12px rgba(183, 141, 65, 0.35) !important;
+    }
+    
     /* Animaciones mejoradas */
     @keyframes pulse {
-        0%, 100% { opacity: 0.6; }
+        0%, 100% { opacity: 0.7; }
         50% { opacity: 1; }
     }
     
@@ -185,27 +99,284 @@
         animation: pulse 2s infinite ease-in-out;
     }
     
-    .delay-500 {
-        animation-delay: 0.5s;
+    .animate-pulse-slow {
+        animation: pulse 3s infinite ease-in-out;
     }
     
     @keyframes bounce-slow {
         0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-3px); }
+        50% { transform: translateY(-5px); }
     }
     
     .animate-bounce-slow {
         animation: bounce-slow 3s infinite ease-in-out;
     }
     
-    @keyframes ping {
-        75%, 100% { transform: scale(1.2); opacity: 0; }
+    /* Componente loader moderno */
+    .loader {
+        position: relative;
+        width: 60px;
+        height: 60px;
     }
     
-    .animate-ping {
-        animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    .spinner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        border-top-color: var(--color-primary, #233e37);
+        animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    /* Estilo para line-clamp */
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;  
+        overflow: hidden;
+        line-clamp: 2;
+    }
+    
+    /* Mejoras para el panel de filtros responsive */
+    @media (min-width: 768px) and (max-width: 1279px) {
+        .filtro-panel {
+            width: 33% !important; /* Ajustar el ancho a 1/3 en pantallas medianas */
+        }
+        .productos-panel {
+            width: 67% !important; /* Ajustar el ancho a 2/3 en pantallas medianas */
+        }
+    }
+    
+    @media (min-width: 1280px) {
+        .filtro-panel {
+            width: 25% !important; /* Mantener 1/4 en pantallas grandes */
+        }
+        .productos-panel {
+            width: 75% !important; /* Mantener 3/4 en pantallas grandes */
+        }
+    }
+    
+    /* Estilos adicionales para el panel de filtros */
+    .filtro-panel .sticky {
+        min-width: 230px;
+    }
+    
+    /* Estilo para el título "Filtrar Productos" */
+    .titulo-filtrar {
+        color: #233E37 !important;
     }
 </style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Título con diseño premium -->
+    <div class="mb-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-primary relative inline-block">
+            <span class="relative z-10">Catálogo de productos</span>
+            <span class="absolute bottom-0 left-0 w-full h-2 bg-secondary opacity-20"></span>
+        </h1>
+        <p class="text-neutral-600 mt-2">Explore nuestra selección premium de productos y soluciones para su negocio o hogar</p>
+    </div>
+    
+    <div class="flex flex-col md:flex-row gap-8 relative">
+        <!-- Panel de filtros con diseño premium -->
+        <div class="w-full md:w-1/3 lg:w-1/4 filtro-panel">
+            <div class="sticky top-24 bg-white rounded-xl shadow-md overflow-hidden border border-gray-200/80 transition-all duration-300 transform hover:shadow-lg">
+                <!-- Encabezado de filtros -->
+                <div class="bg-gradient-to-r from-primary/90 to-primary text-white p-4">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-xl" style="color: #233E37 !important;"></i>
+                        <h2 class="text-lg font-medium titulo-filtrar">Filtrar productos</h2>
+                    </div>
+                </div>
+                
+                <div id="filtro-form" class="p-5">
+                    <!-- Categorías con diseño mejorado -->
+                    <div class="mb-6">
+                        <h3 class="text-md font-medium mb-3 text-gray-700 pb-2 border-b border-gray-200 flex items-center gap-2">
+                            <i class="fa-solid fa-tags text-primary"></i>
+                            Categorías
+                        </h3>
+                        <div class="space-y-3 pl-1">
+                            <div class="flex items-center group">
+                                <input type="radio" id="categoria-todas" name="categoria" value="" 
+                                       class="h-4 w-4 text-primary focus:ring-primary cursor-pointer filtro-input" 
+                                       {% if not categoria_seleccionada %}checked{% endif %}>
+                                <label for="categoria-todas" class="ml-2 text-sm text-gray-700 group-hover:text-primary transition-colors duration-200 cursor-pointer">Todas</label>
+                            </div>
+                            
+                            {% for categoria in categorias %}
+                            <div class="flex items-center group">
+                                <input type="radio" id="categoria-{{ categoria.id }}" name="categoria" value="{{ categoria.id }}" 
+                                       class="h-4 w-4 text-primary focus:ring-primary cursor-pointer filtro-input" 
+                                       {% if categoria_seleccionada == categoria.id|stringformat:"i" %}checked{% endif %}>
+                                <label for="categoria-{{ categoria.id }}" class="ml-2 text-sm text-gray-700 group-hover:text-primary transition-colors duration-200 cursor-pointer">{{ categoria.nombre }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Precio con diseño mejorado -->
+                    <div class="mb-6">
+                        <h3 class="text-md font-medium mb-3 text-gray-700 pb-2 border-b border-gray-200 flex items-center gap-2">
+                            <i class="fa-solid fa-dollar-sign text-primary"></i>
+                            Precio
+                        </h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label for="precio_min" class="block text-sm text-gray-600 mb-1.5">Mínimo</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <span class="text-gray-500 text-sm">$</span>
+                                    </div>
+                                    <input type="number" id="precio_min" name="precio_min" value="{{ precio_min|default:'' }}" min="0" step="any"
+                                           class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm transition-all duration-200 shadow-sm filtro-input">
+                                </div>
+                            </div>
+                            <div>
+                                <label for="precio_max" class="block text-sm text-gray-600 mb-1.5">Máximo</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <span class="text-gray-500 text-sm">$</span>
+                                    </div>
+                                    <input type="number" id="precio_max" name="precio_max" value="{{ precio_max|default:'' }}" min="0" step="any"
+                                           class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm transition-all duration-200 shadow-sm filtro-input">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Botones con diseño idéntico a carrito.html -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button" id="boton-filtrar" 
+                                class="btn-carrito flex items-center justify-center px-5 py-3 rounded-md gap-2">
+                            <i class="fa-solid fa-filter mr-1"></i>
+                            <span>Filtrar</span>
+                        </button>
+                        <button type="button" id="boton-restablecer" 
+                                class="btn-carrito flex items-center justify-center px-5 py-3 rounded-md gap-2">
+                            <i class="fa-solid fa-rotate-left mr-1"></i>
+                            <span>Limpiar</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contenedor de productos con loader -->
+        <div class="w-full md:w-2/3 lg:w-3/4 productos-panel">
+            <div id="loading-spinner" class="hidden flex justify-center items-center py-20">
+                <div class="loader">
+                    <div class="spinner"></div>
+                </div>
+            </div>
+            
+            <div id="productos-container">
+            {% if productos %}
+                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                    {% for producto in productos %}
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 transition-all duration-300 flex flex-col h-full group producto-card hover:shadow-xl">
+                            <!-- Imagen con overlay y efecto hover - Ahora con proporción 1:1 -->
+                            <div class="relative overflow-hidden aspect-square bg-gray-100">
+                                {% if producto.imagen %}
+                                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-110">
+                                {% else %}
+                                <div class="w-full h-full flex items-center justify-center bg-gray-100">
+                                    <i class="fa-solid fa-box-open text-4xl text-gray-300"></i>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- Overlay con acciones rápidas -->
+                                <div class="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <a href="{% url 'carrito_nuevo:detalle_producto' producto.id %}" class="bg-white text-primary p-3 rounded-full shadow-lg mx-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover:scale-110">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    {% if user.is_authenticated and producto.stock > 0 %}
+                                    <button class="agregar-al-carrito bg-white p-3 rounded-full shadow-lg mx-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover:scale-110"
+                                            data-producto-id="{{ producto.id }}" 
+                                            data-cantidad="1"
+                                            style="background-color: #233e37 !important; color: white !important;">
+                                        <i class="fa-solid fa-cart-plus"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                                
+                                {% if producto.destacado %}
+                                <!-- Badge de destacado -->
+                                <div class="absolute top-3 left-3 bg-primary/90 text-white text-xs font-bold py-1 px-2 rounded-md shadow-md flex items-center gap-1 animate-pulse-slow">
+                                    <i class="fa-solid fa-star text-yellow-300"></i>
+                                    DESTACADO
+                                </div>
+                                {% endif %}
+                                
+                                {% if producto.stock < 1 %}
+                                <!-- Badge de agotado -->
+                                <div class="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                                    <div class="bg-red-500 text-white py-1.5 px-5 rotate-45 font-bold text-sm shadow-md absolute" style="width: 200px; text-align: center; top: 40px; right: -50px;">AGOTADO</div>
+                                </div>
+                                {% elif producto.stock < 5 %}
+                                <!-- Badge de pocas unidades -->
+                                <div class="absolute bottom-3 right-3 bg-orange-500 text-white text-xs font-medium py-1 px-2 rounded shadow-sm">
+                                    ¡Últimas {{ producto.stock }} unidades!
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Contenido del producto -->
+                            <div class="p-5 flex-grow flex flex-col">
+                                <!-- Categoría -->
+                                <div class="mb-1">
+                                    <span class="text-xs font-medium text-gray-500 uppercase tracking-wider">{{ producto.categoria.nombre }}</span>
+                                </div>
+                                
+                                <!-- Nombre con truncate -->
+                                <h2 class="text-lg font-medium mb-2 text-gray-800 line-clamp-2 min-h-[3.5rem]">{{ producto.nombre }}</h2>
+                                
+                                <!-- Descripción con ellipsis -->
+                                <p class="text-gray-600 text-sm mb-4 line-clamp-2 flex-grow">{{ producto.descripcion|truncatechars:100 }}</p>
+                                
+                                <div class="mt-auto">
+                                    <!-- Precio con badge -->
+                                    <div class="flex justify-between items-center">
+                                        <div class="bg-green-50 text-green-700 px-3 py-1 rounded-full font-medium text-lg">
+                                            {{ producto.precio_formateado }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <!-- Mensaje de no productos encontrados con diseño premium -->
+                <div class="bg-white rounded-xl shadow-md p-10 text-center border border-gray-200 max-w-2xl mx-auto">
+                    <div class="w-24 h-24 mx-auto mb-6 bg-gray-50 rounded-full flex items-center justify-center shadow-inner relative">
+                        <i class="fa-solid fa-search text-3xl text-primary/80"></i>
+                    </div>
+                    
+                    <h2 class="text-xl font-bold text-gray-800 mb-3">No se encontraron productos</h2>
+                    <p class="text-gray-600 mb-6">Intenta con diferentes filtros o categorías</p>
+                    
+                    <button type="button" id="boton-restablecer-productos" 
+                            class="btn-carrito inline-flex items-center px-6 py-3 rounded-md gap-2">
+                        <i class="fa-solid fa-rotate-left mr-1"></i>
+                        <span>Restablecer filtros</span>
+                    </button>
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -218,8 +389,8 @@
             aplicarFiltros();
         });
         
-        // Restablecer filtros
-        $('#boton-restablecer, #boton-restablecer-productos').on('click', function(e) {
+        // Restablecer filtros - Asegurar que ambos botones de restablecer funcionen
+        $(document).off('click', '#boton-restablecer, #boton-restablecer-productos').on('click', '#boton-restablecer, #boton-restablecer-productos', function(e) {
             e.preventDefault();
             e.stopPropagation();
             
@@ -231,20 +402,29 @@
             aplicarFiltros();
         });
         
-        // Manejar el agregar al carrito
-        $(document).on('click', '.agregar-al-carrito', function(e) {
+        // Agregar productos al carrito
+        $(document).off('click', '.agregar-al-carrito').on('click', '.agregar-al-carrito', function(e) {
             e.preventDefault();
             e.stopPropagation();
+            
             const productoId = $(this).data('producto-id');
-            const cantidad = $(this).data('cantidad');
-            const boton = $(this);
+            const cantidad = $(this).data('cantidad') || 1;
             
-            // Añadir clase de carga y deshabilitar
-            boton.addClass('opacity-75').prop('disabled', true);
+            // Prevenir doble clic
+            if ($(this).hasClass('procesando')) {
+                return false;
+            }
             
-            agregarAlCarrito(productoId, cantidad, function() {
-                // Restaurar botón después de procesado
-                boton.removeClass('opacity-75').prop('disabled', false);
+            // Marcar como procesando para evitar clics múltiples
+            $(this).addClass('procesando');
+            
+            // Añadir un efecto visual al botón
+            $(this).addClass('animate-pulse');
+            
+            agregarAlCarrito(productoId, cantidad, () => {
+                // Quitar el efecto de animación después de completar
+                $(this).removeClass('animate-pulse');
+                $(this).removeClass('procesando');
             });
         });
     });
@@ -299,7 +479,7 @@
         // Realizar petición AJAX para filtrar productos
         $.ajax({
             url: "{% url 'carrito_nuevo:filtrar_productos_ajax' %}",
-            method: 'POST',
+            method: "POST",
             data: filtros,
             processData: false,
             contentType: false,
@@ -340,31 +520,52 @@
     
     // Función para preservar los iconos y textos de los botones
     function preservarBotones() {
-        // Asegurar que los botones de agregar al carrito tengan su icono
-        $('.agregar-al-carrito').each(function() {
-            if ($(this).find('i.fa-cart-plus').length === 0) {
-                $(this).html('<span class="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 opacity-0 hover:opacity-100 transition-opacity duration-300"></span><i class="fa-solid fa-cart-plus relative z-10"></i>');
+        // Eliminar estilos antiguos
+        $('button').not('.btn-carrito').not('.agregar-al-carrito').each(function() {
+            if ($(this).is('#boton-filtrar, #boton-restablecer, #boton-restablecer-productos')) {
+                $(this).addClass('btn-carrito');
             }
+        });
+        
+        // Asegurar que los botones de agregar al carrito tengan su icono y clase correcta
+        $('.agregar-al-carrito').each(function() {
+            // Asegurar el icono correcto
+            if ($(this).find('i.fa-cart-plus').length === 0) {
+                $(this).html('<i class="fa-solid fa-cart-plus"></i>');
+            }
+            
+            // Aplicar la clase btn-carrito para obtener el mismo estilo que los demás botones
+            $(this).addClass('btn-carrito');
+            
+            // Eliminar cualquier estilo inline que pudiera estar sobreescribiendo la clase
+            $(this).removeAttr('style');
         });
         
         // Asegurar que el botón filtrar tenga su icono y texto
         if ($('#boton-filtrar').find('i.fa-filter').length === 0) {
-            $('#boton-filtrar').html('<i class="fa-solid fa-filter"></i> <span>Filtrar</span>');
+            $('#boton-filtrar').html('<i class="fa-solid fa-filter mr-1"></i><span>Filtrar</span>');
         }
         
         // Asegurar que el botón restablecer tenga su icono y texto
         if ($('#boton-restablecer').find('i.fa-rotate-left').length === 0) {
-            $('#boton-restablecer').html('<i class="fa-solid fa-rotate-left"></i> <span>Restablecer</span>');
+            $('#boton-restablecer').html('<i class="fa-solid fa-rotate-left mr-1"></i><span>Limpiar</span>');
         }
         
         // Asegurar que el botón restablecer productos tenga su icono y texto
         if ($('#boton-restablecer-productos').find('i.fa-rotate-left').length === 0) {
-            $('#boton-restablecer-productos').html('<i class="fa-solid fa-rotate-left"></i> <span>Restablecer filtros</span>');
+            $('#boton-restablecer-productos').html('<i class="fa-solid fa-rotate-left mr-1"></i><span>Restablecer filtros</span>');
         }
     }
     
     function agregarAlCarrito(productoId, cantidad, callback) {
         const csrftoken = getCookie('csrftoken');
+        
+        // Crear el efecto de animación para el icono del carrito
+        const cartIcon = $('.fa-shopping-cart');
+        if (cartIcon.length) {
+            cartIcon.addClass('animate-bounce');
+            setTimeout(() => cartIcon.removeClass('animate-bounce'), 1000);
+        }
         
         $.ajax({
             url: "{% url 'carrito_nuevo:agregar_al_carrito_ajax' %}",
@@ -378,52 +579,44 @@
                 if (data.success) {
                     // Actualizar contador del carrito con animación
                     const cartCount = $("#cart-count");
-                    cartCount.addClass('scale-125 text-orange-500');
                     cartCount.text(data.cantidad_total);
-                    
-                    // Quitar animación después de un momento
-                    setTimeout(function() {
-                        cartCount.removeClass('scale-125 text-orange-500');
-                    }, 300);
+                    cartCount.addClass('scale-125');
+                    setTimeout(() => cartCount.removeClass('scale-125'), 300);
                     
                     // Mostrar mensaje de éxito
-                    showAlert('Producto agregado al carrito', 'success');
+                    showAlert('¡Producto agregado al carrito!', 'success');
                 } else {
-                    // Si hay error pero hay mensajes
-                    if (data.message) {
-                        showAlert('Producto agregado al carrito', 'success');
-                    } else {
-                        showAlert('Producto agregado al carrito', 'success');
-                    }
+                    showAlert(data.message || 'Error al agregar el producto', 'error');
                 }
-                
-                if (callback) callback();
             },
             error: function() {
-                // Mostrar mensaje de éxito de todos modos, ya que mencionaste que el producto se agrega
-                showAlert('Producto agregado al carrito', 'success');
+                showAlert('Error al agregar el producto al carrito', 'error');
+            },
+            complete: function() {
                 if (callback) callback();
             }
         });
     }
     
-    // Función para mostrar alertas
     function showAlert(message, type) {
-        if (typeof Swal !== 'undefined') {
-            Swal.fire({
-                text: message,
-                icon: type,
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000
-            });
-        } else {
-            alert(message);
-        }
+        Swal.fire({
+            text: message,
+            icon: type,
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            },
+            customClass: {
+                popup: 'alertas-superiores'
+            }
+        });
     }
     
-    // Función para obtener el token CSRF
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -443,10 +636,21 @@
     $(document).ready(function() {
         preservarBotones();
         
-        // Monitor para evitar que los botones cambien su texto a "Enviar"
-        setInterval(function() {
-            preservarBotones();
-        }, 200);
+        // Animar los elementos al cargar la página
+        $('.producto-card').each(function(i) {
+            $(this).css({
+                'opacity': '0',
+                'transform': 'translateY(20px)'
+            });
+            
+            setTimeout(() => {
+                $(this).css({
+                    'opacity': '1',
+                    'transform': 'translateY(0px)',
+                    'transition': 'all 0.5s ease-out'
+                });
+            }, 100 * i);
+        });
     });
 </script>
 {% endblock %}

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva venta - J Silva Ingeniería</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        
+        * {
+            font-family: 'Kanit', sans-serif;
+
+        }
+        /* Estilos generales */
+        body {
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            background-color: #233e37;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .notification-message {
+            background-color: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        
+        .notification-message h2 {
+            color: #2980b9;
+            margin-top: 0;
+            font-size: 18px;
+        }
+        
+        .order-details {
+            background-color: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .order-details h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 10px;
+            color: #233e37;
+            font-size: 16px;
+        }
+        
+        .order-info {
+            margin-bottom: 15px;
+        }
+        
+        .order-info p {
+            margin: 5px 0;
+        }
+        
+        .order-info .label {
+            font-weight: 600;
+            color: #4b5563;
+        }
+        
+        .products {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .products th {
+            background-color: #f1f5f9;
+            text-align: left;
+            padding: 10px;
+            font-weight: 600;
+            color: #4b5563;
+            font-size: 14px;
+        }
+        
+        .products td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+        
+        .totals {
+            margin-top: 15px;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 15px;
+        }
+        
+        .totals p {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+        }
+        
+        .totals .total {
+            font-weight: 700;
+            color: #233e37;
+            font-size: 16px;
+        }
+        
+        .payment-info {
+            background-color: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .payment-info h3 {
+            margin-top: 0;
+            color: #d97706;
+            font-size: 16px;
+        }
+        
+        .customer-info {
+            margin-bottom: 20px;
+            background-color: #f0fdf4;
+            border: 1px solid #dcfce7;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        
+        .customer-info h3 {
+            color: #16a34a;
+            font-size: 16px;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        
+        .footer {
+            background-color: #f8fafc;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #6b7280;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .button {
+            display: inline-block;
+            background-color: #233e37;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            margin-top: 15px;
+        }
+        
+        .logo {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
+        
+        .highlight {
+            font-weight: bold;
+            color: #233e37;
+        }
+        
+        .admin-actions {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .admin-actions h3 {
+            margin-top: 0;
+            color: #495057;
+            font-size: 16px;
+        }
+        
+        .admin-button {
+            display: inline-block;
+            background-color: #233e37;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://jsilva.cl/static/img/logo-white.png" alt="J Silva Ingeniería" class="logo">
+            <h1>¡Nueva venta recibida!</h1>
+        </div>
+        
+        <div class="content">
+            <div class="notification-message">
+                <h2>Se ha registrado un nuevo pedido</h2>
+                <p>Un cliente ha realizado una compra en la tienda. A continuación encontrarás todos los detalles del pedido.</p>
+            </div>
+            
+            <div class="order-details">
+                <h3>Detalles del pedido</h3>
+                <div class="order-info">
+                    <p><span class="label">Número de pedido:</span> <span class="highlight">#{{ pedido.id }}</span></p>
+                    <p><span class="label">Fecha:</span> {{ pedido.fecha_creacion|date:"d F, Y H:i" }}</p>
+                    <p><span class="label">Estado:</span> <span class="highlight">{{ pedido.estado.nombre }}</span></p>
+                </div>
+                
+                <h3>Productos</h3>
+                <table class="products">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.producto.nombre }}</td>
+                            <td>{{ item.cantidad }}</td>
+                            <td>{{ item.precio_unitario_formateado }}</td>
+                            <td>{{ item.subtotal_formateado }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                <div class="totals">
+                    <p>
+                        <span>Subtotal:</span>
+                        <span>{{ pedido.total_formateado }}</span>
+                    </p>
+                    <p>
+                        <span>IVA (19%):</span>
+                        <span>
+                            {% with iva=pedido.total|floatformat:0|stringformat:"i"|add:"0" %}
+                            {% with iva_calculado=iva|stringformat:"i"|slice:":-2"|add:"0"|stringformat:"i"|add:"." %}
+                            {% with iva_calculado_final=iva_calculado|add:iva|stringformat:"i"|slice:"-2:"|stringformat:"i" %}
+                            ${{ iva_calculado_final|stringformat:"i"|add:"0"|floatformat:0 }}
+                            {% endwith %}
+                            {% endwith %}
+                            {% endwith %}
+                        </span>
+                    </p>
+                    <p>
+                        <span>Envío:</span>
+                        <span>Gratis</span>
+                    </p>
+                    <p class="total">
+                        <span>Total:</span>
+                        <span>{{ pedido.total_formateado }}</span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="customer-info">
+                <h3>Información del cliente</h3>
+                <p><span class="label">Nombre:</span> <span class="highlight">{{ pedido.usuario.get_full_name|default:pedido.usuario.username }}</span></p>
+                <p><span class="label">Correo electrónico:</span> <a href="mailto:{{ pedido.usuario.email }}">{{ pedido.usuario.email }}</a></p>
+                <p><span class="label">Teléfono:</span> <span class="highlight">{{ pedido.telefono_contacto|default:"No proporcionado" }}</span></p>
+                <p><span class="label">Usuario desde:</span> {{ pedido.usuario.date_joined|date:"d F, Y" }}</p>
+                
+                <h3>Dirección de envío</h3>
+                <p><span class="highlight">{{ pedido.direccion_entrega|default:"No proporcionada" }}</span></p>
+                
+                {% if pedido.notas %}
+                <h3>Notas Adicionales</h3>
+                <p>{{ pedido.notas }}</p>
+                {% endif %}
+            </div>
+            
+            {% if pedido.metodo_pago %}
+            <div class="payment-info">
+                <h3>Información de Pago</h3>
+                <p><span class="label">Método de pago:</span> <span class="highlight">{{ pedido.metodo_pago.nombre }}</span></p>
+                
+                {% if pedido.metodo_pago.instrucciones_confirmacion %}
+                <p>{{ pedido.metodo_pago.instrucciones_confirmacion|linebreaks }}</p>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <div class="admin-actions">
+                <h3>Acciones administrativas</h3>
+                <p>Puedes gestionar este pedido desde el panel de administración:</p>
+                <a href="{{ site_url }}/admin/carrito_nuevo/pedido/{{ pedido.id }}/change/" class="admin-button">Ver en Admin</a>
+                <a href="{{ site_url }}{% url 'carrito_nuevo:detalle_pedido' pedido.id %}" class="admin-button">Ver Detalle</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Este correo electrónico fue enviado automáticamente por el sistema de J Silva Ingeniería.</p>
+            <p>© {{ year }} J Silva Ingeniería. Todos los derechos reservados.</p>
+        </div>
+    </div>
+</body>
+</html>

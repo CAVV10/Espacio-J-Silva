@@ -463,6 +463,7 @@ iframe {
 .form {
     height: 100%;
     width: 100%;
+    max-width: 450px; /* Añadido: limita el ancho máximo del formulario */
     border: 0.2rem solid #b78d41;
     display: flex;
     flex-direction: column;
@@ -471,6 +472,7 @@ iframe {
     padding: 20px;
     border-radius: 10px;
     position: relative;
+    margin: 0 auto; /* Añadido: centra el formulario horizontalmente */
 }
   
 .title__form {
@@ -506,10 +508,12 @@ iframe {
     outline: 0;
     border: 1px solid #b78d41;
     border-radius: 10px;
+    color: #333; /* Color de texto oscuro */
 }
   
 .form label .in__message {
     padding: 10px 10px 100px 10px;
+    color: #333; /* Color de texto oscuro para el área de mensaje */
 }
 
   
@@ -623,6 +627,13 @@ iframe {
     animation: bounce-on-add 1s;
 }
 
+/* Ajustes para pantallas grandes */
+@media screen and (min-width: 1400px) {
+    .form {
+        max-width: 450px; /* Mantiene el formulario con un ancho máximo en pantallas grandes */
+    }
+}
+
 /* Estilos para móviles */
 @media screen and (max-width: 1000px) {
     .megamenu {
@@ -729,10 +740,7 @@ iframe {
 
     .form {
         max-width: 26rem; 
-
     }
-    
-
 }
 
 @media screen and (max-width: 960px) {
@@ -752,7 +760,6 @@ iframe {
         visibility: visible;
         opacity: 1;
     }
-    
 }
 
 @media screen and (max-width: 760px) {
@@ -780,8 +787,6 @@ iframe {
     .show__menu {
         left: 45%;
     }
-
-
 }
 
 @media screen and (max-width: 560px) {
@@ -789,12 +794,9 @@ iframe {
         font-size: 1.5rem;
     }
 
-
-
     p {
         font-size: 1rem;
     }
-
 
     .logo a {
         font-size: 1.3rem;
@@ -830,4 +832,3 @@ iframe {
         margin-top: 10px;
     }
 }
-

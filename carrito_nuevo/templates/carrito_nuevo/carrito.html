@@ -3,16 +3,93 @@
 
 {% block title %}Carrito de Compras | J Silva Ingeniería{% endblock %}
 
-{% block content %}
-<div class="container mx-auto px-4 py-8 max-w-6xl">
-    <!-- Título eliminado como solicitaste -->
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'carrito_nuevo/css/carrito-override.css' %}">
+<link rel="stylesheet" href="{% static 'carrito_nuevo/css/botones-carrito.css' %}">
+<style>
+    /* Estilos para hacer el carrito más ancho */
+    .container.mx-auto {
+        max-width: 95% !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
     
-    <div class="flex flex-col md:flex-row gap-8">
+    /* Ajustar proporción de columnas */
+    @media (min-width: 768px) {
+        .md\:w-2\/3 {
+            width: 70% !important;
+        }
+        
+        .md\:w-1\/3 {
+            width: 28% !important;
+        }
+    }
+    
+    /* Botones más anchos en móviles */
+    @media (max-width: 767px) {
+        .flex.flex-col.sm\:flex-row button,
+        .flex.flex-col.sm\:flex-row a {
+            width: 100%;
+        }
+    }
+    
+    /* CORRECCIÓN DEFINITIVA DE HOVER DE NAVEGACIÓN */
+    /* Importante: esta sobrescritura es necesaria porque algún estilo está bloqueando el hover en carrito.html */
+    header .nav__list .nav__item a, 
+    header .megamenu__link a,
+    header .dropdown__link {
+        transition: color 0.3s ease !important;
+    }
+    
+    header .nav__list .nav__item a:hover, 
+    header .megamenu__link a:hover, 
+    header .dropdown__link:hover,
+    header .nav__link:hover {
+        color: #b78d41 !important;
+    }
+    
+    header .dropdown__icon {
+        transition: transform 0.3s ease !important;
+    }
+    
+    header .nav__item:hover .dropdown__icon,
+    header .dropdown__link:hover .dropdown__icon {
+        color: #b78d41 !important;
+        transform: rotate(180deg) !important;
+    }
+    
+    /* Texto de métodos de pago */
+    .metodos-texto {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        color: #233e37;
+    }
+    
+    .metodos-texto i {
+        color: #b78d41;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="carrito-compras-container" class="container mx-auto px-2 py-6 max-w-full">
+    <!-- Cabecera con estilo corporativo -->
+    <div class="mb-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-primary relative inline-block">
+            <span class="relative z-10">Carrito de compras</span>
+            <span class="absolute bottom-0 left-0 w-full h-2 bg-secondary opacity-20"></span>
+        </h1>
+        <p class="text-neutral-600 mt-2">Revise los productos seleccionados antes de finalizar su compra</p>
+    </div>
+    
+    <div class="flex flex-col md:flex-row gap-6">
         <!-- Contenido del carrito -->
         <div class="w-full {% if items %}md:w-2/3{% endif %} mx-auto">
             {% if items %}
-                <!-- Cabecera para desktop con glassmorphism -->
-                <div class="hidden md:grid grid-cols-6 gap-4 px-6 py-4 bg-gradient-to-r from-gray-50/90 to-secondary/5 backdrop-blur-sm rounded-t-xl font-medium text-primary border border-secondary/20 shadow-md">
+                <!-- Cabecera para desktop con estilo mejorado -->
+                <div class="hidden md:grid grid-cols-6 gap-4 px-6 py-4 bg-neutral-100 rounded-t-lg font-medium text-primary border-b border-neutral-200">
                     <div class="col-span-2 flex items-center gap-2">
                         <i class="fa-solid fa-box-open text-secondary"></i>
                         <span>Producto</span>
@@ -35,375 +112,487 @@
                     </div>
                 </div>
                 
-                <div class="bg-white/90 backdrop-blur-sm rounded-b-xl shadow-xl overflow-hidden border-x border-b border-secondary/20 transition-all duration-300">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden border border-neutral-200">
                     {% for item in items %}
-                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4 p-4 md:p-6 {% if not forloop.last %}border-b border-gray-200{% endif %} items-center hover:bg-secondary/5 transition-all duration-300 group" id="item-row-{{ item.id }}">
-                        <!-- Producto (móvil y desktop) -->
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4 p-4 border-b border-neutral-200 items-center hover:bg-neutral-50 transition-all duration-300 group" id="item-row-{{ item.id }}">
+                        <!-- Producto (móvil y desktop) con diseño mejorado -->
                         <div class="col-span-1 md:col-span-2 flex items-center space-x-4">
-                            <div class="w-20 h-20 flex-shrink-0 overflow-hidden rounded-xl shadow-md group-hover:shadow-lg transition-all duration-300">
+                            <div class="w-20 h-20 flex-shrink-0 overflow-hidden rounded-lg shadow-sm border border-neutral-200 group-hover:border-secondary/30 transition-all duration-300">
                                 {% if item.producto.imagen %}
-                                <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-110">
+                                <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                                 {% else %}
-                                <div class="w-full h-full bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center rounded-xl border border-secondary/10 group-hover:from-secondary/5 group-hover:to-secondary/10 transition-all duration-300">
-                                    <i class="fa-solid fa-box-open text-secondary text-xl"></i>
+                                <div class="w-full h-full bg-neutral-100 flex items-center justify-center rounded-md">
+                                    <i class="fa-solid fa-box-open text-primary text-xl"></i>
                                 </div>
                                 {% endif %}
                             </div>
                             <div>
-                                <h3 class="font-medium text-primary group-hover:text-secondary transition-colors duration-300">{{ item.producto.nombre }}</h3>
-                                <p class="text-sm text-secondary/80">{{ item.producto.categoria.nombre }}</p>
+                                <h3 class="font-semibold text-primary group-hover:text-secondary transition-colors duration-300">{{ item.producto.nombre }}</h3>
+                                <p class="text-sm text-neutral-600">{{ item.producto.categoria.nombre }}</p>
+                                <!-- Código o SKU del producto (si existe) -->
+                                {% if item.producto.codigo %}
+                                <p class="text-xs text-neutral-500 mt-1">Ref: {{ item.producto.codigo }}</p>
+                                {% endif %}
+                                <!-- Mostrar el stock disponible -->
+                                <p class="text-xs text-neutral-500 mt-1" id="stock-{{ item.producto.id }}">
+                                    Stock disponible: <span class="font-semibold">{{ item.producto.stock }}</span>
+                                </p>
                             </div>
                         </div>
                         
                         <!-- Precio unitario -->
-                        <div class="md:text-center">
-                            <span class="md:hidden text-dark">Precio: </span>
-                            <span class="font-medium text-primary group-hover:text-secondary transition-colors duration-300">{{ item.producto.precio_formateado }}</span>
+                        <div class="md:text-center flex md:block items-center justify-between border-b md:border-0 pb-2 md:pb-0 border-neutral-100">
+                            <span class="md:hidden text-neutral-600 font-medium">Precio:</span>
+                            <span class="font-medium text-primary">{{ item.producto.precio_formateado }}</span>
                         </div>
                         
-                        <!-- Cantidad con controles mejorados -->
-                        <div class="flex items-center md:justify-center">
-                            <span class="md:hidden text-dark mr-2">Cantidad: </span>
-                            <div class="flex items-center bg-gray-50 p-1 rounded-full shadow-inner border border-gray-200 group-hover:bg-white group-hover:border-secondary/20 transition-all duration-300">
+                        <!-- Cantidad con controles mejorados y estilo corporativo -->
+                        <div class="flex items-center md:justify-center border-b md:border-0 pb-2 md:pb-0 border-neutral-100">
+                            <span class="md:hidden text-neutral-600 font-medium mr-2">Cantidad:</span>
+                            <div class="flex items-center bg-white border border-neutral-300 rounded-md overflow-hidden shadow-sm group-hover:shadow group-hover:border-secondary/50 transition-all duration-300">
                                 <button type="button" 
-                                        class="w-8 h-8 bg-white hover:bg-secondary/10 rounded-full flex items-center justify-center focus:outline-none shadow-sm hover:shadow actualizar-cantidad transition-all duration-200 hover:scale-105" 
-                                        data-item-id="{{ item.id }}" data-cantidad="{{ item.cantidad|add:'-1' }}">
-                                    <i class="fa-solid fa-minus text-secondary/80"></i>
+                                        class="w-8 h-8 flex items-center justify-center focus:outline-none border-r border-neutral-200 btn-disminuir btn-carrito" 
+                                        data-item-id="{{ item.id }}">
+                                    <i class="fa-solid fa-minus text-white text-xs"></i>
                                 </button>
                                 
-                                <span id="cantidad-{{ item.id }}" class="w-8 text-center font-medium text-primary">{{ item.cantidad }}</span>
+                                <span id="cantidad-{{ item.id }}" 
+                                     class="w-10 text-center font-medium text-primary py-1 cursor-pointer hover:bg-neutral-50 cantidad-editable" 
+                                     data-item-id="{{ item.id }}"
+                                     data-stock="{{ item.producto.stock }}">
+                                    {{ item.cantidad }}
+                                </span>
                                 
                                 <button type="button" 
-                                        class="w-8 h-8 bg-white hover:bg-secondary/10 rounded-full flex items-center justify-center focus:outline-none shadow-sm hover:shadow actualizar-cantidad transition-all duration-200 hover:scale-105" 
-                                        data-item-id="{{ item.id }}" data-cantidad="{{ item.cantidad|add:'1' }}">
-                                    <i class="fa-solid fa-plus text-secondary/80"></i>
+                                        class="w-8 h-8 flex items-center justify-center focus:outline-none border-l border-neutral-200 btn-aumentar btn-carrito" 
+                                        data-item-id="{{ item.id }}"
+                                        data-stock="{{ item.producto.stock }}">
+                                    <i class="fa-solid fa-plus text-white text-xs"></i>
                                 </button>
                             </div>
                         </div>
                         
                         <!-- Subtotal -->
-                        <div class="md:text-center">
-                            <span class="md:hidden text-dark">Subtotal: </span>
-                            <span id="subtotal-{{ item.id }}" class="font-medium text-primary group-hover:text-secondary transition-colors duration-300">{{ item.subtotal_formateado }}</span>
+                        <div class="md:text-center flex md:block items-center justify-between border-b md:border-0 pb-2 md:pb-0 border-neutral-100">
+                            <span class="md:hidden text-neutral-600 font-medium">Subtotal:</span>
+                            <span id="subtotal-{{ item.id }}" class="font-semibold text-primary">{{ item.subtotal_formateado }}</span>
                         </div>
                         
-                        <!-- Acciones -->
+                        <!-- Acciones - Estilo corporativo -->
                         <div class="flex md:justify-center">
                             <button type="button" 
-                                    class="w-10 h-10 bg-red-50 hover:bg-red-100 text-red-500 hover:text-red-600 rounded-full flex items-center justify-center focus:outline-none shadow-sm hover:shadow-md transition-all duration-300 hover:scale-110 eliminar-del-carrito relative overflow-hidden" 
-                                    data-item-id="{{ item.id }}">
-                                <i class="fa-solid fa-trash relative z-10"></i>
-                                <span class="absolute inset-0 bg-red-200 transform scale-0 rounded-full transition-transform duration-300 ease-out group-hover:scale-100"></span>
+                                    class="w-9 h-9 rounded-md flex items-center justify-center focus:outline-none shadow-sm eliminar-del-carrito btn-carrito" 
+                                    data-item-id="{{ item.id }}" title="Eliminar producto">
+                                <i class="fa-solid fa-trash"></i>
                             </button>
                         </div>
                     </div>
                     {% endfor %}
                 </div>
                 
-                <!-- Botones de acción mejorados -->
-                <div class="flex justify-between mt-8">
+                <!-- Botones de acción con estilo corporativo -->
+                <div class="flex flex-col sm:flex-row justify-between gap-4 mt-6">
                     <a href="{% url 'carrito_nuevo:catalogo' %}" 
-                       class="action-button flex items-center px-6 py-3 rounded-xl 
-                              bg-gradient-to-br from-gray-50 to-gray-100 text-primary border border-gray-200
-                              shadow-md hover:shadow-lg transition-all duration-300 gap-2 group
-                              hover:bg-gradient-to-br hover:from-primary/5 hover:to-secondary/10
-                              hover:border-secondary/20 hover:text-secondary">
-                        <span class="bg-white p-2 rounded-full shadow group-hover:shadow-md transition-all duration-300">
-                            <i class="fa-solid fa-arrow-left text-secondary"></i>
-                        </span>
-                        <span class="font-medium">Seguir comprando</span>
+                       class="btn-seguir-comprando btn-carrito flex items-center justify-center px-5 py-3 rounded-md gap-2">
+                        <i class="fa-solid fa-arrow-left mr-1"></i>
+                        <span>Seguir comprando</span>
                     </a>
                     
                     <button type="button" 
-                            class="action-button flex items-center px-6 py-3 rounded-xl
-                                  bg-gradient-to-br from-red-50 to-red-100 text-red-500 border border-red-200
-                                  shadow-md hover:shadow-lg transition-all duration-300 gap-2 group
-                                  hover:bg-gradient-to-br hover:from-red-100 hover:to-red-200
-                                  hover:border-red-300 hover:text-red-600 vaciar-carrito">
-                        <span class="bg-white p-2 rounded-full shadow group-hover:shadow-md transition-all duration-300">
-                            <i class="fa-solid fa-trash text-red-500"></i>
-                        </span>
-                        <span class="font-medium">Vaciar carrito</span>
+                            class="btn-vaciar-carrito btn-carrito flex items-center justify-center px-5 py-3 rounded-md gap-2 vaciar-carrito">
+                        <i class="fa-solid fa-trash mr-1"></i>
+                        <span>Vaciar carrito</span>
                     </button>
                 </div>
             {% else %}
-                <!-- Carrito vacío optimizado con ajustes de texto y colores -->
-                <div class="bg-white/98 backdrop-blur-sm rounded-2xl shadow-xl p-8 text-center 
-                            border-4 border-secondary/60 max-w-xl mx-auto 
-                            transition-all duration-500 hover:shadow-2xl hover:border-secondary/80
-                            transform hover:-translate-y-1 relative overflow-hidden
-                            group/container">
-                    <!-- Elementos decorativos de fondo -->
-                    <div class="absolute -top-16 -right-16 w-32 h-32 bg-primary/15 rounded-full blur-xl group-hover/container:bg-primary/30 group-hover/container:w-40 group-hover/container:h-40 transition-all duration-700"></div>
-                    <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-secondary/15 rounded-full blur-xl group-hover/container:bg-secondary/30 group-hover/container:w-40 group-hover/container:h-40 transition-all duration-700"></div>
-                    
-                    <!-- Efecto de brillo en hover -->
-                    <div class="absolute inset-0 bg-gradient-to-tr from-primary/5 via-secondary/5 to-primary/5 
-                                group-hover/container:from-primary/15 group-hover/container:via-secondary/20 group-hover/container:to-primary/15 
-                                transition-all duration-700 opacity-50 group-hover/container:opacity-100"></div>
-                    
-                    <!-- Línea decorativa superior -->
-                    <div class="w-32 h-1.5 bg-gradient-to-r from-primary/70 to-secondary/70 rounded-full mx-auto mb-6 
-                                group-hover/container:w-48 group-hover/container:from-primary/90 group-hover/container:to-secondary/90
-                                transition-all duration-500"></div>
-                    
-                    <!-- Contenedor del icono con efectos -->
-                    <div class="relative w-24 h-24 mx-auto mb-5">
-                        <div class="absolute inset-0 bg-secondary/15 rounded-full animate-pulse 
-                                    group-hover/container:bg-secondary/30 transition-colors duration-300"></div>
-                        <div class="absolute inset-2 bg-white rounded-full shadow-inner border-2 border-secondary/20 
-                                    group-hover/container:border-secondary/40 transition-colors duration-300"></div>
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <i class="fa-solid fa-cart-shopping text-4xl text-secondary animate-bounce-subtle"></i>
-                        </div>
+                <!-- Carrito vacío con estilo profesional mejorado -->
+                <div class="bg-white shadow-md rounded-lg p-8 max-w-md mx-auto text-center border border-neutral-200">
+                    <div class="w-24 h-24 mx-auto mb-6 bg-neutral-100 rounded-full flex items-center justify-center border border-neutral-200 shadow-inner">
+                        <i class="fa-solid fa-shopping-cart text-4xl text-primary opacity-70"></i>
                     </div>
-                    
-                    <!-- Textos más compactos y llamativos -->
-                    <h2 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2 drop-shadow-sm">Tu carrito está vacío</h2>
-                    <p class="text-dark mb-6 text-base">Agrega productos para comenzar tu compra</p>
-                    
-                    <!-- Botón con texto más ligero y fondos más oscuros para mejor contraste -->
+                    <h2 class="text-xl font-bold text-primary mb-3">Su carrito está vacío</h2>
+                    <p class="text-neutral-600 mb-6">No hay productos agregados al carrito de compras</p>
                     <a href="{% url 'carrito_nuevo:catalogo' %}" 
-                       class="catalog-button inline-flex items-center px-8 py-3 rounded-xl 
-                              bg-gradient-to-r from-primary/90 to-secondary/90 text-white font-normal
-                              shadow-lg hover:shadow-2xl transition-all duration-500 gap-3 text-base
-                              transform hover:scale-105 relative overflow-hidden group">
-                        <!-- Efectos internos con colores más oscuros -->
-                        <span class="absolute inset-0 bg-gradient-to-r from-secondary/90 to-primary/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
-                        <span class="absolute bottom-0 left-0 right-0 h-1 bg-white/60 transform scale-x-0 origin-left transition-transform duration-500 group-hover:scale-x-100"></span>
-                        
-                        <!-- Icono flotante -->
-                        <span class="relative z-10 bg-white/30 p-2 rounded-lg backdrop-blur-sm group-hover:bg-white/50 transition-all duration-300">
-                            <i class="fa-solid fa-store text-lg text-white group-hover:text-white transition-all duration-300"></i>
-                        </span>
-                        
-                        <!-- Texto con fuente más ligera para mejor legibilidad -->
-                        <span class="relative z-10 transition-all duration-300 text-white group-hover:text-white group-hover:font-medium tracking-wide group-hover:drop-shadow-[0_0_4px_rgba(255,255,255,0.9)]">Ir al catálogo</span>
+                       class="btn-explorar-catalogo btn-carrito inline-flex items-center px-6 py-3 rounded-md gap-2">
+                        <i class="fa-solid fa-store mr-1"></i>
+                        <span>Explorar catálogo</span>
                     </a>
-                    
-                    <!-- Línea decorativa inferior -->
-                    <div class="w-24 h-1.5 bg-gradient-to-r from-secondary/70 to-primary/70 rounded-full mx-auto mt-6 
-                                group-hover/container:w-32 group-hover/container:from-secondary/90 group-hover/container:to-primary/90
-                                transition-all duration-500"></div>
                 </div>
             {% endif %}
         </div>
         
-        <!-- Resumen del carrito con diseño mejorado -->
         {% if items %}
-        <div class="w-full md:w-1/3" id="carrito-resumen">
-            <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-6 sticky top-4 border border-secondary/20 hover:shadow-2xl transition-all duration-300 overflow-hidden group">
-                <!-- Elementos decorativos -->
-                <div class="absolute -right-10 -top-10 w-20 h-20 bg-secondary/5 rounded-full blur-xl transform group-hover:scale-150 transition-transform duration-500"></div>
+        <!-- Resumen del carrito con estilo corporativo premium -->
+        <div class="w-full md:w-1/3">
+            <div class="bg-white rounded-lg shadow-md p-6 border border-neutral-200 sticky top-24">
+                <h2 class="text-xl font-bold mb-5 text-primary relative inline-block">
+                    <span class="relative z-10">Resumen de compra</span>
+                    <span class="absolute bottom-0 left-0 w-full h-2 bg-secondary opacity-20"></span>
+                </h2>
                 
-                <h2 class="text-xl font-bold mb-5 text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary relative pb-3 after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-px after:bg-gradient-to-r after:from-primary/30 after:to-secondary/30">Resumen de compra</h2>
-                
-                <div class="space-y-4 mb-6 relative">
-                    <div class="flex justify-between pb-3 border-b border-gray-200 group/item hover:border-secondary/20 transition-colors duration-300">
-                        <span class="text-dark group-hover/item:text-primary transition-colors duration-300">Subtotal</span>
-                        <span class="font-medium text-primary group-hover/item:text-secondary transition-colors duration-300" id="subtotal-general">{{ carrito.total_formateado }}</span>
+                <div class="space-y-4 mb-6">
+                    <div class="flex justify-between py-2 px-2 border-b border-neutral-100">
+                        <span class="text-neutral-700">Subtotal</span>
+                        <span class="font-medium text-primary" id="total-carrito">{{ carrito.total_formateado }}</span>
                     </div>
-                    <div class="flex justify-between pb-3 border-b border-gray-200 group/item hover:border-secondary/20 transition-colors duration-300">
-                        <span class="text-dark group-hover/item:text-primary transition-colors duration-300">Envío</span>
-                        <span class="font-medium text-green-600">Gratis</span>
+                    <div class="flex justify-between py-2 px-2 border-b border-neutral-100">
+                        <span class="text-neutral-700">IVA (19%)</span>
+                        <span class="font-medium text-primary" id="total-iva">{{ carrito.iva_formateado }}</span>
                     </div>
-                    <div class="flex justify-between pt-3 group/item">
-                        <span class="text-lg font-bold text-primary group-hover/item:text-secondary transition-colors duration-300">Total</span>
-                        <span class="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary" id="total-principal">{{ carrito.total_formateado }}</span>
+                    <div class="flex justify-between py-2 px-2 border-b border-neutral-100">
+                        <span class="text-neutral-700">Envío</span>
+                        <span class="font-medium text-primary">A calcular</span>
+                    </div>
+                    <div class="flex justify-between py-3 px-2 bg-neutral-50 rounded-md">
+                        <span class="text-primary font-bold">Total</span>
+                        <span class="font-bold text-primary text-lg" id="gran-total">{{ carrito.total_formateado }}</span>
                     </div>
                 </div>
                 
-                <!-- Botón de finalizar compra mejorado -->
+                <!-- Opciones de pago con estilo profesional - Simplificado -->
+                <div class="mb-6">
+
+                    <p class="text-neutral-600 text-sm mb-2">Paga con tarjetas de crédito, débito, transferencias bancarias o Nequi</p>
+
+                </div>
+                
+                <!-- Botón de finalizar compra con estilo premium -->
                 <a href="{% url 'carrito_nuevo:checkout' %}" 
-                   class="checkout-button w-full text-center justify-center flex items-center py-4 px-6 rounded-xl
-                         bg-gradient-to-r from-primary to-secondary text-white font-bold
-                         shadow-md hover:shadow-xl transition-all duration-300 gap-2 text-lg
-                         relative overflow-hidden group/btn">
-                    <span class="absolute inset-0 bg-gradient-to-r from-secondary to-primary opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500"></span>
-                    <i class="fa-solid fa-credit-card text-xl relative z-10"></i>
-                    <span class="relative z-10">Finalizar compra</span>
+                   class="btn-finalizar-compra btn-carrito flex items-center justify-center w-full py-3 px-6 rounded-md gap-2 shadow-md">
+                    <i class="fa-solid fa-credit-card mr-1"></i>
+                    <span>Finalizar compra</span>
                 </a>
+
             </div>
         </div>
         {% endif %}
     </div>
 </div>
 
-<style>
-    /* Animación de rebote sutil para el icono del carrito */
-    @keyframes bounce-subtle {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-5px); }
-    }
-    
-    .animate-bounce-subtle {
-        animation: bounce-subtle 2s infinite ease-in-out;
-    }
-    
-    /* Efecto resplandor para botones */
-    .catalog-button::after, 
-    .checkout-button::after {
-        content: '';
-        position: absolute;
-        top: -100%;
-        left: -100%;
-        width: 300%;
-        height: 300%;
-        background: linear-gradient(60deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-        transform: rotate(30deg);
-        transition: transform 0.8s ease-out;
-    }
-    
-    .catalog-button:hover::after,
-    .checkout-button:hover::after {
-        transform: rotate(30deg) translate(50%, 50%);
-    }
-    
-    /* Sombra de texto sutil */
-    .text-shadow-sm {
-        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-    }
-    
-    /* Efectos adicionales para botones de acción */
-    .action-button:hover {
-        transform: translateY(-2px);
-    }
-</style>
-{% endblock %}
-
-{% block extra_js %}
+<!-- Scripts específicos para el carrito -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    // Agregar eventos a los botones
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    function animarContadorCarrito(nuevoValor) {
+        const contador = document.getElementById('cart-count');
+        if (!contador) {
+            console.error('No se encontró el elemento cart-count');
+            return;
+        }
+        
+        // Guardar el valor anterior
+        const valorAnterior = parseInt(contador.textContent || '0');
+        
+        // Actualizar con el nuevo valor
+        contador.textContent = nuevoValor;
+        
+        // Si el valor ha cambiado, animar
+        if (valorAnterior !== nuevoValor) {
+            // Remover clases de animación previas
+            contador.classList.remove('animate-pulse');
+            contador.classList.remove('scale-125');
+            contador.classList.remove('bg-secondary');
+            
+            // Forzar un reflow para que las animaciones se reinicien
+            void contador.offsetWidth;
+            
+            // Añadir animaciones
+            contador.classList.add('animate-pulse');
+            contador.classList.add('scale-125');
+            contador.classList.add('bg-secondary');
+            
+            // Remover animaciones después de completarse
+            setTimeout(() => {
+                contador.classList.remove('animate-pulse');
+                contador.classList.remove('scale-125');
+                contador.classList.remove('bg-secondary');
+            }, 1500);
+        }
+    }
+    
+    // Agregar eventos a los botones usando delegación de eventos
     $(document).ready(function() {
-        // Botones de actualizar cantidad
-        $('.actualizar-cantidad').on('click', function() {
+        // Evento para aumentar la cantidad
+        $(document).on('click', '.btn-aumentar', function() {
             const itemId = $(this).data('item-id');
-            const cantidad = $(this).data('cantidad');
+            const stock = parseInt($(this).data('stock'));
+            const cantidadElement = $(`#cantidad-${itemId}`);
+            let cantidad = parseInt(cantidadElement.text());
+            
+            // Verificar que no exceda el stock disponible
+            if (cantidad >= stock) {
+                Swal.fire({
+                    title: 'Límite de stock',
+                    text: `Solo hay ${stock} unidades disponibles de este producto`,
+                    icon: 'warning',
+                    confirmButtonColor: '#233e37'
+                });
+                return;
+            }
+            
+            cantidad++;
             actualizarCantidad(itemId, cantidad);
         });
         
-        // Botones de eliminar del carrito
-        $('.eliminar-del-carrito').on('click', function() {
+        // Evento para disminuir la cantidad
+        $(document).on('click', '.btn-disminuir', function() {
+            const itemId = $(this).data('item-id');
+            const cantidadElement = $(`#cantidad-${itemId}`);
+            let cantidad = parseInt(cantidadElement.text());
+            
+            if (cantidad > 1) {
+                cantidad--;
+                actualizarCantidad(itemId, cantidad);
+            }
+        });
+        
+        // Evento para eliminar un producto
+        $(document).on('click', '.eliminar-del-carrito', function() {
             const itemId = $(this).data('item-id');
             eliminarDelCarrito(itemId);
         });
         
-        // Botón de vaciar carrito
-        $('.vaciar-carrito').on('click', function() {
+        // Evento para vaciar todo el carrito
+        $(document).on('click', '.vaciar-carrito', function() {
             vaciarCarrito();
+        });
+        
+        // Evento para editar directamente la cantidad
+        $(document).on('click', '.cantidad-editable', function() {
+            const itemId = $(this).data('item-id');
+            const stock = parseInt($(this).data('stock'));
+            const currentValue = $(this).text().trim();
+            
+            Swal.fire({
+                title: 'Actualizar cantidad',
+                input: 'number',
+                inputValue: currentValue,
+                inputAttributes: {
+                    min: 1,
+                    max: stock,
+                    step: 1
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Actualizar',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#233e37',
+                cancelButtonColor: '#6B7280',
+                inputValidator: (value) => {
+                    if (!value || value < 1) {
+                        return 'La cantidad debe ser al menos 1';
+                    }
+                    if (parseInt(value) > stock) {
+                        return `Solo hay ${stock} unidades disponibles`;
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const nuevaCantidad = parseInt(result.value);
+                    if (nuevaCantidad > 0 && nuevaCantidad <= stock) {
+                        actualizarCantidad(itemId, nuevaCantidad);
+                    }
+                }
+            });
         });
     });
     
     function actualizarCantidad(itemId, nuevaCantidad) {
-        if (nuevaCantidad < 1) {
-            nuevaCantidad = 1;
-        }
-        
         const csrftoken = getCookie('csrftoken');
         
+        // Mostrar un pequeño indicador de carga en el elemento de cantidad
+        const cantidadElement = $(`#cantidad-${itemId}`);
+        const valorOriginal = cantidadElement.text();
+        cantidadElement.html('<i class="fas fa-spinner fa-spin text-sm"></i>');
+        
         $.ajax({
-            url: "{% url 'carrito_nuevo:actualizar_cantidad_ajax' %}",
-            type: "POST",
+            url: '{% url "carrito_nuevo:actualizar_cantidad_ajax" %}',
+            type: 'POST',
             data: {
                 'item_id': itemId,
                 'cantidad': nuevaCantidad,
                 'csrfmiddlewaretoken': csrftoken
             },
-            success: function(data) {
-                if (data.success) {
-                    // Actualizar la cantidad mostrada
-                    $("#cantidad-" + itemId).text(data.cantidad);
+            success: function(response) {
+                if (response.success) {
+                    // Actualizar la cantidad en la interfaz
+                    cantidadElement.text(nuevaCantidad);
                     
-                    // Actualizar el subtotal del item
-                    $("#subtotal-" + itemId).text(data.subtotal_formateado);
+                    // Actualizar el subtotal
+                    $(`#subtotal-${itemId}`).text(response.subtotal_formateado);
                     
-                    // Actualizar totales del carrito
-                    $("#subtotal-general").text(data.total_formateado);
-                    $("#total-principal").text(data.total_formateado);
+                    // Actualizar el total general
+                    $('#total-carrito').text(response.total_formateado);
+                    $('#total-iva').text(response.iva_formateado || '0');
+                    $('#gran-total').text(response.total_formateado);
                     
-                    // Actualizar contador del carrito
-                    $("#cart-count").text(data.cantidad_total);
+                    // Actualizar el contador del carrito en el navbar
+                    animarContadorCarrito(response.cantidad_total);
                     
-                    showAlert('Cantidad actualizada', 'success');
+                    // Mostrar notificación de éxito
+                    mostrarNotificacion('Cantidad actualizada correctamente', 'success');
                 } else {
-                    showAlert(data.message || 'Error al actualizar cantidad', 'error');
+                    // Restaurar valor original
+                    cantidadElement.text(valorOriginal);
+                    
+                    // Mostrar notificación con el mensaje de error
+                    mostrarNotificacion(response.message || 'No se pudo actualizar la cantidad', 'error');
                 }
             },
-            error: function() {
-                showAlert('Error al actualizar la cantidad', 'error');
+            error: function(xhr, status, error) {
+                // En caso de error, restaurar el valor original
+                cantidadElement.text(valorOriginal);
+                
+                // Mostrar notificación de error
+                mostrarNotificacion('No se pudo actualizar la cantidad', 'error');
+                console.error('Error al actualizar la cantidad:', error);
             }
         });
     }
     
     function eliminarDelCarrito(itemId) {
-        if (!confirm('¿Estás seguro de que quieres eliminar este producto del carrito?')) {
-            return;
-        }
-        
         const csrftoken = getCookie('csrftoken');
         
-        $.ajax({
-            url: "{% url 'carrito_nuevo:eliminar_del_carrito_ajax' %}",
-            type: "POST",
-            data: {
-                'item_id': itemId,
-                'csrfmiddlewaretoken': csrftoken
-            },
-            success: function(data) {
-                if (data.success) {
-                    // Eliminar la fila del producto
-                    $("#item-row-" + itemId).fadeOut(300, function() {
-                        $(this).remove();
+        // Confirmar antes de eliminar
+        Swal.fire({
+            title: '¿Eliminar producto?',
+            text: '¿Está seguro de que desea eliminar este producto del carrito?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#233e37',
+            cancelButtonColor: '#6B7280'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Aplicar efecto de desvanecimiento antes de eliminar
+                $(`#item-row-${itemId}`).addClass('opacity-50');
+                
+                $.ajax({
+                    url: '{% url "carrito_nuevo:eliminar_del_carrito_ajax" %}',
+                    type: 'POST',
+                    data: {
+                        'item_id': itemId,
+                        'csrfmiddlewaretoken': csrftoken
+                    },
+                    success: function(response) {
+                        // Eliminar la fila con animación
+                        $(`#item-row-${itemId}`).slideUp(300, function() {
+                            $(this).remove();
+                            
+                            // Actualizar el total general
+                            $('#total-carrito').text(response.total_formateado);
+                            $('#total-iva').text(response.iva_formateado || '0');
+                            $('#gran-total').text(response.total_formateado);
+                            
+                            // Actualizar el contador del carrito en el navbar
+                            animarContadorCarrito(response.cantidad_total);
+                            
+                            // Si no quedan productos, recargar la página para mostrar el carrito vacío
+                            if (response.items_count === 0) {
+                                location.reload();
+                            }
+                        });
                         
-                        // Si no quedan items, recargar la página
-                        if (data.cantidad_items === 0) {
-                            location.reload();
-                            return;
-                        }
+                        // Mostrar notificación de éxito
+                        mostrarNotificacion('Producto eliminado del carrito', 'success');
+                    },
+                    error: function(xhr, status, error) {
+                        // Restaurar opacidad en caso de error
+                        $(`#item-row-${itemId}`).removeClass('opacity-50');
                         
-                        // Actualizar totales del carrito
-                        $("#subtotal-general").text(data.total_formateado);
-                        $("#total-principal").text(data.total_formateado);
-                        
-                        // Actualizar contador del carrito
-                        $("#cart-count").text(data.cantidad_total);
-                    });
-                    
-                    showAlert('Producto eliminado del carrito', 'success');
-                } else {
-                    showAlert(data.message || 'Error al eliminar el producto', 'error');
-                }
-            },
-            error: function() {
-                showAlert('Error al eliminar el producto del carrito', 'error');
+                        // Mostrar notificación de error
+                        mostrarNotificacion('No se pudo eliminar el producto', 'error');
+                        console.error('Error al eliminar del carrito:', error);
+                    }
+                });
             }
         });
     }
     
     function vaciarCarrito() {
-        if (!confirm('¿Estás seguro de que quieres vaciar tu carrito?')) {
+        const csrftoken = getCookie('csrftoken');
+        
+        // Confirmar antes de vaciar
+        Swal.fire({
+            title: '¿Vaciar carrito?',
+            text: '¿Está seguro de que desea eliminar todos los productos del carrito?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, vaciar carrito',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#233e37',
+            cancelButtonColor: '#6B7280'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Aplicar efecto de desvanecimiento a todos los items
+                $('.container .bg-white .grid').addClass('opacity-50');
+                
+                $.ajax({
+                    url: '{% url "carrito_nuevo:vaciar_carrito_ajax" %}',
+                    type: 'POST',
+                    data: {
+                        'csrfmiddlewaretoken': csrftoken
+                    },
+                    success: function(response) {
+                        // Mostrar notificación de éxito
+                        mostrarNotificacion('Carrito vaciado correctamente', 'success');
+                        
+                        // Actualizar el contador del carrito en el navbar
+                        animarContadorCarrito(0);
+                        
+                        // Recargar la página para mostrar el carrito vacío
+                        setTimeout(function() {
+                            location.reload();
+                        }, 500);
+                    },
+                    error: function(xhr, status, error) {
+                        // Restaurar opacidad en caso de error
+                        $('.container .bg-white .grid').removeClass('opacity-50');
+                        
+                        // Mostrar notificación de error
+                        mostrarNotificacion('No se pudo vaciar el carrito', 'error');
+                        console.error('Error al vaciar carrito:', error);
+                    }
+                });
+            }
+        });
+    }
+    
+    function mostrarNotificacion(mensaje, tipo) {
+        const alertContainer = document.getElementById('alert-container');
+        if (!alertContainer) {
+            console.error('No se encontró el contenedor de alertas');
             return;
         }
         
-        const csrftoken = getCookie('csrftoken');
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${tipo}`;
+        alert.innerHTML = `
+            <i class="fas fa-${tipo === 'success' ? 'check-circle' : 'exclamation-circle'} mr-2"></i>
+            <span>${mensaje}</span>
+        `;
+        alertContainer.appendChild(alert);
         
-        $.ajax({
-            url: "{% url 'carrito_nuevo:vaciar_carrito_ajax' %}",
-            type: "POST",
-            data: {
-                'csrfmiddlewaretoken': csrftoken
-            },
-            success: function(data) {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    showAlert(data.message || 'Error al vaciar el carrito', 'error');
-                }
-            },
-            error: function() {
-                showAlert('Error al vaciar el carrito', 'error');
-            }
-        });
+        setTimeout(() => {
+            alert.style.animation = 'slideOut 0.3s ease-in forwards';
+            setTimeout(() => {
+                alert.remove();
+            }, 300);
+        }, 3000);
     }
 </script>
 {% endblock %}

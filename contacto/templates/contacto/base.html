@@ -53,10 +53,10 @@
     <header>
         <nav class="navbar">
             <div class="logo">
-                <a href="{% url 'inicio' %}">
+                <a href="{% url 'contacto:inicio' %}">
                     <img src="{% static 'contacto/img/jsilva.png' %}" alt="Logo de J Silva Ingeniería">
                 </a>
-                <a href="{% url 'inicio' %}">J SILVA INGENIERÍA</a>
+                <a href="{% url 'contacto:inicio' %}">J SILVA INGENIERÍA</a>
             </div>
 
             <!-- Toggle para móviles -->
@@ -69,8 +69,8 @@
                 <div class="close__menu" id="close-menu">
                     <i class='bx bx-x-circle'></i>
                 </div>
-                <li class="nav__item"><a href="{% url 'inicio' %}" class="nav__link">Inicio</a></li>
-                <li class="nav__item"><a href="{% url 'quienes_somos' %}" class="nav__link">¿Quiénes somos?</a></li>
+                <li class="nav__item"><a href="{% url 'contacto:inicio' %}" class="nav__link">Inicio</a></li>
+                <li class="nav__item"><a href="{% url 'contacto:quienes_somos' %}" class="nav__link">¿Quiénes somos?</a></li>
 
                 <li class="nav__item dropdown">
                     <a href="#" class="nav__link dropdown__link">Servicios 
@@ -82,21 +82,21 @@
                             <li class="megamenu__item">
                                 <div class="menu__icon"><img src="{% static 'contacto/img/icono_fumigacion-def.png' %}" alt=""></div>
                                 <div class="megamenu__link">
-                                    <a href="{% url 'desinfeccion' %}">Desinfección</a>
+                                    <a href="{% url 'contacto:desinfeccion' %}">Desinfección</a>
                                     <p>Eliminación de virus, bacterias y patógenos</p>
                                 </div>
                             </li>
                             <li class="megamenu__item">
                                 <div class="menu__icon"><img src="{% static 'contacto/img/icono_control-apicola-def.png' %}" alt=""></div>
                                 <div class="megamenu__link">
-                                    <a href="{% url 'control_apicola' %}">Control apícola</a>
+                                    <a href="{% url 'contacto:control_apicola' %}">Control apícola</a>
                                     <p>Manejo integrado de abejas</p>
                                 </div>
                             </li>
                             <li class="megamenu__item">
                                 <div class="menu__icon"><img src="{% static 'contacto/img/icono_jardineria-def.png' %}" alt=""></div>
                                 <div class="megamenu__link">
-                                    <a href="{% url 'jardineria' %}">Jardinería</a>
+                                    <a href="{% url 'contacto:jardineria' %}">Jardinería</a>
                                     <p>Servicio de jardinería y mantenimiento</p>
                                 </div>
                             </li>
@@ -106,27 +106,29 @@
                             <li class="megamenu__item">
                                 <div class="menu__icon"><img src="{% static 'contacto/img/icono_extintor-def.png' %}" alt=""></div>
                                 <div class="megamenu__link">
-                                    <a href="{% url 'suministros' %}">Suministros</a>
+                                    <a href="{% url 'contacto:suministros' %}">Suministros</a>
                                     <p>Venta y mantenimiento de equipos de seguridad</p>
                                 </div>
                             </li>
                             <li class="megamenu__item">
                                 <div class="menu__icon"><img src="{% static 'contacto/img/icono_capacitacion-def.png' %}" alt=""></div>
                                 <div class="megamenu__link">
-                                    <a href="{% url 'capacitacion' %}">Capacitación</a>
+                                    <a href="{% url 'contacto:capacitacion' %}">Capacitación</a>
                                     <p>Prevención de incendios y plan de saneamiento</p>
                                 </div>
                             </li>
                             <li class="megamenu__item">
                                 <div class="menu__icon"><img src="{% static 'contacto/img/icono_planos-3d-def.png' %}" alt=""></div>
                                 <div class="megamenu__link">
-                                    <a href="{% url 'planos_3d' %}">Planos 3D</a>
+                                    <a href="{% url 'contacto:planos_3d' %}">Planos 3D</a>
                                     <p>Diseño y planificación para emergencias</p>
                                 </div>
                             </li>
                         </ul>
                     </div>
                 </li>
+                <li class="nav__item"><a href="{% url 'carrito_nuevo:catalogo' %}" class="nav__link">Catálogo de productos</a></li>
+
                 <li class="nav__item">
                     <a href="https://wa.me/573213249181" target="_blank" class="whatsapp-button">
                         <i class="fab fa-whatsapp"></i>
@@ -148,15 +150,14 @@
                             <img src="{% static 'contacto/img/imagen-perfil-defecto.jpg' %}" alt="Imagen de perfil">
                             <div class="dropdown-content">
                                 <a>{{ user.email }}</a>
-                                <a href="{% url 'hacer_reserva' %}">Diligenciar</a>
-                                <a href="{% url 'carrito_nuevo:catalogo' %}">Catálogo</a>
-                                <a href="{% url 'historial_pedidos' %}">Historial de pedidos</a>
-                                <a href="{% url 'logout' %}">Cerrar sesión</a>
+                                <a href="{% url 'contacto:hacer_reserva' %}">Diligenciar</a>
+                                <a href="{% url 'contacto:historial_pedidos' %}">Historial de pedidos</a>
+                                <a href="{% url 'contacto:logout' %}">Cerrar sesión</a>
                             </div>
                         </div>
                     {% else %}
                         <!-- Si no ha iniciado sesión, mostrar el ícono de inicio de sesión -->
-                        <a href="{% url 'login_view' %}">
+                        <a href="{% url 'contacto:login_view' %}">
                             <img class="login" src="{% static 'contacto/img/icono-sesion-verde.png' %}" alt="Iniciar sesión">
                         </a>
                     {% endif %}
@@ -185,7 +186,7 @@
             <iframe src="https://www.google.com/maps/embed?pb=!1m13!1m8!1m3!1d996.1562128100267!2d-75.316127!3d2.923728!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMsKwNTUnMjUuMyJOIDc1wrAxOCc1OC4xIlc!5e0!3m2!1ses!2sus!4v1733139594945!5m2!1ses!2sus" width="700" height="450" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
         </div>
 
-        <form class="form" method="POST" action="{% url 'enviar_mensaje' %}">
+        <form class="form" method="POST" action="{% url 'contacto:enviar_mensaje' %}">
             {% csrf_token %}
             <p class="title__form">Contáctenos</p>
             <p class="message">Envíenos un mensaje y nos comunicaremos lo antes posible.</p>

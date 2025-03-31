@@ -25,7 +25,7 @@
                 <input class="input" type="password" name="password" required>
                 <span>Contraseña</span>
             </label>
-            <p class="forgot-password"><a href="{% url 'password_reset_request' %}">¿Olvidó la contraseña?</a></p>
+            <p class="forgot-password"><a href="{% url 'contacto:password_reset_request' %}">¿Olvidó la contraseña?</a></p>
 
             <button class="button" type="submit">Ingresar</button>
 
@@ -63,7 +63,7 @@
         </form>
     </div>
 
-    <a href="{% url 'inicio' %}" class="back-button">← Volver al inicio</a>
+    <a href="{% url 'contacto:inicio' %}" class="back-button">← Volver al inicio</a>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -101,7 +101,7 @@
                 const formData = new FormData(loginForm);
 
                 // Enviar solicitud AJAX
-                fetch("{% url 'login_view' %}", {
+                fetch("{% url 'contacto:login_view' %}", {
                     method: "POST",
                     body: formData,
                 })
@@ -154,7 +154,7 @@
                 }
 
                 // Enviar solicitud AJAX
-                fetch("{% url 'register_view' %}", {
+                fetch("{% url 'contacto:register_view' %}", {
                     method: "POST",
                     body: formData,
                 })

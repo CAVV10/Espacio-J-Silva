@@ -26,6 +26,7 @@ urlpatterns = [
     
     # Checkout y pedidos
     path('checkout/', views.checkout, name='checkout'),
+    path('comprobacion/', views.comprobacion, name='comprobacion'),  # Nueva URL para la página de comprobación
     path('procesar-pedido/', views.procesar_pedido, name='procesar_pedido'),
     path('confirmacion/<int:pedido_id>/', views.confirmacion_pedido, name='confirmacion_pedido'),
     path('mis-pedidos/', views.mis_pedidos, name='mis_pedidos'),
