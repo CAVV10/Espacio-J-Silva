@@ -36,17 +36,16 @@
     color: var(--color-primary) !important;
 }
 
-/* Estilos básicos para todos los botones */
-.container button,
-.container .btn,
-.container a.rounded-lg,
-.container a.inline-flex,
-.container a.flex,
+/* Estilos básicos para todos los botones - EXCLUYENDO MIGAS DE PAN */
+.container button:not(nav button),
+.container .btn:not(nav .btn),
+.container a.rounded-lg:not(nav a),
+.container a.inline-flex:not(nav a),
+.container a.flex:not(nav a),
 .btn-checkout,
 .container a[href*="checkout"],
-.container a[href*="catalogo"],
 .container button.vaciar-carrito,
-button[type="button"],
+button[type="button"]:not(nav button),
 .container button.btn-aumentar,
 .container button.btn-disminuir,
 .container button.eliminar-del-carrito {
@@ -59,17 +58,16 @@ button[type="button"],
     z-index: 1;
 }
 
-/* Efecto hover con animación dorada */
-.container button:hover,
-.container .btn:hover,
-.container a.rounded-lg:hover,
-.container a.inline-flex:hover,
-.container a.flex:hover,
+/* Efecto hover con animación dorada - EXCLUYENDO MIGAS DE PAN */
+.container button:not(nav button):hover,
+.container .btn:not(nav .btn):hover,
+.container a.rounded-lg:not(nav a):hover,
+.container a.inline-flex:not(nav a):hover,
+.container a.flex:not(nav a):hover,
 .btn-checkout:hover,
 .container a[href*="checkout"]:hover,
-.container a[href*="catalogo"]:hover,
 .container button.vaciar-carrito:hover,
-button[type="button"]:hover,
+button[type="button"]:not(nav button):hover,
 .container button.btn-aumentar:hover,
 .container button.btn-disminuir:hover,
 .container button.eliminar-del-carrito:hover {
@@ -78,17 +76,16 @@ button[type="button"]:hover,
     box-shadow: 0 7px 14px rgba(183, 141, 65, 0.25) !important;
 }
 
-/* Crear el efecto de brillo dorado */
-.container button::before,
-.container .btn::before,
-.container a.rounded-lg::before,
-.container a.inline-flex::before,
-.container a.flex::before,
+/* Crear el efecto de brillo dorado - EXCLUYENDO MIGAS DE PAN */
+.container button:not(nav button)::before,
+.container .btn:not(nav .btn)::before,
+.container a.rounded-lg:not(nav a)::before,
+.container a.inline-flex:not(nav a)::before,
+.container a.flex:not(nav a)::before,
 .btn-checkout::before,
 .container a[href*="checkout"]::before,
-.container a[href*="catalogo"]::before,
 .container button.vaciar-carrito::before,
-button[type="button"]::before,
+button[type="button"]:not(nav button)::before,
 .container button.btn-aumentar::before,
 .container button.btn-disminuir::before,
 .container button.eliminar-del-carrito::before {
@@ -108,51 +105,48 @@ button[type="button"]::before,
     z-index: -1;
 }
 
-/* Activar el brillo en hover */
-.container button:hover::before,
-.container .btn:hover::before,
-.container a.rounded-lg:hover::before,
-.container a.inline-flex:hover::before,
-.container a.flex:hover::before,
+/* Activar el brillo en hover - EXCLUYENDO MIGAS DE PAN */
+.container button:not(nav button):hover::before,
+.container .btn:not(nav .btn):hover::before,
+.container a.rounded-lg:not(nav a):hover::before,
+.container a.inline-flex:not(nav a):hover::before,
+.container a.flex:not(nav a):hover::before,
 .btn-checkout:hover::before,
 .container a[href*="checkout"]:hover::before,
-.container a[href*="catalogo"]:hover::before,
 .container button.vaciar-carrito:hover::before,
-button[type="button"]:hover::before,
+button[type="button"]:not(nav button):hover::before,
 .container button.btn-aumentar:hover::before,
 .container button.btn-disminuir:hover::before,
 .container button.eliminar-del-carrito:hover::before {
     left: 100%;
 }
 
-/* Efecto de borde dorado en hover */
-.container button:hover,
-.container .btn:hover,
-.container a.rounded-lg:hover,
-.container a.inline-flex:hover,
-.container a.flex:hover,
+/* Efecto de borde dorado en hover - EXCLUYENDO MIGAS DE PAN */
+.container button:not(nav button):hover,
+.container .btn:not(nav .btn):hover,
+.container a.rounded-lg:not(nav a):hover,
+.container a.inline-flex:not(nav a):hover,
+.container a.flex:not(nav a):hover,
 .btn-checkout:hover,
 .container a[href*="checkout"]:hover,
-.container a[href*="catalogo"]:hover,
 .container button.vaciar-carrito:hover,
-button[type="button"]:hover,
+button[type="button"]:not(nav button):hover,
 .container button.btn-aumentar:hover,
 .container button.btn-disminuir:hover,
 .container button.eliminar-del-carrito:hover {
     border: 1px solid rgba(183, 141, 65, 0.5) !important;
 }
 
-/* Efecto de texto al hacer hover */
-.container button:hover span,
-.container .btn:hover span,
-.container a.rounded-lg:hover span,
-.container a.inline-flex:hover span,
-.container a.flex:hover span,
+/* Efecto de texto al hacer hover - EXCLUYENDO MIGAS DE PAN */
+.container button:not(nav button):hover span,
+.container .btn:not(nav .btn):hover span,
+.container a.rounded-lg:not(nav a):hover span,
+.container a.inline-flex:not(nav a):hover span,
+.container a.flex:not(nav a):hover span,
 .btn-checkout:hover span,
 .container a[href*="checkout"]:hover span,
-.container a[href*="catalogo"]:hover span,
 .container button.vaciar-carrito:hover span,
-button[type="button"]:hover span,
+button[type="button"]:not(nav button):hover span,
 .container button.btn-aumentar:hover i,
 .container button.btn-disminuir:hover i,
 .container button.eliminar-del-carrito:hover i {
@@ -168,15 +162,14 @@ button[type="button"]:hover span,
     }
 }
 
-/* Animación específica para íconos */
-.container button:hover i,
-.container .btn:hover i,
-.container a.rounded-lg:hover i,
-.container a.inline-flex:hover i,
-.container a.flex:hover i,
+/* Animación específica para íconos - EXCLUYENDO MIGAS DE PAN */
+.container button:not(nav button):hover i,
+.container .btn:not(nav .btn):hover i,
+.container a.rounded-lg:not(nav a):hover i,
+.container a.inline-flex:not(nav a):hover i,
+.container a.flex:not(nav a):hover i,
 .btn-checkout:hover i,
 .container a[href*="checkout"]:hover i,
-.container a[href*="catalogo"]:hover i,
 .container button.vaciar-carrito:hover i {
     animation: iconPulse 1s ease-in-out infinite alternate;
     color: #b78d41 !important;
@@ -218,4 +211,26 @@ a[href*="checkout"]::after {
 
 a[href*="checkout"]:hover::after {
     width: 100%;
+}
+
+/* Estilos específicos para migas de pan */
+nav ol a {
+    background-color: transparent !important;
+    color: #233e37 !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    font-weight: normal !important;
+    text-transform: none !important;
+    display: inline !important;
+}
+
+nav ol a:hover {
+    color: #b78d41 !important;
+    transform: none !important;
+    opacity: 1 !important;
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }

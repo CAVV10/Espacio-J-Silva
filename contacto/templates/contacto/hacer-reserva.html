@@ -4,6 +4,46 @@
 {% block title %}Hacer Reserva - J Silva Ingeniería{% endblock %}
 
 {% block content %}
+<!-- Estilos para los mensajes -->
+<style>
+    /* Estilos para los mensajes de Django */
+    .messages-container {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .alert {
+        padding: 15px;
+        margin-bottom: 10px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
+    .alert-error, .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .alert-warning {
+        color: #856404;
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+    }
+
+    .alert-info {
+        color: #0c5460;
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+    }
+</style>
+
 <div class="spacer__titles layer-2">
     <div class="overlay__text">Diligenciar</div>
 </div>
@@ -11,16 +51,30 @@
     <div class="overlay__text__subtitles">Reserva</div>
 </div>
 
+<!-- Mensajes de Django -->
+{% if messages %}
+<div class="messages-container">
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+            {{ message }}
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <div class="container-reserve">
-    <form method="post" action="{% url 'hacer_reserva' %}">
+    <form method="post" action="{% url 'contacto:hacer_reserva' %}">
         {% csrf_token %}
         
         <!-- Selector de Servicio -->
         <div class="form-group">
+            <label for="servicio">Seleccione un servicio:</label>
             <select id="servicio" name="servicio" class="form-control" required>
                 <option value="" disabled selected>Seleccione un servicio</option>
                 {% for servicio in servicios %}
                     <option value="{{ servicio.id }}">{{ servicio.servicio_nombre }}</option>
+                {% empty %}
+                    <option value="" disabled>No hay servicios disponibles</option>
                 {% endfor %}
             </select>
         </div>
@@ -197,76 +251,7 @@
     </form>
 </div>
 
-<div class="spacer__subtitles layer-3">
-    <div class="overlay__text__subtitles">Compra</div>
-</div>
-
-<!-- Sección de la tienda -->
-<div class="container-tienda">
-    <div class="productos-grid">
-        {% for producto in productos %}
-            {% if producto.activo %}
-            <div class="producto" data-id="{{ producto.id }}" data-tipo="{{ producto.tipo }}">
-                {% if producto.imagen %}
-                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
-                {% else %}
-                    <img src="{% static 'img/'|add:producto.tipo|add:'.png' %}" alt="{{ producto.nombre }}">
-                {% endif %}
-                <h3>{{ producto.nombre }}</h3>
-                <p>{{ producto.descripcion }}</p>
-                <!-- <p class="precio">${{ producto.precio_base|floatformat:0 }} COP</p> -->
-                <button class="btn-comprar button" data-producto-id="{{ producto.id }}">Comprar</button>
-            </div>
-            {% endif %}
-        {% empty %}
-            <p>No hay productos disponibles en este momento.</p>
-        {% endfor %}
-    </div>
-</div>
-
-<!-- Ventanas modales dinámicas -->
-<!-- Modificar la parte del modal -->
-{% for producto in productos %}
-    <div id="modal-{{ producto.tipo }}-{{ producto.id }}" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>{{ producto.nombre }}</h2>
-            <form id="form-{{ producto.tipo }}-{{ producto.id }}" class="form-producto" novalidate>
-                {% csrf_token %}
-                <input type="hidden" name="producto_id" value="{{ producto.id }}">
-                <p class="precio-base" data-precio="{{ producto.precio_base }}">Precio base: ${{ producto.precio_base|floatformat:0 }} COP</p>
-                
-                {% for opcion in producto.opciones.all %}
-                <div class="form-group">
-                    <label for="{{ opcion.nombre }}-{{ producto.id }}">{{ opcion.nombre }}:</label>
-                    <select 
-                        id="{{ opcion.nombre }}-{{ producto.id }}" 
-                        name="{{ opcion.nombre }}" 
-                        data-required="true"
-                        class="select-opcion">
-                        <option value="">Seleccione {{ opcion.nombre }}</option>
-                        {% for item in opcion.opciones %}
-                            <option value="{{ item.valor }}" data-precio="{{ item.precio }}">
-                                {{ item.valor }} - ${{ item.precio|floatformat:0 }} COP
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-                {% endfor %}
-            
-                <div class="form-group">
-                    <label for="cantidad-{{ producto.id }}">Cantidad:</label>
-                    <input type="number" id="cantidad-{{ producto.id }}" name="cantidad" min="1" value="1">
-                </div>
-            
-                <p class="precio-total">Total: $<span>{{ producto.precio_base }}</span> COP</p>
-                <button type="submit" class="btn-agregar-carrito button">Agregar al carrito</button>
-            </form>
-        </div>
-    </div>
-{% endfor %}
 <script src="{% static 'js/productos.js' %}"></script>
-
 <script src="{% static 'js/reservas.js' %}"></script>
 
 {% endblock %}

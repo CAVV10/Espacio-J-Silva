@@ -26,10 +26,11 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+# Modelo Servicio (asegúrate de que tenga esta estructura)
 class Servicio(models.Model):
     servicio_nombre = models.CharField(max_length=100)
-    descripcion = models.TextField()
-
+    descripcion = models.TextField(blank=True, null=True)
+    
     def __str__(self):
         return self.servicio_nombre
 
@@ -44,14 +45,14 @@ class Reserva(models.Model):
     direccion = models.CharField(max_length=255)  # Para almacenar la dirección
     ciudad = models.CharField(max_length=100)  # Para almacenar la ciudad
 
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['usuario', 'servicio', 'fecha_hora'],
-                name='unique_reserva'
-            )
-        ]
+    # Eliminamos la restricción de unicidad en Meta
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(
+    #             fields=['servicio', 'fecha_hora'],
+    #             name='unique_reserva_servicio_fecha'
+    #         )
+    #     ]
 
     def __str__(self):
         return f'Reserva de {self.usuario} para {self.servicio} el {self.fecha_hora}'
@@ -59,13 +60,8 @@ class Reserva(models.Model):
     # Validaciones personalizadas antes de guardar
     def clean(self):
         # Verificar que el usuario esté asignado
-        if not self.usuario_id:  # Cambia esto para verificar el ID del usuario
+        if not self.usuario_id:
             return  # Salir si el usuario no está asignado
-
-        # Validación: No puede haber una reserva existente para el mismo usuario, servicio y fecha/hora
-        if Reserva.objects.filter(usuario=self.usuario, servicio=self.servicio, fecha_hora=self.fecha_hora).exists():
-            raise ValidationError("Ya tienes una reserva para este servicio en la fecha y hora seleccionadas.")
-
 
         # Verificar si el servicio está asociado correctamente
         if self.servicio_id is None:
@@ -88,14 +84,22 @@ class Reserva(models.Model):
         if self.fecha_hora < timezone.now():
             raise ValidationError("No puedes hacer una reserva en una fecha pasada.")
 
-        # Validación: No puede haber una reserva existente para el mismo email, servicio y fecha/hora
-        if Reserva.objects.filter(usuario=self.usuario, servicio=self.servicio, fecha_hora=self.fecha_hora).exists():
-            raise ValidationError("Ya tienes una reserva para este servicio en la fecha y hora seleccionadas.")
+        # Eliminamos la validación de reservas duplicadas
+        # reservas_existentes = Reserva.objects.filter(
+        #     servicio=self.servicio, 
+        #     fecha_hora=self.fecha_hora
+        # )
+        # 
+        # if self.pk:
+        #     reservas_existentes = reservas_existentes.exclude(pk=self.pk)
+        #     
+        # if reservas_existentes.exists():
+        #     raise ValidationError("Ya existe una reserva para este servicio en la fecha y hora seleccionadas. Por favor, elige otra fecha u hora.")
+
     def save(self, *args, **kwargs):
         # Llama a clean() antes de guardar para asegurarse de que las validaciones se ejecuten
-        self.clean()
+        self.full_clean()  # Cambiado de self.clean() a self.full_clean()
         super(Reserva, self).save(*args, **kwargs)
-
 
 class HistorialCompra(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

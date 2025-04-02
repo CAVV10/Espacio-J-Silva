@@ -34,7 +34,7 @@
     /* Garantizar el color correcto de los botones */
     .btn-carrito, 
     button.btn-carrito,
-    a.btn-carrito,
+    a.btn-carrito:not(nav ol a),
     #boton-filtrar,
     #boton-restablecer,
     #boton-restablecer-productos,
@@ -48,25 +48,39 @@
     
     .btn-carrito:hover,
     button.btn-carrito:hover,
-    a.btn-carrito:hover,
+    a.btn-carrito:not(nav ol a):hover,
     .btn-agregar-carrito:hover,
     .agregar-al-carrito:hover {
         opacity: 0.9 !important;
         transform: translateY(-1px) !important;
     }
     
-    /* Excluir enlaces de migas de pan de los estilos de botón */
-    .breadcrumb-link {
+    /* Estilos específicos para las migas de pan */
+    nav ol a {
         background-color: transparent !important;
-        color: #4b5563 !important; /* text-gray-600 */
+        color: #233e37 !important; /* Verde oscuro */
         border: none !important;
-        transition: color 0.3s ease !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        font-weight: normal !important;
+        text-transform: none !important;
+        display: inline !important;
     }
     
-    .breadcrumb-link:hover {
-        color: var(--color-primary) !important;
+    nav ol a:hover {
+        color: #b78d41 !important; /* Dorado */
         transform: none !important;
         opacity: 1 !important;
+        background-color: transparent !important;
+    }
+    
+    /* Anular cualquier otro estilo que pueda estar afectando */
+    nav.text-sm a, 
+    nav.text-sm a:hover {
+        background-color: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
     }
     
     .accion-rapida {
@@ -149,6 +163,9 @@
     /* Estilos para las alertas al estilo de carrito.html */
     #alert-container {
         z-index: 9999 !important;
+        position: fixed !important;
+        top: 20px !important;
+        right: 20px !important;
     }
     
     .alert {
@@ -171,6 +188,19 @@
         border-left: 4px solid #e53e3e;
         color: #e53e3e;
     }
+    
+    /* Estilos para SweetAlert2 */
+    .swal2-popup {
+        font-family: 'Kanit', sans-serif !important;
+    }
+    
+    .swal2-title {
+        color: #233e37 !important;
+    }
+    
+    .swal2-confirm {
+        background-color: #233e37 !important;
+    }
 </style>
 {% endblock %}
 
@@ -180,14 +210,14 @@
     <nav class="text-sm mb-6 inline-block bg-white rounded-lg shadow-sm py-2 px-4 border border-gray-200">
         <ol class="inline-flex items-center flex-wrap">
             <li class="inline-flex items-center">
-                <a href="{% url 'carrito_nuevo:catalogo' %}" class="breadcrumb-link text-gray-600 hover:text-primary transition-colors">
+                <a href="{% url 'carrito_nuevo:catalogo' %}" class="text-gray-600 hover:text-primary transition-colors">
                     <i class="fas fa-store mr-1"></i>
                     Catálogo
                 </a>
             </li>
             <li class="inline-flex items-center">
                 <span class="text-primary mx-2">/</span>
-                <a href="{% url 'carrito_nuevo:catalogo' %}?categoria={{ producto.categoria.id }}" class="breadcrumb-link text-gray-600 hover:text-primary transition-colors">
+                <a href="{% url 'carrito_nuevo:catalogo' %}?categoria={{ producto.categoria.id }}" class="text-gray-600 hover:text-primary transition-colors">
                     <i class="fas fa-tag mr-1"></i>
                     {{ producto.categoria.nombre }}
                 </a>
