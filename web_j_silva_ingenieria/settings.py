@@ -17,10 +17,10 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "clave-secreta-desarrollo")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 # Hosts permitidos
-ALLOWED_HOSTS = ['web-j-silva.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['jsilvaing.senadsogarzon.com', 'www.jsilvaing.senadsogarzon.com', 'localhost', '127.0.0.1']
 
 # Orígenes confiables para CSRF
-CSRF_TRUSTED_ORIGINS = ['https://web-j-silva.onrender.com', 'http://localhost:8000', 'http://127.0.0.1:8000', 'http://127.0.0.1:41038']
+CSRF_TRUSTED_ORIGINS = ['https://jsilvaing.senadsogarzon.com', 'https://www.jsilvaing.senadsogarzon.com', 'http://localhost:8000', 'http://127.0.0.1:8000', 'http://127.0.0.1:41038']
 
 # Aplicaciones instaladas
 INSTALLED_APPS = [
@@ -105,37 +105,46 @@ TIME_ZONE = 'America/Bogota'
 USE_I18N = True
 USE_TZ = True
 
-# === 📦 Cloudinary Configuration ===
+# === 📦 Configuración de archivos estáticos y media ===
 
-# Archivos estáticos servidos desde Cloudinary
-STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticCloudinaryStorage'
-
-# Archivos de medios (subidos por usuarios) desde Cloudinary
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-# Configuración de Cloudinary (asegúrate de tener estas vars en Render o .env)
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
-}
-
-# === Archivos estáticos y media (por si se usa localmente también) ===
-
+# URL para acceder a los archivos estáticos desde el navegador (IMPORTANTE: faltaba esta configuración)
 STATIC_URL = '/static/'
+
+# Directorio donde Django recolecta los estáticos (cuando corres collectstatic)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Directorios adicionales donde buscar archivos estáticos (útil en desarrollo)
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'contacto', 'static', 'contacto'),
 ]
 
-# Directorio donde Django recolecta los estáticos (cuando corres collectstatic)
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 # Archivos de media (subidos por usuarios)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# === 📦 Cloudinary Configuration ===
+# Determina si usar Cloudinary basado en una variable de entorno
+USE_CLOUDINARY = os.environ.get("USE_CLOUDINARY", "False") == "True"
+
+if USE_CLOUDINARY:
+    # Archivos estáticos servidos desde Cloudinary
+    STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticCloudinaryStorage'
+    
+    # Archivos de medios (subidos por usuarios) desde Cloudinary
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    
+    # Configuración de Cloudinary
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+        'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+        'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+    }
+else:
+    # Usar almacenamiento local para archivos estáticos
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+    
+    # Usar almacenamiento local para archivos media
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 # === 📧 Configuración de correo ===
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -146,7 +155,10 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_ADMIN = os.environ.get('EMAIL_ADMIN', '')
-SITE_URL = 'http://127.0.0.1:8000' 
+
+# Actualiza la URL del sitio para producción
+SITE_URL = 'https://jsilvaing.senadsogarzon.com' if not DEBUG else 'http://127.0.0.1:8000'
+
 # === 👤 Autenticación personalizada ===
 AUTH_USER_MODEL = 'contacto.CustomUser'
 AUTHENTICATION_BACKENDS = [
